@@ -7,339 +7,346 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
-    --purple-50: #EEEDFE;
-    --purple-100: #CECBF6;
-    --purple-200: #AFA9EC;
-    --purple-400: #7F77DD;
-    --purple-600: #534AB7;
-    --purple-800: #3C3489;
-    --purple-900: #26215C;
-    --teal-50: #E1F5EE;
-    --teal-600: #0F6E56;
-    --coral-50: #FAECE7;
-    --coral-600: #993C1D;
-    --blue-50: #E6F1FB;
-    --blue-600: #185FA5;
-    --green-50: #EAF3DE;
-    --green-600: #3B6D11;
-    --amber-50: #FAEEDA;
-    --amber-600: #854F0B;
-    --bg: #FAFAF9;
-    --bg-card: #FFFFFF;
-    --text: #1a1a1a;
-    --text-muted: #6b6b6b;
-    --text-faint: #9a9a9a;
-    --border: rgba(0,0,0,0.08);
-    --border-hover: rgba(83,74,183,0.35);
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-hover: 0 4px 16px rgba(83,74,183,0.12), 0 1px 4px rgba(0,0,0,0.06);
-  }
+:root {
+--purple-50: #EEEDFE;
+--purple-100: #CECBF6;
+--purple-200: #AFA9EC;
+--purple-400: #7F77DD;
+--purple-600: #534AB7;
+--purple-800: #3C3489;
+--purple-900: #26215C;
+--teal-50: #E1F5EE;
+--teal-600: #0F6E56;
+--coral-50: #FAECE7;
+--coral-600: #993C1D;
+--blue-50: #E6F1FB;
+--blue-600: #185FA5;
+--green-50: #EAF3DE;
+--green-600: #3B6D11;
+--amber-50: #FAEEDA;
+--amber-600: #854F0B;
+--bg: #FAFAF9;
+--bg-card: #FFFFFF;
+--text: #1a1a1a;
+--text-muted: #6b6b6b;
+--text-faint: #9a9a9a;
+--border: rgba(0,0,0,0.08);
+--border-hover: rgba(83,74,183,0.35);
+--radius-sm: 8px;
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-xl: 24px;
+--shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+--shadow-hover: 0 4px 16px rgba(83,74,183,0.12), 0 1px 4px rgba(0,0,0,0.06);
+}
 
-  html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+font-family: 'DM Sans', sans-serif;
+background: var(--bg);
+color: var(--text);
+font-size: 16px;
+line-height: 1.6;
+-webkit-font-smoothing: antialiased;
+}
 
-  /* ─── NAV ─── */
-  .nav {
-    position: sticky; top: 0; z-index: 200;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem; height: 60px;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px; color: var(--text); cursor: pointer;
-    letter-spacing: -0.3px; text-decoration: none;
-  }
-  .nav-logo span { color: var(--purple-600); }
-  .nav-links { display: flex; gap: 2px; align-items: center; }
-  .nav-btn {
-    background: none; border: none; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 400;
-    color: var(--text-muted);
-    padding: 6px 13px; border-radius: var(--radius-sm);
-    transition: background 0.15s, color 0.15s;
-  }
-  .nav-btn:hover { background: var(--purple-50); color: var(--purple-600); }
-  .nav-btn.active { color: var(--purple-600); background: var(--purple-50); }
-  .nav-apply {
-    background: var(--purple-600) !important;
-    color: #fff !important;
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    margin-left: 6px;
-  }
-  .nav-apply:hover { background: var(--purple-800) !important; }
+/* ─── NAV ─── */
+.nav {
+position: sticky; top: 0; z-index: 200;
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 2rem; height: 60px;
+background: rgba(255,255,255,0.92);
+backdrop-filter: blur(12px);
+border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+font-family: 'DM Serif Display', serif;
+font-size: 22px; color: var(--text); cursor: pointer;
+letter-spacing: -0.3px; text-decoration: none;
+}
+.nav-logo span { color: var(--purple-600); }
+.nav-links { display: flex; gap: 2px; align-items: center; }
+.nav-btn {
+background: none; border: none; cursor: pointer;
+font-family: 'DM Sans', sans-serif;
+font-size: 14px; font-weight: 400;
+color: var(--text-muted);
+padding: 6px 13px; border-radius: var(--radius-sm);
+transition: background 0.15s, color 0.15s;
+}
+.nav-btn:hover { background: var(--purple-50); color: var(--purple-600); }
+.nav-btn.active { color: var(--purple-600); background: var(--purple-50); }
+.nav-apply {
+background: var(--purple-600) !important;
+color: #fff !important;
+font-weight: 500;
+border-radius: var(--radius-sm);
+margin-left: 6px;
+}
+.nav-apply:hover { background: var(--purple-800) !important; }
 
-  /* ─── PAGES ─── */
-  .page { display: none; }
-  .page.active { display: block; }
+/* ─── PAGES ─── */
+.page { display: none; }
+.page.active { display: block; }
 
-  /* ─── HERO ─── */
-  .hero {
-    position: relative; overflow: hidden;
-    min-height: 520px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center;
-    padding: 6rem 2rem 4rem;
-    background: #0d0b1e;
-  }
-  #heroCanvas {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-  }
-  .hero-content { position: relative; z-index: 2; }
-  .hero-eyebrow {
-    display: inline-block;
-    font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--purple-200);
-    background: rgba(83,74,183,0.2);
-    border: 1px solid rgba(175,169,236,0.3);
-    padding: 5px 16px; border-radius: 30px;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(48px, 7vw, 80px);
-    font-weight: 400;
-    color: #fff;
-    line-height: 1.05;
-    letter-spacing: -2px;
-    margin-bottom: 1.25rem;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-  .hero h1 em { font-style: italic; color: var(--purple-200); }
-  .hero-sub {
-    font-size: 18px; font-weight: 300;
-    color: rgba(255,255,255,0.6);
-    max-width: 520px; margin: 0 auto 2.5rem;
-    line-height: 1.7;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-  .hero-btns {
-    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
-  .btn-primary {
-    background: var(--purple-600); color: #fff;
-    border: none; padding: 12px 28px;
-    border-radius: var(--radius-md);
-    cursor: pointer; font-size: 15px; font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .btn-primary:hover { background: var(--purple-800); transform: translateY(-1px); }
-  .btn-ghost {
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.85);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 12px 28px; border-radius: var(--radius-md);
-    cursor: pointer; font-size: 15px; font-weight: 400;
-    font-family: 'DM Sans', sans-serif;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .btn-ghost:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+/* ─── HERO ─── */
+.hero {
+position: relative; overflow: hidden;
+min-height: 520px;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+text-align: center;
+padding: 6rem 2rem 4rem;
+background: #0d0b1e;
+}
+#heroCanvas {
+position: absolute; inset: 0;
+width: 100%; height: 100%;
+pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-eyebrow {
+display: inline-block;
+font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+color: var(--purple-200);
+background: rgba(83,74,183,0.2);
+border: 1px solid rgba(175,169,236,0.3);
+padding: 5px 16px; border-radius: 30px;
+margin-bottom: 1.5rem;
+animation: fadeUp 0.6s ease both;
+}
+.hero h1 {
+font-family: 'DM Serif Display', serif;
+font-size: clamp(48px, 7vw, 80px);
+font-weight: 400;
+color: #fff;
+line-height: 1.05;
+letter-spacing: -2px;
+margin-bottom: 1.25rem;
+animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero h1 em { font-style: italic; color: var(--purple-200); }
+.hero-sub {
+font-size: 18px; font-weight: 300;
+color: rgba(255,255,255,0.6);
+max-width: 520px; margin: 0 auto 2.5rem;
+line-height: 1.7;
+animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-btns {
+display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+animation: fadeUp 0.6s 0.3s ease both;
+}
+.btn-primary {
+background: var(--purple-600); color: #fff;
+border: none; padding: 12px 28px;
+border-radius: var(--radius-md);
+cursor: pointer; font-size: 15px; font-weight: 500;
+font-family: 'DM Sans', sans-serif;
+transition: background 0.15s, transform 0.1s;
+}
+.btn-primary:hover { background: var(--purple-800); transform: translateY(-1px); }
+.btn-ghost {
+background: rgba(255,255,255,0.08);
+color: rgba(255,255,255,0.85);
+border: 1px solid rgba(255,255,255,0.15);
+padding: 12px 28px; border-radius: var(--radius-md);
+cursor: pointer; font-size: 15px; font-weight: 400;
+font-family: 'DM Sans', sans-serif;
+transition: background 0.15s, transform 0.1s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(18px); }
+to   { opacity: 1; transform: translateY(0); }
+}
 
-  /* ─── STAT BAR ─── */
-  .stat-bar {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    border-bottom: 1px solid var(--border);
-    background: var(--bg-card);
-  }
-  .stat-item {
-    padding: 1.75rem 2rem; text-align: center;
-    border-right: 1px solid var(--border);
-  }
-  .stat-item:last-child { border-right: none; }
-  .stat-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 40px; color: var(--purple-600);
-    line-height: 1; margin-bottom: 6px;
-  }
-  .stat-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+/* ─── STAT BAR ─── */
+.stat-bar {
+display: grid; grid-template-columns: repeat(3, 1fr);
+border-bottom: 1px solid var(--border);
+background: var(--bg-card);
+}
+.stat-item {
+padding: 1.75rem 2rem; text-align: center;
+border-right: 1px solid var(--border);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+font-family: 'DM Serif Display', serif;
+font-size: 40px; color: var(--purple-600);
+line-height: 1; margin-bottom: 6px;
+}
+.stat-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
 
-  /* ─── SECTIONS ─── */
-  .section { padding: 3.5rem 2rem; }
-  .section-sm { padding: 2rem 2rem; }
-  .section-header {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 1.75rem;
-  }
-  .section-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px; font-weight: 400; letter-spacing: -0.5px;
-  }
-  .view-all {
-    font-size: 13px; color: var(--purple-600);
-    background: none; border: none; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    padding: 4px 0; text-decoration: none;
-    transition: color 0.15s;
-  }
-  .view-all:hover { color: var(--purple-800); }
+/* ─── SECTIONS ─── */
+.section { padding: 3.5rem 2rem; }
+.section-sm { padding: 2rem 2rem; }
+.section-header {
+display: flex; align-items: baseline; justify-content: space-between;
+margin-bottom: 1.75rem;
+}
+.section-header h2 {
+font-family: 'DM Serif Display', serif;
+font-size: 28px; font-weight: 400; letter-spacing: -0.5px;
+}
+.view-all {
+font-size: 13px; color: var(--purple-600);
+background: none; border: none; cursor: pointer;
+font-family: 'DM Sans', sans-serif;
+padding: 4px 0; text-decoration: none;
+transition: color 0.15s;
+}
+.view-all:hover { color: var(--purple-800); }
 
-  /* ─── GRID ─── */
-  .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
-  .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+/* ─── GRID ─── */
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 
-  /* ─── ARTICLE CARD ─── */
-  .article-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-    box-shadow: var(--shadow-card);
-    text-decoration: none; color: inherit;
-    display: flex; flex-direction: column;
-  }
-  .article-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
-  }
-  .card-tag {
-    display: inline-block;
-    font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 4px 11px; border-radius: 20px;
-    background: var(--purple-50); color: var(--purple-800);
-    margin-bottom: 12px; width: fit-content;
-  }
-  .article-card h3 {
-    font-size: 16px; font-weight: 500; line-height: 1.4;
-    margin-bottom: 8px; flex: 1;
-  }
-  .article-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
-  .card-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
-  .card-author { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-faint); }
-  .avatar-img {
-    width: 24px; height: 24px; border-radius: 50%;
-    object-fit: cover; object-position: top;
-    border: 1px solid var(--border);
-  }
-  .avatar-initials {
-    width: 24px; height: 24px; border-radius: 50%;
-    background: var(--purple-50); color: var(--purple-800);
-    font-size: 9px; font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-  }
+/* ─── ARTICLE CARD ─── */
+.article-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 1.5rem;
+cursor: pointer;
+transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+box-shadow: var(--shadow-card);
+text-decoration: none; color: inherit;
+display: flex; flex-direction: column;
+}
+.article-card:hover {
+border-color: var(--border-hover);
+box-shadow: var(--shadow-hover);
+transform: translateY(-2px);
+}
+.card-tag {
+display: inline-block;
+font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+text-transform: uppercase;
+padding: 4px 11px; border-radius: 20px;
+background: var(--purple-50); color: var(--purple-800);
+margin-bottom: 12px; width: fit-content;
+}
+.article-card h3 {
+font-size: 16px; font-weight: 500; line-height: 1.4;
+margin-bottom: 8px; flex: 1;
+}
+.article-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+.card-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.card-author { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-faint); }
+.avatar-img {
+width: 24px; height: 24px; border-radius: 50%;
+object-fit: cover; object-position: top;
+border: 1px solid var(--border);
+}
+.avatar-initials {
+width: 24px; height: 24px; border-radius: 50%;
+background: var(--purple-50); color: var(--purple-800);
+font-size: 9px; font-weight: 600;
+display: flex; align-items: center; justify-content: center;
+}
 
-  /* ─── VIDEO CARD ─── */
-  .video-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden; cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-    box-shadow: var(--shadow-card);
-    text-decoration: none; color: inherit;
-  }
-  .video-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
-  }
-  .video-thumb {
-    background: #0d0b1e;
-    height: 180px; position: relative;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .thumb-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.4; }
-  .play-btn {
-    width: 54px; height: 54px; border-radius: 50%;
-    background: rgba(83,74,183,0.7);
-    border: 2px solid rgba(175,169,236,0.6);
-    display: flex; align-items: center; justify-content: center;
-    position: relative; z-index: 1;
-    transition: background 0.2s, transform 0.15s;
-  }
-  .video-card:hover .play-btn { background: var(--purple-600); transform: scale(1.08); }
-  .play-icon {
-    width: 0; height: 0;
-    border-style: solid;
-    border-width: 9px 0 9px 18px;
-    border-color: transparent transparent transparent rgba(255,255,255,0.95);
-    margin-left: 4px;
-  }
-  .video-info { padding: 1.1rem 1.25rem; }
-  .video-info h3 { font-size: 14px; font-weight: 500; margin-bottom: 5px; line-height: 1.4; }
-  .video-info p { font-size: 12px; color: var(--text-muted); }
+/* ─── VIDEO CARD ─── */
+.video-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+overflow: hidden; cursor: pointer;
+transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+box-shadow: var(--shadow-card);
+text-decoration: none; color: inherit;
+}
+.video-card:hover {
+border-color: var(--border-hover);
+box-shadow: var(--shadow-hover);
+transform: translateY(-2px);
+}
+.video-thumb {
+background: #0d0b1e;
+height: 180px; position: relative;
+display: flex; align-items: center; justify-content: center;
+overflow: hidden;
+}
+.thumb-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.4; }
+.play-btn {
+width: 54px; height: 54px; border-radius: 50%;
+background: rgba(83,74,183,0.7);
+border: 2px solid rgba(175,169,236,0.6);
+display: flex; align-items: center; justify-content: center;
+position: relative; z-index: 1;
+transition: background 0.2s, transform 0.15s;
+}
+.video-card:hover .play-btn { background: var(--purple-600); transform: scale(1.08); }
+.play-icon {
+width: 0; height: 0;
+border-style: solid;
+border-width: 9px 0 9px 18px;
+border-color: transparent transparent transparent rgba(255,255,255,0.95);
+margin-left: 4px;
+}
+.video-info { padding: 1.1rem 1.25rem; }
+.video-info h3 { font-size: 14px; font-weight: 500; margin-bottom: 5px; line-height: 1.4; }
+.video-info p { font-size: 12px; color: var(--text-muted); }
 
-  /* ─── RESOURCE CARD ─── */
-  .resource-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.4rem 1.5rem;
-    display: grid; grid-template-columns: 10px 1fr; gap: 1rem;
-    align-items: start;
-    box-shadow: var(--shadow-card);
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .resource-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-hover); }
-  .diff-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
-  .diff-green { background: #3B6D11; }
-  .diff-yellow { background: #BA7517; }
-  .diff-red { background: #A32D2D; }
-  .resource-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 5px; }
-  .resource-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
-  .resource-links { display: flex; gap: 8px; flex-wrap: wrap; }
-  .res-link {
-    font-size: 12px; font-weight: 500;
-    padding: 5px 13px; border-radius: 20px;
-    border: 1px solid var(--border);
-    color: var(--text-muted); background: var(--bg);
-    text-decoration: none; font-family: 'DM Sans', sans-serif;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-    display: inline-flex; align-items: center; gap: 4px;
-  }
-  .res-link:hover { color: var(--purple-600); border-color: var(--purple-200); background: var(--purple-50); }
-  .res-link.slides { color: var(--purple-600); border-color: var(--purple-200); background: var(--purple-50); }
-  .res-link.slides:hover { background: var(--purple-100); }
+/* ─── RESOURCE CARD ─── */
+.resource-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 1.4rem 1.5rem;
+display: grid; grid-template-columns: 10px 1fr; gap: 1rem;
+align-items: start;
+box-shadow: var(--shadow-card);
+transition: border-color 0.2s, box-shadow 0.2s;
+}
+.resource-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-hover); }
+.diff-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
+.diff-green { background: #3B6D11; }
+.diff-yellow { background: #BA7517; }
+.diff-red { background: #A32D2D; }
+.resource-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 5px; }
+.resource-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+.resource-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.res-link {
+font-size: 12px; font-weight: 500;
+padding: 5px 13px; border-radius: 20px;
+border: 1px solid var(--border);
+color: var(--text-muted); background: var(--bg);
+text-decoration: none; font-family: 'DM Sans', sans-serif;
+transition: border-color 0.15s, color 0.15s, background 0.15s;
+display: inline-flex; align-items: center; gap: 4px;
+}
+.res-link:hover { color: var(--purple-600); border-color: var(--purple-200); background: var(--purple-50); }
+.res-link.slides { color: var(--purple-600); border-color: var(--purple-200); background: var(--purple-50); }
+.res-link.slides:hover { background: var(--purple-100); }
 
-  /* ─── TEAM ─── */
-  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-  .team-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 2rem 1.5rem; text-align: center;
-    box-shadow: var(--shadow-card);
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-    cursor: pointer; text-decoration: none; color: inherit;
+/* ─── TEAM ─── */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.team-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 2rem 1.5rem; text-align: center;
+box-shadow: var(--shadow-card);
+transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+cursor: pointer; text-decoration: none; color: inherit;
+display: block;
+}
+.team-card:hover {
+border-color: var(--border-hover);
+box-shadow: var(--shadow-hover);
+transform: translateY(-2px);
+}
+  .team-photo {
+    width: 80px; height: 80px; border-radius: 50%;
+    object-fit: cover; object-position: center top;
+    border: 2px solid var(--purple-100);
+    margin: 0 auto 14px;
     display: block;
-  }
-  .team-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
   }
 .team-photo {
   width: 80px;
@@ -351,955 +358,814 @@
   margin: 0 auto 14px;
   display: block;
 }
-  .team-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-  .team-card .role { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-  .team-card .school { font-size: 11px; color: var(--text-faint); }
-  .team-tag {
-    display: inline-block; margin-top: 10px;
-    font-size: 11px; font-weight: 500;
-    padding: 3px 10px; border-radius: 20px;
-    background: var(--purple-50); color: var(--purple-800);
-  }
-
-  /* ─── MISSION BAND ─── */
-  .mission-band {
-    background: #0d0b1e;
-    padding: 5rem 2rem;
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .mission-band::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(83,74,183,0.18) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .mission-band h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 5vw, 52px);
-    color: #fff; font-weight: 400;
-    letter-spacing: -1px; margin-bottom: 1.25rem;
-    position: relative;
-  }
-  .mission-band p {
-    font-size: 17px; font-weight: 300;
-    color: rgba(255,255,255,0.55);
-    max-width: 560px; margin: 0 auto 2rem;
-    line-height: 1.75; position: relative;
-  }
-
-  /* ─── START A CLUB ─── */
-  .start-hero {
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--border);
-    padding: 3.5rem 2rem;
-  }
-  .start-hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 5vw, 48px); font-weight: 400;
-    letter-spacing: -1px; margin-bottom: 0.75rem;
-  }
-  .start-hero p { font-size: 16px; color: var(--text-muted); max-width: 540px; line-height: 1.7; }
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; padding: 2.5rem 2rem; }
-  .step-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 1.5rem;
-    box-shadow: var(--shadow-card);
-  }
-  .step-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px; color: var(--purple-100);
-    line-height: 1; margin-bottom: 12px;
-  }
-  .step-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
-  .step-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
-
-  /* ─── CTA BAND ─── */
-  .cta-band {
-    margin: 0 2rem 2rem;
-    background: var(--purple-50);
-    border: 1px solid var(--purple-100);
-    border-radius: var(--radius-xl);
-    padding: 2rem 2rem;
-    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .cta-band h3 { font-size: 17px; font-weight: 500; color: var(--purple-900); margin-bottom: 4px; }
-  .cta-band p { font-size: 13px; color: var(--purple-600); }
-
-  /* ─── APPLY ─── */
-  .apply-wrap { padding: 3.5rem 2rem; max-width: 560px; }
-  .apply-wrap h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 0.75rem;
-  }
-  .apply-wrap > p { font-size: 15px; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
-  .roles-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
-  .role-item {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: var(--radius-md); padding: 14px 16px;
-    font-size: 14px; font-weight: 400;
-    box-shadow: var(--shadow-card);
-  }
-  .role-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple-600); flex-shrink: 0; }
-  .contact-info { font-size: 13px; color: var(--text-muted); margin-top: 1.5rem; }
-  .contact-info a { color: var(--purple-600); text-decoration: none; }
-
-  /* ─── PAGE HEADERS ─── */
-  .page-header {
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--border);
-    padding: 3rem 2rem 2rem;
-  }
-  .page-header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(30px, 5vw, 44px); font-weight: 400;
-    letter-spacing: -1px; margin-bottom: 0.5rem;
-  }
-  .page-header p { font-size: 15px; color: var(--text-muted); max-width: 520px; line-height: 1.65; }
-
-  /* ─── SEARCH + FILTERS ─── */
-  .search-wrap { padding: 0 2rem; margin-top: 2rem; }
-  .search-input {
-    width: 100%; padding: 11px 16px;
-    border: 1px solid var(--border); border-radius: var(--radius-md);
-    background: var(--bg-card); font-family: 'DM Sans', sans-serif;
-    font-size: 14px; color: var(--text);
-    margin-bottom: 14px; outline: none;
-    transition: border-color 0.15s;
-  }
-  .search-input:focus { border-color: var(--purple-400); }
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-  .filter-btn {
-    font-size: 12px; font-weight: 500; padding: 6px 14px;
-    border-radius: 20px; border: 1px solid var(--border);
-    background: none; color: var(--text-muted);
-    cursor: pointer; font-family: 'DM Sans', sans-serif;
-    transition: all 0.15s;
-  }
-  .filter-btn.active, .filter-btn:hover { background: var(--purple-50); color: var(--purple-800); border-color: var(--purple-200); }
-
-  /* ─── DIFFICULTY LEGEND ─── */
-  .diff-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-  .diff-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); }
-
-  /* ─── YOUTUBE CTA ─── */
-  .yt-cta {
-    margin-top: 2rem;
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 1.5rem 2rem;
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-    box-shadow: var(--shadow-card);
-  }
-  .yt-cta h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-  .yt-cta p { font-size: 13px; color: var(--text-muted); }
-
-  /* ─── FOOTER ─── */
-  .footer {
-    background: var(--bg-card);
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 2rem;
-    display: flex; justify-content: space-between; align-items: flex-start;
-    flex-wrap: wrap; gap: 2rem;
-  }
-  .footer-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px; color: var(--text); margin-bottom: 6px;
-  }
-  .footer-logo span { color: var(--purple-600); }
-  .footer-tagline { font-size: 13px; color: var(--text-muted); }
-  .footer-links { display: flex; flex-direction: column; gap: 8px; }
-  .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
-  .footer-links a:hover { color: var(--purple-600); }
-  .footer-links h4 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-faint); margin-bottom: 4px; }
-  .footer-bottom { padding: 1rem 2rem; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-faint); }
-
-  /* ─── INLINE BTNS ─── */
-  .btn-sm {
-    display: inline-block;
-    background: var(--purple-600); color: #fff;
-    border: none; padding: 10px 22px;
-    border-radius: var(--radius-md);
-    cursor: pointer; font-size: 14px; font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
-    transition: background 0.15s;
-    text-decoration: none;
-  }
-  .btn-sm:hover { background: var(--purple-800); }
-  .btn-sm-outline {
-    display: inline-block;
-    background: none; color: var(--text);
-    border: 1px solid var(--border); padding: 10px 22px;
-    border-radius: var(--radius-md);
-    cursor: pointer; font-size: 14px; font-weight: 400;
-    font-family: 'DM Sans', sans-serif;
-    transition: border-color 0.15s, background 0.15s;
-    text-decoration: none;
-  }
-  .btn-sm-outline:hover { border-color: var(--purple-200); background: var(--purple-50); }
- /* ─── IMPACT SECTION ─── */
-.impact-section {
-  padding: 4rem 2rem;
-  background: var(--bg);
+.team-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.team-card .role { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.team-card .school { font-size: 11px; color: var(--text-faint); }
+.team-tag {
+display: inline-block; margin-top: 10px;
+font-size: 11px; font-weight: 500;
+padding: 3px 10px; border-radius: 20px;
+background: var(--purple-50); color: var(--purple-800);
 }
 
-.impact-header {
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto 2.5rem;
+/* ─── MISSION BAND ─── */
+.mission-band {
+background: #0d0b1e;
+padding: 5rem 2rem;
+text-align: center;
+position: relative; overflow: hidden;
+}
+.mission-band::before {
+content: '';
+position: absolute; inset: 0;
+background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(83,74,183,0.18) 0%, transparent 70%);
+pointer-events: none;
+}
+.mission-band h2 {
+font-family: 'DM Serif Display', serif;
+font-size: clamp(32px, 5vw, 52px);
+color: #fff; font-weight: 400;
+letter-spacing: -1px; margin-bottom: 1.25rem;
+position: relative;
+}
+.mission-band p {
+font-size: 17px; font-weight: 300;
+color: rgba(255,255,255,0.55);
+max-width: 560px; margin: 0 auto 2rem;
+line-height: 1.75; position: relative;
 }
 
-.impact-header h2 {
-  font-family: 'DM Serif Display', serif;
-  font-size: 42px;
-  font-weight: 400;
-  letter-spacing: -1px;
-  margin-bottom: 0.75rem;
-  color: var(--text);
+/* ─── START A CLUB ─── */
+.start-hero {
+background: var(--bg-card);
+border-bottom: 1px solid var(--border);
+padding: 3.5rem 2rem;
 }
-
-.impact-header p {
-  font-size: 16px;
-  color: var(--text-muted);
-  line-height: 1.7;
+.start-hero h1 {
+font-family: 'DM Serif Display', serif;
+font-size: clamp(32px, 5vw, 48px); font-weight: 400;
+letter-spacing: -1px; margin-bottom: 0.75rem;
 }
-
-.impact-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  max-width: 1200px;
-  margin: 0 auto 3rem;
+.start-hero p { font-size: 16px; color: var(--text-muted); max-width: 540px; line-height: 1.7; }
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; padding: 2.5rem 2rem; }
+.step-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg); padding: 1.5rem;
+box-shadow: var(--shadow-card);
 }
-
-.impact-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 2.25rem 1.5rem;
-  text-align: center;
-  box-shadow: var(--shadow-card);
-  transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+.step-num {
+font-family: 'DM Serif Display', serif;
+font-size: 36px; color: var(--purple-100);
+line-height: 1; margin-bottom: 12px;
 }
+.step-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+.step-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
 
-.impact-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--border-hover);
+/* ─── CTA BAND ─── */
+.cta-band {
+margin: 0 2rem 2rem;
+background: var(--purple-50);
+border: 1px solid var(--purple-100);
+border-radius: var(--radius-xl);
+padding: 2rem 2rem;
+display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+flex-wrap: wrap;
 }
+.cta-band h3 { font-size: 17px; font-weight: 500; color: var(--purple-900); margin-bottom: 4px; }
+.cta-band p { font-size: 13px; color: var(--purple-600); }
 
-.impact-num {
-  font-family: 'DM Serif Display', serif;
-  font-size: 52px;
-  line-height: 1;
-  color: var(--purple-600);
-  margin-bottom: 0.65rem;
+/* ─── APPLY ─── */
+.apply-wrap { padding: 3.5rem 2rem; max-width: 560px; }
+.apply-wrap h1 {
+font-family: 'DM Serif Display', serif;
+font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 0.75rem;
 }
-
-.impact-label {
-  font-size: 15px;
-  color: var(--text-muted);
-  line-height: 1.5;
+.apply-wrap > p { font-size: 15px; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+.roles-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+.role-item {
+display: flex; align-items: center; gap: 12px;
+background: var(--bg-card); border: 1px solid var(--border);
+border-radius: var(--radius-md); padding: 14px 16px;
+font-size: 14px; font-weight: 400;
+box-shadow: var(--shadow-card);
 }
+.role-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple-600); flex-shrink: 0; }
+.contact-info { font-size: 13px; color: var(--text-muted); margin-top: 1.5rem; }
+.contact-info a { color: var(--purple-600); text-decoration: none; }
 
-.testimonial-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
+/* ─── PAGE HEADERS ─── */
+.page-header {
+background: var(--bg-card);
+border-bottom: 1px solid var(--border);
+padding: 3rem 2rem 2rem;
 }
-
-.testimonial-wrap h3 {
-  text-align: center;
-  font-family: 'DM Serif Display', serif;
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.5px;
-  margin-bottom: 1.5rem;
-  color: var(--text);
+.page-header h1 {
+font-family: 'DM Serif Display', serif;
+font-size: clamp(30px, 5vw, 44px); font-weight: 400;
+letter-spacing: -1px; margin-bottom: 0.5rem;
 }
+.page-header p { font-size: 15px; color: var(--text-muted); max-width: 520px; line-height: 1.65; }
 
-.testimonial-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+/* ─── SEARCH + FILTERS ─── */
+.search-wrap { padding: 0 2rem; margin-top: 2rem; }
+.search-input {
+width: 100%; padding: 11px 16px;
+border: 1px solid var(--border); border-radius: var(--radius-md);
+background: var(--bg-card); font-family: 'DM Sans', sans-serif;
+font-size: 14px; color: var(--text);
+margin-bottom: 14px; outline: none;
+transition: border-color 0.15s;
 }
-
-.testimonial-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 1.75rem;
-  box-shadow: var(--shadow-card);
+.search-input:focus { border-color: var(--purple-400); }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.filter-btn {
+font-size: 12px; font-weight: 500; padding: 6px 14px;
+border-radius: 20px; border: 1px solid var(--border);
+background: none; color: var(--text-muted);
+cursor: pointer; font-family: 'DM Sans', sans-serif;
+transition: all 0.15s;
 }
+.filter-btn.active, .filter-btn:hover { background: var(--purple-50); color: var(--purple-800); border-color: var(--purple-200); }
 
-.testimonial-card p {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-  font-style: italic;
+/* ─── DIFFICULTY LEGEND ─── */
+.diff-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.diff-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); }
+
+/* ─── YOUTUBE CTA ─── */
+.yt-cta {
+margin-top: 2rem;
+background: var(--bg-card); border: 1px solid var(--border);
+border-radius: var(--radius-lg); padding: 1.5rem 2rem;
+display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+box-shadow: var(--shadow-card);
 }
+.yt-cta h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.yt-cta p { font-size: 13px; color: var(--text-muted); }
 
-.testimonial-author {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
+/* ─── FOOTER ─── */
+.footer {
+background: var(--bg-card);
+border-top: 1px solid var(--border);
+padding: 2.5rem 2rem;
+display: flex; justify-content: space-between; align-items: flex-start;
+flex-wrap: wrap; gap: 2rem;
 }
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 900px) {
-  .impact-grid,
-  .testimonial-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .impact-header h2 {
-    font-size: 34px;
-  }
-
-  .testimonial-wrap h3 {
-    font-size: 28px;
-  }
+.footer-logo {
+font-family: 'DM Serif Display', serif;
+font-size: 20px; color: var(--text); margin-bottom: 6px;
 }
+.footer-logo span { color: var(--purple-600); }
+.footer-tagline { font-size: 13px; color: var(--text-muted); }
+.footer-links { display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+.footer-links a:hover { color: var(--purple-600); }
+.footer-links h4 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-faint); margin-bottom: 4px; }
+.footer-bottom { padding: 1rem 2rem; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-faint); }
+
+/* ─── INLINE BTNS ─── */
+.btn-sm {
+display: inline-block;
+background: var(--purple-600); color: #fff;
+border: none; padding: 10px 22px;
+border-radius: var(--radius-md);
+cursor: pointer; font-size: 14px; font-weight: 500;
+font-family: 'DM Sans', sans-serif;
+transition: background 0.15s;
+text-decoration: none;
+}
+.btn-sm:hover { background: var(--purple-800); }
+.btn-sm-outline {
+display: inline-block;
+background: none; color: var(--text);
+border: 1px solid var(--border); padding: 10px 22px;
+border-radius: var(--radius-md);
+cursor: pointer; font-size: 14px; font-weight: 400;
+font-family: 'DM Sans', sans-serif;
+transition: border-color 0.15s, background 0.15s;
+text-decoration: none;
+}
+.btn-sm-outline:hover { border-color: var(--purple-200); background: var(--purple-50); }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a class="nav-logo" href="#" onclick="showPage('home');return false;">Neuro<span>View</span></a>
-  <div class="nav-links">
-    <button class="nav-btn active" id="nav-home" onclick="showPage('home')">Home</button>
-    <button class="nav-btn" id="nav-articles" onclick="showPage('articles')">Articles</button>
-    <button class="nav-btn" id="nav-videos" onclick="showPage('videos')">Videos</button>
-    <button class="nav-btn" id="nav-resources" onclick="showPage('resources')">Club Resources</button>
-    <button class="nav-btn" id="nav-team" onclick="showPage('team')">Team</button>
-    <button class="nav-btn" id="nav-start" onclick="showPage('start')">Start a Club</button>
-    <button class="nav-btn nav-apply" id="nav-apply" onclick="showPage('apply')">Apply</button>
-  </div>
+<a class="nav-logo" href="#" onclick="showPage('home');return false;">Neuro<span>View</span></a>
+<div class="nav-links">
+<button class="nav-btn active" id="nav-home" onclick="showPage('home')">Home</button>
+<button class="nav-btn" id="nav-articles" onclick="showPage('articles')">Articles</button>
+<button class="nav-btn" id="nav-videos" onclick="showPage('videos')">Videos</button>
+<button class="nav-btn" id="nav-resources" onclick="showPage('resources')">Club Resources</button>
+<button class="nav-btn" id="nav-team" onclick="showPage('team')">Team</button>
+<button class="nav-btn" id="nav-start" onclick="showPage('start')">Start a Club</button>
+<button class="nav-btn nav-apply" id="nav-apply" onclick="showPage('apply')">Apply</button>
+</div>
 </nav>
 
 <!-- ══════════════ HOME ══════════════ -->
 <div class="page active" id="page-home">
 
-  <div class="hero">
-    <canvas id="heroCanvas"></canvas>
-    <div class="hero-content">
-      <span class="hero-eyebrow">Student-led · Science-driven</span>
-      <h1>Your brain on<br><em>NeuroView</em></h1>
-      <p class="hero-sub">A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free — for everyone.</p>
-      <div class="hero-btns">
-        <button class="btn-primary" onclick="showPage('articles')">Read Articles</button>
-        <button class="btn-ghost" onclick="showPage('resources')">Get Club Resources</button>
-      </div>
-    </div>
-  </div>
-
-<div class="impact-section">
-  <div class="impact-header">
-    <h2>Our Impact</h2>
-    <p>NeuroView makes neuroscience accessible through presentations, resources, and student-led outreach.</p>
-  </div>
-
-  <div class="impact-grid">
-    <div class="impact-card">
-      <div class="impact-num">40+</div>
-      <div class="impact-label">Presentations & Lectures Made</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-num">20+</div>
-      <div class="impact-label">Schools Reached</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-num">4</div>
-      <div class="impact-label">Continents Reached</div>
-    </div>
-  </div>
-
-  <div class="testimonial-wrap">
-    <h3>What Students Are Saying</h3>
-
-    <div class="testimonial-grid">
-      <div class="testimonial-card">
-        <p>“NeuroView’s pre-made lectures and slide decks were perfect for helping me start my own neuroscience club at my school. Their guidance and support have been extraordinary, and have made running a club much easier!”</p>
-        <div class="testimonial-author">Samadhi U, Year 10 – MacRobertson Girls' High School</div>
-      </div>
-
-      <div class="testimonial-card">
-        <p>“NeuroView has helped me make my own club at my school, even though I had no prior knowledge.”</p>
-        <div class="testimonial-author">Zahraa Alahmad – Student from Gaza</div>
-      </div>
-    </div>
-  </div>
+<div class="hero">
+<canvas id="heroCanvas"></canvas>
+<div class="hero-content">
+<span class="hero-eyebrow">Student-led · Science-driven</span>
+<h1>Your brain on<br><em>NeuroView</em></h1>
+<p class="hero-sub">A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free — for everyone.</p>
+<div class="hero-btns">
+<button class="btn-primary" onclick="showPage('articles')">Read Articles</button>
+<button class="btn-ghost" onclick="showPage('resources')">Get Club Resources</button>
+</div>
+</div>
 </div>
 
-  <div class="section">
-    <div class="section-header">
-      <h2>Latest articles</h2>
-      <button class="view-all" onclick="showPage('articles')">View all →</button>
-    </div>
-    <div class="grid-3">
-      <a class="article-card" href="https://www.neuro-view.org/a-beginners-guide-to-bcis" target="_blank">
-        <span class="card-tag">BCI</span>
-        <h3>A Beginner's Guide to BCIs</h3>
-        <p>Control a robotic arm, play video games, or send messages — all with your mind. BCIs are going from sci-fi to reality.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
-      </a>
-      <a class="article-card" href="https://www.neuro-view.org/mind-reading-an-fmri-approach" target="_blank">
-        <span class="card-tag">Neuroimaging</span>
-        <h3>Mind Reading: An fMRI Approach</h3>
-        <p>New discoveries in neuroengineering are pushing telepathic communication closer to reality than ever before.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</div></div>
-      </a>
-      <a class="article-card" href="https://www.neuro-view.org/biocomputing" target="_blank">
-        <span class="card-tag">AI + Neuro</span>
-        <h3>Biocomputing & AGI</h3>
-        <p>What happens when you build a computer with living human brain cells? The implications for AGI are enormous.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
-      </a>
-    </div>
-  </div>
+<div class="stat-bar">
+<div class="stat-item">
+<div class="stat-num">6</div>
+<div class="stat-label">Articles published</div>
+</div>
+<div class="stat-item">
+<div class="stat-num">8</div>
+<div class="stat-label">Free lecture decks</div>
+</div>
+<div class="stat-item">
+<div class="stat-num">82%</div>
+<div class="stat-label">Americans unfamiliar with mild cognitive impairment</div>
+</div>
+</div>
 
-  <div class="section" style="padding-top:0">
-    <div class="section-header">
-      <h2>Featured videos</h2>
-      <button class="view-all" onclick="showPage('videos')">All videos →</button>
-    </div>
-    <div class="grid-2">
-      <a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
-        <div class="video-thumb">
-          <svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/>
-            <line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/>
-            <circle cx="100" cy="140" r="3" fill="#3C3489"/><circle cx="300" cy="135" r="3" fill="#3C3489"/>
-            <line x1="50" y1="90" x2="100" y2="140" stroke="#3C3489" stroke-width="1"/><line x1="250" y1="95" x2="300" y2="135" stroke="#3C3489" stroke-width="1"/>
-          </svg>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>fMRI: The Tech That Reads Your Mind</h3>
-          <p>Oliver Payne · NeuroView YouTube</p>
-        </div>
-      </a>
-      <a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
-        <div class="video-thumb">
-          <svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/>
-            <line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/>
-            <circle cx="200" cy="150" r="3" fill="#3C3489"/><line x1="200" y1="100" x2="200" y2="150" stroke="#3C3489" stroke-width="1"/>
-          </svg>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Biocomputing: When Neuroscience Meets Technology</h3>
-          <p>Joseph Sun · NeuroView YouTube</p>
-        </div>
-      </a>
-    </div>
-  </div>
+<div class="section">
+<div class="section-header">
+<h2>Latest articles</h2>
+<button class="view-all" onclick="showPage('articles')">View all →</button>
+</div>
+<div class="grid-3">
+<a class="article-card" href="https://www.neuro-view.org/a-beginners-guide-to-bcis" target="_blank">
+<span class="card-tag">BCI</span>
+<h3>A Beginner's Guide to BCIs</h3>
+<p>Control a robotic arm, play video games, or send messages — all with your mind. BCIs are going from sci-fi to reality.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
+</a>
+<a class="article-card" href="https://www.neuro-view.org/mind-reading-an-fmri-approach" target="_blank">
+<span class="card-tag">Neuroimaging</span>
+<h3>Mind Reading: An fMRI Approach</h3>
+<p>New discoveries in neuroengineering are pushing telepathic communication closer to reality than ever before.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</div></div>
+</a>
+<a class="article-card" href="https://www.neuro-view.org/biocomputing" target="_blank">
+<span class="card-tag">AI + Neuro</span>
+<h3>Biocomputing & AGI</h3>
+<p>What happens when you build a computer with living human brain cells? The implications for AGI are enormous.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
+</a>
+</div>
+</div>
 
-  <div class="mission-band">
-    <h2>Our mission</h2>
-    <p>Neuroscience shapes medicine, technology, and public policy — yet only 18% of Americans understand cognitive impairments. NeuroView exists to change that. No PhD required.</p>
-    <button class="btn-primary" onclick="showPage('articles')">Start exploring →</button>
-  </div>
+<div class="section" style="padding-top:0">
+<div class="section-header">
+<h2>Featured videos</h2>
+<button class="view-all" onclick="showPage('videos')">All videos →</button>
+</div>
+<div class="grid-2">
+<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<div class="video-thumb">
+<svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/>
+<line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/>
+<circle cx="100" cy="140" r="3" fill="#3C3489"/><circle cx="300" cy="135" r="3" fill="#3C3489"/>
+<line x1="50" y1="90" x2="100" y2="140" stroke="#3C3489" stroke-width="1"/><line x1="250" y1="95" x2="300" y2="135" stroke="#3C3489" stroke-width="1"/>
+</svg>
+<div class="play-btn"><div class="play-icon"></div></div>
+</div>
+<div class="video-info">
+<h3>fMRI: The Tech That Reads Your Mind</h3>
+<p>Oliver Payne · NeuroView YouTube</p>
+</div>
+</a>
+<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<div class="video-thumb">
+<svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+<circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/>
+<line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/>
+<circle cx="200" cy="150" r="3" fill="#3C3489"/><line x1="200" y1="100" x2="200" y2="150" stroke="#3C3489" stroke-width="1"/>
+</svg>
+<div class="play-btn"><div class="play-icon"></div></div>
+</div>
+<div class="video-info">
+<h3>Biocomputing: When Neuroscience Meets Technology</h3>
+<p>Joseph Sun · NeuroView YouTube</p>
+</div>
+</a>
+</div>
+</div>
 
-  <div class="footer">
-    <div>
-      <div class="footer-logo">Neuro<span>View</span></div>
-      <div class="footer-tagline">Student-led. Science-driven.</div>
-    </div>
-    <div class="footer-links">
-      <h4>Navigate</h4>
-      <a href="#" onclick="showPage('articles');return false;">Articles</a>
-      <a href="#" onclick="showPage('videos');return false;">Videos</a>
-      <a href="#" onclick="showPage('resources');return false;">Club Resources</a>
-      <a href="#" onclick="showPage('team');return false;">Team</a>
-    </div>
-    <div class="footer-links">
-      <h4>Connect</h4>
-      <a href="https://medium.com/@theneuroview" target="_blank">Medium</a>
-      <a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube</a>
-      <a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
-      <a href="tel:+16507851240">+1 (650) 785-1240</a>
-    </div>
-  </div>
-  <div class="footer-bottom">© 2024 NeuroView. All rights reserved.</div>
+<div class="mission-band">
+<h2>Our mission</h2>
+<p>Neuroscience shapes medicine, technology, and public policy — yet only 18% of Americans understand cognitive impairments. NeuroView exists to change that. No PhD required.</p>
+<button class="btn-primary" onclick="showPage('articles')">Start exploring →</button>
+</div>
+
+<div class="footer">
+<div>
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
+</div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="#" onclick="showPage('articles');return false;">Articles</a>
+<a href="#" onclick="showPage('videos');return false;">Videos</a>
+<a href="#" onclick="showPage('resources');return false;">Club Resources</a>
+<a href="#" onclick="showPage('team');return false;">Team</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</div>
+<div class="footer-bottom">© 2024 NeuroView. All rights reserved.</div>
 </div>
 
 <!-- ══════════════ ARTICLES ══════════════ -->
 <div class="page" id="page-articles">
-  <div class="page-header">
-    <h1>Articles</h1>
-    <p>Written by students, reviewed for scientific accuracy using peer-reviewed sources. No PhD required.</p>
-  </div>
-  <div class="search-wrap">
-    <input class="search-input" type="text" placeholder="Search articles..." id="articleSearch" oninput="filterArticles()">
-    <div class="filters">
-      <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
-      <button class="filter-btn" onclick="setFilter(this,'BCI')">BCI</button>
-      <button class="filter-btn" onclick="setFilter(this,'Neuroimaging')">Neuroimaging</button>
-      <button class="filter-btn" onclick="setFilter(this,'AI + Neuro')">AI + Neuro</button>
-      <button class="filter-btn" onclick="setFilter(this,'Neuroscience')">Neuroscience</button>
-      <button class="filter-btn" onclick="setFilter(this,'Personal')">Personal</button>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="grid-3" id="articles-grid">
-      <a class="article-card" data-tag="BCI" href="https://www.neuro-view.org/a-beginners-guide-to-bcis" target="_blank">
-        <span class="card-tag">BCI</span>
-        <h3>A Beginner's Guide to BCIs</h3>
-        <p>Imagine controlling a robotic arm, playing a video game, or sending messages — all using just your mind. BCIs are quickly making this a reality.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
-      </a>
-      <a class="article-card" data-tag="Personal" href="https://www.neuro-view.org/chinavsus" target="_blank">
-        <span class="card-tag">Personal</span>
-        <h3>From Foster City to Shenzhen</h3>
-        <p>Interning at biotech labs in both the US and China — I expected technical similarities. Science is universal, right? What surprised me were the differences.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
-      </a>
-      <a class="article-card" data-tag="Neuroimaging" href="https://www.neuro-view.org/mind-reading-an-fmri-approach" target="_blank">
-        <span class="card-tag">Neuroimaging</span>
-        <h3>Mind Reading: An fMRI Approach</h3>
-        <p>Have you ever wondered what it would be like to know what someone is thinking at any moment? A new discovery in neuroengineering is getting us closer.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</div></div>
-      </a>
-      <a class="article-card" data-tag="AI + Neuro" href="https://www.neuro-view.org/biocomputing" target="_blank">
-        <span class="card-tag">AI + Neuro</span>
-        <h3>Biocomputing: A Breakthrough in AGI</h3>
-        <p>Imagine a computer built not just from silicon, but from living human brain cells. Biocomputing has major implications for the race toward Artificial General Intelligence.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
-      </a>
-      <a class="article-card" data-tag="Neuroscience" href="https://www.neuro-view.org/neuroplasticity" target="_blank">
-        <span class="card-tag">Neuroscience</span>
-        <h3>What is Neuroplasticity?</h3>
-        <p>Your brain is not fixed. Neuroplasticity explains how experience, learning, and environment reshape neural circuits — throughout your entire life.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">FS</span>Finnegan Schoebel</div></div>
-      </a>
-      <a class="article-card" data-tag="Neuroscience" href="https://www.neuro-view.org/brain-death" target="_blank">
-        <span class="card-tag">Neuroscience</span>
-        <h3>What Does Your Brain Experience as You Die?</h3>
-        <p>Your heart stops. No more oxygen. But your brain isn't done yet — scientists have recorded brain activity up to 10 minutes after clinical death.</p>
-        <div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
-      </a>
-    </div>
-  </div>
-  <div class="footer">
-    <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-    <div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
-  </div>
+<div class="page-header">
+<h1>Articles</h1>
+<p>Written by students, reviewed for scientific accuracy using peer-reviewed sources. No PhD required.</p>
+</div>
+<div class="search-wrap">
+<input class="search-input" type="text" placeholder="Search articles..." id="articleSearch" oninput="filterArticles()">
+<div class="filters">
+<button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
+<button class="filter-btn" onclick="setFilter(this,'BCI')">BCI</button>
+<button class="filter-btn" onclick="setFilter(this,'Neuroimaging')">Neuroimaging</button>
+<button class="filter-btn" onclick="setFilter(this,'AI + Neuro')">AI + Neuro</button>
+<button class="filter-btn" onclick="setFilter(this,'Neuroscience')">Neuroscience</button>
+<button class="filter-btn" onclick="setFilter(this,'Personal')">Personal</button>
+</div>
+</div>
+<div class="section" style="padding-top:0">
+<div class="grid-3" id="articles-grid">
+<a class="article-card" data-tag="BCI" href="https://www.neuro-view.org/a-beginners-guide-to-bcis" target="_blank">
+<span class="card-tag">BCI</span>
+<h3>A Beginner's Guide to BCIs</h3>
+<p>Imagine controlling a robotic arm, playing a video game, or sending messages — all using just your mind. BCIs are quickly making this a reality.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
+</a>
+<a class="article-card" data-tag="Personal" href="https://www.neuro-view.org/chinavsus" target="_blank">
+<span class="card-tag">Personal</span>
+<h3>From Foster City to Shenzhen</h3>
+<p>Interning at biotech labs in both the US and China — I expected technical similarities. Science is universal, right? What surprised me were the differences.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
+</a>
+<a class="article-card" data-tag="Neuroimaging" href="https://www.neuro-view.org/mind-reading-an-fmri-approach" target="_blank">
+<span class="card-tag">Neuroimaging</span>
+<h3>Mind Reading: An fMRI Approach</h3>
+<p>Have you ever wondered what it would be like to know what someone is thinking at any moment? A new discovery in neuroengineering is getting us closer.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</div></div>
+</a>
+<a class="article-card" data-tag="AI + Neuro" href="https://www.neuro-view.org/biocomputing" target="_blank">
+<span class="card-tag">AI + Neuro</span>
+<h3>Biocomputing: A Breakthrough in AGI</h3>
+<p>Imagine a computer built not just from silicon, but from living human brain cells. Biocomputing has major implications for the race toward Artificial General Intelligence.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
+</a>
+<a class="article-card" data-tag="Neuroscience" href="https://www.neuro-view.org/neuroplasticity" target="_blank">
+<span class="card-tag">Neuroscience</span>
+<h3>What is Neuroplasticity?</h3>
+<p>Your brain is not fixed. Neuroplasticity explains how experience, learning, and environment reshape neural circuits — throughout your entire life.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">FS</span>Finnegan Schoebel</div></div>
+</a>
+<a class="article-card" data-tag="Neuroscience" href="https://www.neuro-view.org/brain-death" target="_blank">
+<span class="card-tag">Neuroscience</span>
+<h3>What Does Your Brain Experience as You Die?</h3>
+<p>Your heart stops. No more oxygen. But your brain isn't done yet — scientists have recorded brain activity up to 10 minutes after clinical death.</p>
+<div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div>
+</a>
+</div>
+</div>
+<div class="footer">
+<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+</div>
 </div>
 
 <!-- ══════════════ VIDEOS ══════════════ -->
 <div class="page" id="page-videos">
-  <div class="page-header">
-    <h1>Videos</h1>
-    <p>Visual explainers on neuroscience and BCI research, presented by the NeuroView team.</p>
-  </div>
-  <div class="section">
-    <div class="grid-2">
-      <a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
-        <div class="video-thumb">
-          <svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/>
-            <line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/>
-            <circle cx="100" cy="140" r="3" fill="#3C3489"/><line x1="50" y1="90" x2="100" y2="140" stroke="#3C3489" stroke-width="1"/>
-          </svg>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>fMRI: The Tech That Reads Your Mind</h3>
-          <p>Oliver Payne · Functional MRI, BOLD signal, brain imaging applications</p>
-        </div>
-      </a>
-      <a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
-        <div class="video-thumb">
-          <svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/>
-            <line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/>
-            <circle cx="200" cy="150" r="3" fill="#3C3489"/><line x1="200" y1="100" x2="200" y2="150" stroke="#3C3489" stroke-width="1"/>
-          </svg>
-          <div class="play-btn"><div class="play-icon"></div></div>
-        </div>
-        <div class="video-info">
-          <h3>Biocomputing: When Neuroscience Meets Technology</h3>
-          <p>Joseph Sun · Brain organoids, AI, implications for AGI</p>
-        </div>
-      </a>
-    </div>
-    <div class="yt-cta">
-      <div>
-        <h3>More on YouTube</h3>
-        <p>Subscribe to @the_neuroview for new videos on neuroscience, BCIs, and more.</p>
-      </div>
-      <a class="btn-sm" href="https://www.youtube.com/@the_neuroview" target="_blank">Visit our channel ↗</a>
-    </div>
-  </div>
-  <div class="footer">
-    <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-    <div class="footer-links"><a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube ↗</a><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
-  </div>
+<div class="page-header">
+<h1>Videos</h1>
+<p>Visual explainers on neuroscience and BCI research, presented by the NeuroView team.</p>
+</div>
+<div class="section">
+<div class="grid-2">
+<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<div class="video-thumb">
+<svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/>
+<line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/>
+<circle cx="100" cy="140" r="3" fill="#3C3489"/><line x1="50" y1="90" x2="100" y2="140" stroke="#3C3489" stroke-width="1"/>
+</svg>
+<div class="play-btn"><div class="play-icon"></div></div>
+</div>
+<div class="video-info">
+<h3>fMRI: The Tech That Reads Your Mind</h3>
+<p>Oliver Payne · Functional MRI, BOLD signal, brain imaging applications</p>
+</div>
+</a>
+<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<div class="video-thumb">
+<svg class="thumb-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+<circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/>
+<line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/>
+<circle cx="200" cy="150" r="3" fill="#3C3489"/><line x1="200" y1="100" x2="200" y2="150" stroke="#3C3489" stroke-width="1"/>
+</svg>
+<div class="play-btn"><div class="play-icon"></div></div>
+</div>
+<div class="video-info">
+<h3>Biocomputing: When Neuroscience Meets Technology</h3>
+<p>Joseph Sun · Brain organoids, AI, implications for AGI</p>
+</div>
+</a>
+</div>
+<div class="yt-cta">
+<div>
+<h3>More on YouTube</h3>
+<p>Subscribe to @the_neuroview for new videos on neuroscience, BCIs, and more.</p>
+</div>
+<a class="btn-sm" href="https://www.youtube.com/@the_neuroview" target="_blank">Visit our channel ↗</a>
+</div>
+</div>
+<div class="footer">
+<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<div class="footer-links"><a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube ↗</a><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+</div>
 </div>
 
 <!-- ══════════════ RESOURCES ══════════════ -->
 <div class="page" id="page-resources">
-  <div class="page-header">
-    <h1>Club Resources</h1>
-    <p>Free, ready-to-use lecture decks + Kahoots for neuroscience, immunology, and bioengineering. Perfect for launching or growing a science club.</p>
-  </div>
-  <div class="section">
-    <div class="diff-legend">
-      <div class="diff-item"><span class="diff-dot diff-green"></span>Introductory</div>
-      <div class="diff-item"><span class="diff-dot diff-yellow"></span>Intermediate</div>
-      <div class="diff-item"><span class="diff-dot diff-red"></span>Advanced</div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
+<div class="page-header">
+<h1>Club Resources</h1>
+<p>Free, ready-to-use lecture decks + Kahoots for neuroscience, immunology, and bioengineering. Perfect for launching or growing a science club.</p>
+</div>
+<div class="section">
+<div class="diff-legend">
+<div class="diff-item"><span class="diff-dot diff-green"></span>Introductory</div>
+<div class="diff-item"><span class="diff-dot diff-yellow"></span>Intermediate</div>
+<div class="diff-item"><span class="diff-dot diff-red"></span>Advanced</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
 
-      <div class="resource-card">
-        <span class="diff-dot diff-green"></span>
-        <div>
-          <h3>Lecture 1 — Cells of the Brain</h3>
-          <p>Neurons, astrocytes, oligodendrocytes, microglia, and endothelial cells — how each cell type shapes brain function, neural communication, and neurological disease.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/share/xray-stuff/3a02b938-c96c-4c5b-9d5a-967dfde5ac9d" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-green"></span>
+<div>
+<h3>Lecture 1 — Cells of the Brain</h3>
+<p>Neurons, astrocytes, oligodendrocytes, microglia, and endothelial cells — how each cell type shapes brain function, neural communication, and neurological disease.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/xray-stuff/3a02b938-c96c-4c5b-9d5a-967dfde5ac9d" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-red"></span>
-        <div>
-          <h3>Lecture 2 — What are Microglia?</h3>
-          <p>The brain's resident immune cells — surveillance, DAMPs, membrane asymmetry, protein aggregate clearance (Alzheimer's/Parkinson's), cytokine signaling, and chronic neuroinflammation.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/share/biofreak/24f8afb1-e845-4fa4-8373-17497a38c215" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-red"></span>
+<div>
+<h3>Lecture 2 — What are Microglia?</h3>
+<p>The brain's resident immune cells — surveillance, DAMPs, membrane asymmetry, protein aggregate clearance (Alzheimer's/Parkinson's), cytokine signaling, and chronic neuroinflammation.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/biofreak/24f8afb1-e845-4fa4-8373-17497a38c215" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-yellow"></span>
-        <div>
-          <h3>Lecture 3 — BCIs and the Foreign Body Response</h3>
-          <p>Why implanted brain-computer interfaces fail over time — microglial encapsulation, astrocyte scarring, signal degradation, and immunomodulation strategies for longer-lasting devices.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/details/c34d0755-54a1-4a33-aa29-1ada72fadcd0" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-yellow"></span>
+<div>
+<h3>Lecture 3 — BCIs and the Foreign Body Response</h3>
+<p>Why implanted brain-computer interfaces fail over time — microglial encapsulation, astrocyte scarring, signal degradation, and immunomodulation strategies for longer-lasting devices.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/details/c34d0755-54a1-4a33-aa29-1ada72fadcd0" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-red"></span>
-        <div>
-          <h3>Lecture 4 — Staining Techniques</h3>
-          <p>Immunohistochemistry (IHC) and immunofluorescence (IF) — how antibodies bind specific targets, fluorescent labeling, and how these techniques reveal neurons, glial cells, and markers of inflammation.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/share/ihc-if/51762252-487e-4436-963b-a85de21a0ddf" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-red"></span>
+<div>
+<h3>Lecture 4 — Staining Techniques</h3>
+<p>Immunohistochemistry (IHC) and immunofluorescence (IF) — how antibodies bind specific targets, fluorescent labeling, and how these techniques reveal neurons, glial cells, and markers of inflammation.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/ihc-if/51762252-487e-4436-963b-a85de21a0ddf" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-green"></span>
-        <div>
-          <h3>Lecture 5 — Intro to Research</h3>
-          <p>How to read a scientific paper like a professor — breaking down each section, evaluating methods and controls, identifying statistical relevance, and assessing credibility of primary literature.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/share/biochem-club/4ad79bc3-bc87-441e-9235-da6b7ddf9d73" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-green"></span>
+<div>
+<h3>Lecture 5 — Intro to Research</h3>
+<p>How to read a scientific paper like a professor — breaking down each section, evaluating methods and controls, identifying statistical relevance, and assessing credibility of primary literature.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/biochem-club/4ad79bc3-bc87-441e-9235-da6b7ddf9d73" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-yellow"></span>
-        <div>
-          <h3>Lecture 6 — What are Antioxidants?</h3>
-          <p>Reactive oxygen species, oxidative stress, neurodegeneration, and aging — and why antioxidant therapies are more complicated than popular science makes them sound.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/details/792cf26b-0bdc-453e-950e-123c89169683" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-yellow"></span>
+<div>
+<h3>Lecture 6 — What are Antioxidants?</h3>
+<p>Reactive oxygen species, oxidative stress, neurodegeneration, and aging — and why antioxidant therapies are more complicated than popular science makes them sound.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/details/792cf26b-0bdc-453e-950e-123c89169683" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-green"></span>
-        <div>
-          <h3>Lecture 7 — What is PCR?</h3>
-          <p>Polymerase chain reaction — denaturation, annealing, extension, and why heat-stable Taq polymerase changed molecular biology. Applications in virus detection, forensics, and genetic testing.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/share/pcr/358d4e70-394a-4734-b4db-5d40f32942cb" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-green"></span>
+<div>
+<h3>Lecture 7 — What is PCR?</h3>
+<p>Polymerase chain reaction — denaturation, annealing, extension, and why heat-stable Taq polymerase changed molecular biology. Applications in virus detection, forensics, and genetic testing.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/pcr/358d4e70-394a-4734-b4db-5d40f32942cb" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-      <div class="resource-card">
-        <span class="diff-dot diff-red"></span>
-        <div>
-          <h3>Lecture 8 — AI in Biotech</h3>
-          <p>Deep learning for protein structure prediction — why folding matters, how traditional methods struggled, and how AI tools like AlphaFold are accelerating drug discovery and biological research.</p>
-          <div class="resource-links">
-            <a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
-            <a class="res-link" href="https://create.kahoot.it/share/deep-learning-protein-structure-prediction/a51468ef-8978-46b6-8688-87a212593917" target="_blank">Kahoot ↗</a>
-          </div>
-        </div>
-      </div>
+<div class="resource-card">
+<span class="diff-dot diff-red"></span>
+<div>
+<h3>Lecture 8 — AI in Biotech</h3>
+<p>Deep learning for protein structure prediction — why folding matters, how traditional methods struggled, and how AI tools like AlphaFold are accelerating drug discovery and biological research.</p>
+<div class="resource-links">
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/deep-learning-protein-structure-prediction/a51468ef-8978-46b6-8688-87a212593917" target="_blank">Kahoot ↗</a>
+</div>
+</div>
+</div>
 
-    </div>
+</div>
 
-    <div class="cta-band" style="margin:2rem 0 0">
-      <div>
-        <h3>Want more resources?</h3>
-        <p>Fill out the form on the Start a Club page and we'll send you additional materials.</p>
-      </div>
-      <button class="btn-sm" onclick="showPage('start')">Start a Club →</button>
-    </div>
-  </div>
-  <div class="footer">
-    <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-    <div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
-  </div>
+<div class="cta-band" style="margin:2rem 0 0">
+<div>
+<h3>Want more resources?</h3>
+<p>Fill out the form on the Start a Club page and we'll send you additional materials.</p>
+</div>
+<button class="btn-sm" onclick="showPage('start')">Start a Club →</button>
+</div>
+</div>
+<div class="footer">
+<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+</div>
 </div>
 
 <!-- ══════════════ TEAM ══════════════ -->
 <div class="page" id="page-team">
-  <div class="page-header">
-    <h1>Our team</h1>
-    <p>Student researchers, writers, and educators making neuroscience accessible from Palo Alto and beyond.</p>
-  </div>
-  <div class="section">
-    <div class="team-grid">
+<div class="page-header">
+<h1>Our team</h1>
+<p>Student researchers, writers, and educators making neuroscience accessible from Palo Alto and beyond.</p>
+</div>
+<div class="section">
+<div class="team-grid">
 
-      <a class="team-card" href="https://www.neuro-view.org/team/joseph-sun" target="_blank">
+<a class="team-card" href="https://www.neuro-view.org/team/joseph-sun" target="_blank">
+        <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none'">
         <img class="team-photo" src="josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none'">
-        <h3>Joseph Sun</h3>
-        <div class="role">Founder + President</div>
-        <div class="school">Palo Alto High School</div>
-        <span class="team-tag">Writer</span>
-      </a>
+<h3>Joseph Sun</h3>
+<div class="role">Founder + President</div>
+<div class="school">Palo Alto High School</div>
+<span class="team-tag">Writer</span>
+</a>
 
-      <a class="team-card" href="https://www.neuro-view.org/team/oliver-payne" target="_blank">
+<a class="team-card" href="https://www.neuro-view.org/team/oliver-payne" target="_blank">
+        <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none'">
         <img class="team-photo" src="oliverpayne.jpg" alt="Oliver Payne" onerror="this.style.display='none'">
-        <h3>Oliver Payne</h3>
-        <div class="role">Member</div>
-        <div class="school">Palo Alto High School</div>
-        <span class="team-tag">Writer · Video</span>
-      </a>
+<h3>Oliver Payne</h3>
+<div class="role">Member</div>
+<div class="school">Palo Alto High School</div>
+<span class="team-tag">Writer · Video</span>
+</a>
 
-      <a class="team-card" href="https://www.neuro-view.org/team/finnegan-schoebel" target="_blank">
+<a class="team-card" href="https://www.neuro-view.org/team/finnegan-schoebel" target="_blank">
+        <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none'">
         <img class="team-photo" src="finneganschoebel.jpg" alt="Finnegan Schoebel" onerror="this.style.display='none'">
-        <h3>Finnegan Schoebel</h3>
-        <div class="role">Member</div>
-        <div class="school">Palo Alto High School</div>
-        <span class="team-tag">Writer</span>
-      </a>
+<h3>Finnegan Schoebel</h3>
+<div class="role">Member</div>
+<div class="school">Palo Alto High School</div>
+<span class="team-tag">Writer</span>
+</a>
 
-      <a class="team-card" href="https://www.neuro-view.org/team/david-wu" target="_blank">
+<a class="team-card" href="https://www.neuro-view.org/team/david-wu" target="_blank">
+        <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSGPIxa0WBpLLIwOjz7TH8po5UHBNZB8Jmc5C2KtOmonQHQERbGmg1QKRo6bmNqeZMuFDzCv67tZ4HaQzMfK058Y4ztec_vQbv2YiaV_c3gmE4jLNZ6K8Yv-PyYK_6vhpt2q5ZZIqp8D4IOiYFr2VV4TM2MacMcLDarTEj7GW_s9uTD3QbRJfFYcDbtLUsRYcuLP6M4Q1hujWnLbqvrP82JUr9KhImQR44dMik=w1280" alt="David Wu" onerror="this.style.display='none'">
         <img class="team-photo" src="davidwu.png" alt="David Wu" onerror="this.style.display='none'">
-        <h3>David Wu</h3>
-        <div class="role">Outreach Manager</div>
-        <div class="school">Palo Alto High School</div>
-        <span class="team-tag">Outreach</span>
-      </a>
+<h3>David Wu</h3>
+<div class="role">Outreach Manager</div>
+<div class="school">Palo Alto High School</div>
+<span class="team-tag">Outreach</span>
+</a>
 
-      <a class="team-card" href="https://www.neuro-view.org/team/khai-gordon" target="_blank">
+<a class="team-card" href="https://www.neuro-view.org/team/khai-gordon" target="_blank">
+        <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRQupfDLraPIo9_4lueTq4xsLabeby7HwWUMvB8FrOJBTpPtFqfPBqfwEvX77jMPtA7hI44r4hCRsnusKbzwqqD0SDf1iDOmEJ-wYxZr0sFOSjh4qOkLN5LLRYryxiH_boZmnK058xq96Lfphvya_TiGKbSHJbj3EnH5Q0yo3pZvBsM45-10dFRhfWKcgymWQRCoBRvXwEaq_VWmlBxD9rVyQoZk9BstjtYSHY=w1280" alt="Khai Gordon" onerror="this.style.display='none'">
         <img class="team-photo" src="khaigordon.jpg" alt="Khai Gordon" onerror="this.style.display='none'">
-        <h3>Khai Gordon</h3>
-        <div class="role">Outreach Agent</div>
-        <div class="school">Palo Alto High School</div>
-        <span class="team-tag">Outreach</span>
-      </a>
+<h3>Khai Gordon</h3>
+<div class="role">Outreach Agent</div>
+<div class="school">Palo Alto High School</div>
+<span class="team-tag">Outreach</span>
+</a>
 
-    </div>
+</div>
 
-    <div class="cta-band" style="margin:2rem 0 0">
-      <div>
-        <h3>Join the team</h3>
-        <p>Writing, content creation, and outreach roles are open.</p>
-      </div>
-      <button class="btn-sm" onclick="showPage('apply')">Apply now →</button>
-    </div>
-  </div>
-  <div class="footer">
-    <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-    <div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
-  </div>
+<div class="cta-band" style="margin:2rem 0 0">
+<div>
+<h3>Join the team</h3>
+<p>Writing, content creation, and outreach roles are open.</p>
+</div>
+<button class="btn-sm" onclick="showPage('apply')">Apply now →</button>
+</div>
+</div>
+<div class="footer">
+<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+</div>
 </div>
 
 <!-- ══════════════ START A CLUB ══════════════ -->
 <div class="page" id="page-start">
-  <div class="start-hero">
-    <h1>Start a neuroscience club</h1>
-    <p>No experience required. We provide everything you need to launch, run, and grow a science club at your school — for free.</p>
-  </div>
-  <div class="steps-grid">
-    <div class="step-card">
-      <div class="step-num">01</div>
-      <h3>Fill out the form</h3>
-      <p>Tell us about your school and what kind of club you want to start. We'll reach out within a few days.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">02</div>
-      <h3>Get your resources</h3>
-      <p>We send free slide decks, Kahoots, and materials tailored to your club's focus and experience level.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">03</div>
-      <h3>Run your first meeting</h3>
-      <p>Use our ready-to-go lectures to run an engaging first session. We're here for any questions you have.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">04</div>
-      <h3>Grow your chapter</h3>
-      <p>Keep getting new materials as you grow. Join our growing network of student-run neuro clubs across the US.</p>
-    </div>
-  </div>
-  <div style="padding:0 2rem 3rem">
-    <div class="cta-band">
-      <div>
-        <h3>Ready to get started?</h3>
-        <p>Email us and we'll send you everything you need to launch your club.</p>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=I want to start a NeuroView club">Email us ↗</a>
-        <button class="btn-sm-outline" onclick="showPage('resources')">Browse resources first →</button>
-      </div>
-    </div>
-  </div>
-  <div class="footer">
-    <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-    <div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
-  </div>
+<div class="start-hero">
+<h1>Start a neuroscience club</h1>
+<p>No experience required. We provide everything you need to launch, run, and grow a science club at your school — for free.</p>
+</div>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-num">01</div>
+<h3>Fill out the form</h3>
+<p>Tell us about your school and what kind of club you want to start. We'll reach out within a few days.</p>
+</div>
+<div class="step-card">
+<div class="step-num">02</div>
+<h3>Get your resources</h3>
+<p>We send free slide decks, Kahoots, and materials tailored to your club's focus and experience level.</p>
+</div>
+<div class="step-card">
+<div class="step-num">03</div>
+<h3>Run your first meeting</h3>
+<p>Use our ready-to-go lectures to run an engaging first session. We're here for any questions you have.</p>
+</div>
+<div class="step-card">
+<div class="step-num">04</div>
+<h3>Grow your chapter</h3>
+<p>Keep getting new materials as you grow. Join our growing network of student-run neuro clubs across the US.</p>
+</div>
+</div>
+<div style="padding:0 2rem 3rem">
+<div class="cta-band">
+<div>
+<h3>Ready to get started?</h3>
+<p>Email us and we'll send you everything you need to launch your club.</p>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=I want to start a NeuroView club">Email us ↗</a>
+<button class="btn-sm-outline" onclick="showPage('resources')">Browse resources first →</button>
+</div>
+</div>
+</div>
+<div class="footer">
+<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+</div>
 </div>
 
 <!-- ══════════════ APPLY ══════════════ -->
 <div class="page" id="page-apply">
-  <div class="apply-wrap">
-    <h1>Apply to join our team</h1>
-    <p>We're always looking for curious students who want to make neuroscience accessible. No prior experience required — just genuine interest and a willingness to learn.</p>
-    <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--text-faint);margin-bottom:12px">Open roles</div>
-    <div class="roles-list">
-      <div class="role-item"><span class="role-dot"></span>Article writer</div>
-      <div class="role-item"><span class="role-dot"></span>Content creator / video</div>
-      <div class="role-item"><span class="role-dot"></span>Club outreach coordinator</div>
-      <div class="role-item"><span class="role-dot"></span>Graphic design</div>
-    </div>
-    <a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=NeuroView Team Application" style="display:inline-block;width:100%;text-align:center">Apply via email ↗</a>
-    <div class="contact-info">
-      Or reach us at <a href="tel:+16507851240">+1 (650) 785-1240</a>
-    </div>
-  </div>
-  <div class="footer">
-    <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-    <div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
-  </div>
+<div class="apply-wrap">
+<h1>Apply to join our team</h1>
+<p>We're always looking for curious students who want to make neuroscience accessible. No prior experience required — just genuine interest and a willingness to learn.</p>
+<div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--text-faint);margin-bottom:12px">Open roles</div>
+<div class="roles-list">
+<div class="role-item"><span class="role-dot"></span>Article writer</div>
+<div class="role-item"><span class="role-dot"></span>Content creator / video</div>
+<div class="role-item"><span class="role-dot"></span>Club outreach coordinator</div>
+<div class="role-item"><span class="role-dot"></span>Graphic design</div>
+</div>
+<a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=NeuroView Team Application" style="display:inline-block;width:100%;text-align:center">Apply via email ↗</a>
+<div class="contact-info">
+Or reach us at <a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</div>
+<div class="footer">
+<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+</div>
 </div>
 
 <script>
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  const nb = document.getElementById('nav-' + id);
-  if (nb) nb.classList.add('active');
-  window.scrollTo(0, 0);
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+document.getElementById('page-' + id).classList.add('active');
+const nb = document.getElementById('nav-' + id);
+if (nb) nb.classList.add('active');
+window.scrollTo(0, 0);
 }
 
 let activeFilter = 'all';
 function setFilter(el, tag) {
-  document.querySelectorAll('.filter-btn').forEach(f => f.classList.remove('active'));
-  el.classList.add('active');
-  activeFilter = tag;
-  filterArticles();
+document.querySelectorAll('.filter-btn').forEach(f => f.classList.remove('active'));
+el.classList.add('active');
+activeFilter = tag;
+filterArticles();
 }
 function filterArticles() {
-  const q = document.getElementById('articleSearch').value.toLowerCase();
-  document.querySelectorAll('#articles-grid .article-card').forEach(card => {
-    const tagMatch = activeFilter === 'all' || card.dataset.tag === activeFilter;
-    const textMatch = card.innerText.toLowerCase().includes(q);
-    card.style.display = tagMatch && textMatch ? '' : 'none';
-  });
+const q = document.getElementById('articleSearch').value.toLowerCase();
+document.querySelectorAll('#articles-grid .article-card').forEach(card => {
+const tagMatch = activeFilter === 'all' || card.dataset.tag === activeFilter;
+const textMatch = card.innerText.toLowerCase().includes(q);
+card.style.display = tagMatch && textMatch ? '' : 'none';
+});
 }
 
 /* ── NEURAL CANVAS ANIMATION ── */
 (function() {
-  const canvas = document.getElementById('heroCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let nodes = [], W, H, raf;
+const canvas = document.getElementById('heroCanvas');
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+let nodes = [], W, H, raf;
 
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
+function resize() {
+W = canvas.width = canvas.offsetWidth;
+H = canvas.height = canvas.offsetHeight;
+}
 
-  function init() {
-    nodes = [];
-    const count = Math.floor((W * H) / 14000);
-    for (let i = 0; i < count; i++) {
-      nodes.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 2.5 + 1.5,
-        pulse: Math.random() * Math.PI * 2
-      });
-    }
-  }
+function init() {
+nodes = [];
+const count = Math.floor((W * H) / 14000);
+for (let i = 0; i < count; i++) {
+nodes.push({
+x: Math.random() * W,
+y: Math.random() * H,
+vx: (Math.random() - 0.5) * 0.4,
+vy: (Math.random() - 0.5) * 0.4,
+r: Math.random() * 2.5 + 1.5,
+pulse: Math.random() * Math.PI * 2
+});
+}
+}
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    const t = Date.now() * 0.001;
+function draw() {
+ctx.clearRect(0, 0, W, H);
+const t = Date.now() * 0.001;
 
-    nodes.forEach(n => {
-      n.x += n.vx;
-      n.y += n.vy;
-      if (n.x < -10) n.x = W + 10;
-      if (n.x > W + 10) n.x = -10;
-      if (n.y < -10) n.y = H + 10;
-      if (n.y > H + 10) n.y = -10;
-    });
+nodes.forEach(n => {
+n.x += n.vx;
+n.y += n.vy;
+if (n.x < -10) n.x = W + 10;
+if (n.x > W + 10) n.x = -10;
+if (n.y < -10) n.y = H + 10;
+if (n.y > H + 10) n.y = -10;
+});
 
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x;
-        const dy = nodes[i].y - nodes[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          const alpha = (1 - dist / 130) * 0.18;
-          ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = `rgba(127,119,221,${alpha})`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
-      }
-    }
+for (let i = 0; i < nodes.length; i++) {
+for (let j = i + 1; j < nodes.length; j++) {
+const dx = nodes[i].x - nodes[j].x;
+const dy = nodes[i].y - nodes[j].y;
+const dist = Math.sqrt(dx * dx + dy * dy);
+if (dist < 130) {
+const alpha = (1 - dist / 130) * 0.18;
+ctx.beginPath();
+ctx.moveTo(nodes[i].x, nodes[i].y);
+ctx.lineTo(nodes[j].x, nodes[j].y);
+ctx.strokeStyle = `rgba(127,119,221,${alpha})`;
+ctx.lineWidth = 0.8;
+ctx.stroke();
+}
+}
+}
 
-    nodes.forEach(n => {
-      const pulse = Math.sin(t + n.pulse) * 0.5 + 0.5;
-      const alpha = 0.3 + pulse * 0.35;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(175,169,236,${alpha})`;
-      ctx.fill();
-    });
+nodes.forEach(n => {
+const pulse = Math.sin(t + n.pulse) * 0.5 + 0.5;
+const alpha = 0.3 + pulse * 0.35;
+ctx.beginPath();
+ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+ctx.fillStyle = `rgba(175,169,236,${alpha})`;
+ctx.fill();
+});
 
-    raf = requestAnimationFrame(draw);
-  }
+raf = requestAnimationFrame(draw);
+}
 
-  resize();
-  init();
-  draw();
-  window.addEventListener('resize', () => { resize(); init(); });
+resize();
+init();
+draw();
+window.addEventListener('resize', () => { resize(); init(); });
 })();
 </script>
 </body>
