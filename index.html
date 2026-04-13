@@ -656,9 +656,160 @@ body {
 
 /* Resources grid layout */
 .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+/* ═══════════════════════════════════════════
+   SHAZAM ANIMATIONS
+═══════════════════════════════════════════ */
+
+/* ─── SCROLL PROGRESS BAR ─── */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--purple-400), var(--purple-600), var(--purple-800));
+  transition: width 0.05s linear;
+  pointer-events: none;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─── PAGE TRANSITION OVERLAY ─── */
+#page-veil {
+  position: fixed; inset: 0; z-index: 9998;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+#page-veil.out { opacity: 1; pointer-events: all; }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+              transform 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* stagger delays for children — JS will set inline delays */
+
+/* ─── NEURAL PULSE: card hover glow ─── */
+.article-card, .video-card, .resource-card, .team-card, .step-card {
+  position: relative;
+}
+.article-card::after, .video-card::after, .team-card::after {
+  content: '';
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  opacity: 0;
+  box-shadow: 0 0 0 2px var(--purple-400), 0 0 18px 2px rgba(127,119,221,0.22);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.article-card:hover::after, .video-card:hover::after, .team-card:hover::after {
+  opacity: 1;
+  animation: neuralPulse 1.6s ease infinite;
+}
+@keyframes neuralPulse {
+  0%,100% { box-shadow: 0 0 0 2px var(--purple-400), 0 0 14px 2px rgba(127,119,221,0.18); }
+  50%      { box-shadow: 0 0 0 2px var(--purple-200), 0 0 28px 4px rgba(127,119,221,0.35); }
+}
+
+/* ─── CARD IMAGE ZOOM on hover ─── */
+.article-cover, .lecture-cover, .video-thumb img {
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
+}
+.article-card:hover .article-cover,
+.resource-card:hover .lecture-cover,
+.video-card:hover .video-thumb img {
+  transform: scale(1.07);
+}
+
+/* ─── TEAM CARD: avatar glow ─── */
+.team-card:hover .team-photo {
+  border-color: var(--purple-400);
+  box-shadow: 0 0 0 3px rgba(127,119,221,0.25), 0 0 20px rgba(127,119,221,0.3);
+  transform: scale(1.05);
+  transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+.team-photo {
+  transition: all 0.35s ease;
+}
+
+/* ─── MAGNETIC BUTTON ─── */
+.btn-magnetic {
+  display: inline-block;
+  will-change: transform;
+  transition: transform 0.15s cubic-bezier(0.22,1,0.36,1), background 0.15s;
+}
+
+/* ─── FLOATING PARTICLES (behind hero, lightweight) ─── */
+.hero-particles {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+}
+
+/* ─── STAT NUMBER ─── */
+.stat-num {
+  transition: color 0.3s;
+}
+
+/* ─── SYNAPSE SPARK on click ─── */
+@keyframes sparkRipple {
+  0%   { transform: scale(0); opacity: 0.7; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+.spark-ring {
+  position: absolute;
+  border-radius: 50%;
+  width: 60px; height: 60px;
+  margin-left: -30px; margin-top: -30px;
+  border: 2px solid var(--purple-400);
+  pointer-events: none;
+  animation: sparkRipple 0.6s cubic-bezier(0.22,1,0.36,1) both;
+  z-index: 10;
+}
+
+/* ─── MISSION BAND text reveal ─── */
+.mission-band h2, .mission-band p, .mission-band .btn-primary {
+  /* handled by reveal class, added via JS */
+}
+
+/* ─── STEP CARDS: icon pulse ─── */
+.step-num {
+  transition: color 0.3s, transform 0.3s;
+}
+.step-card:hover .step-num {
+  color: var(--purple-400);
+  transform: scale(1.08);
+}
+
+/* ─── NAV entrance ─── */
+.nav {
+  animation: navSlideDown 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes navSlideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* ─── ROLE ITEMS stagger ─── */
+.role-item {
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.role-item:hover {
+  border-color: var(--purple-200);
+  background: var(--purple-50);
+  transform: translateX(4px);
+}
+
 </style>
 </head>
 <body>
+<div id="scroll-progress"></div>
+<div id="page-veil"></div>
 
 <!-- ══════════════ ARTICLE READER OVERLAY ══════════════ -->
 <div class="article-reader" id="articleReader">
@@ -694,27 +845,27 @@ body {
 <h1>Your brain on<br><em>NeuroView</em></h1>
 <p class="hero-sub">A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free — for everyone.</p>
 <div class="hero-btns">
-<button class="btn-primary" onclick="showPage('articles')">Read Articles</button>
-<button class="btn-ghost" onclick="showPage('resources')">Get Club Resources</button>
+<button class="btn-primary btn-magnetic" onclick="showPage('articles')">Read Articles</button>
+<button class="btn-ghost btn-magnetic" onclick="showPage('resources')">Get Club Resources</button>
 </div>
 </div>
 </div>
 
 <div class="stat-bar">
-<div class="stat-item"><div class="stat-num">40+</div><div class="stat-label">Presentations and Lectures Made</div></div>
-<div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">Schools Reached</div></div>
-<div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Continents Reached</div></div>
+<div class="stat-item reveal" data-delay="0"><div class="stat-num" data-count="40" data-suffix="+">0+</div><div class="stat-label">Presentations and Lectures Made</div></div>
+<div class="stat-item reveal" data-delay="120"><div class="stat-num" data-count="20" data-suffix="+">0+</div><div class="stat-label">Schools Reached</div></div>
+<div class="stat-item reveal" data-delay="240"><div class="stat-num" data-count="4" data-suffix="">0</div><div class="stat-label">Continents Reached</div></div>
 </div>
 
 <div class="section">
-<div class="section-header">
+<div class="section-header reveal">
 <h2>Latest articles</h2>
 <button class="view-all" onclick="showPage('articles')">View all →</button>
 </div>
 <div class="grid-3">
 
-<div class="article-card" onclick="openArticle('bcis')">
-<img class="article-cover" src="images/cover-bcis.jpg" alt="BCIs cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<div class="article-card reveal" data-delay="0" onclick="openArticle('bcis')">
+<img class="article-cover" src="images/cover-bcis.svg" alt="BCIs cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><circle cx="80" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="60" r="30" fill="none" stroke="#7F77DD" stroke-width="1.5"/><circle cx="320" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><line x1="80" y1="80" x2="200" y2="60" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="60" x2="320" y2="80" stroke="#534AB7" stroke-width="1.5"/></svg>
 </div>
@@ -726,8 +877,8 @@ body {
 </div>
 </div>
 
-<div class="article-card" onclick="openArticle('fmri')">
-<img class="article-cover" src="images/cover-fmri.jpg" alt="fMRI cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<div class="article-card reveal" data-delay="120" onclick="openArticle('fmri')">
+<img class="article-cover" src="images/cover-fmri.svg" alt="fMRI cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><ellipse cx="200" cy="80" rx="100" ry="60" fill="none" stroke="#7F77DD" stroke-width="1.5"/><ellipse cx="200" cy="80" rx="60" ry="35" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="15" fill="#534AB7" opacity="0.5"/></svg>
 </div>
@@ -739,8 +890,8 @@ body {
 </div>
 </div>
 
-<div class="article-card" onclick="openArticle('biocomputing')">
-<img class="article-cover" src="images/cover-biocomputing.jpg" alt="Biocomputing cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<div class="article-card reveal" data-delay="240" onclick="openArticle('biocomputing')">
+<img class="article-cover" src="images/cover-biocomputing.svg" alt="Biocomputing cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><rect x="60" y="40" width="80" height="80" rx="12" fill="none" stroke="#534AB7" stroke-width="1.5"/><rect x="260" y="40" width="80" height="80" rx="12" fill="none" stroke="#7F77DD" stroke-width="1.5"/><path d="M140 80 Q200 20 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 140 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="8" fill="#534AB7" opacity="0.7"/></svg>
 </div>
@@ -761,9 +912,9 @@ body {
 <button class="view-all" onclick="showPage('videos')">All videos →</button>
 </div>
 <div class="grid-2">
-<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="0" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-fmri.jpg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
+<img src="images/thumb-fmri.svg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
 <svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/><line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/></svg>
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
@@ -772,9 +923,9 @@ body {
 <p>Oliver Payne · NeuroView YouTube</p>
 </div>
 </a>
-<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="130" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-biocomputing.jpg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
+<img src="images/thumb-biocomputing.svg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
 <svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/><line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/></svg>
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
@@ -787,9 +938,9 @@ body {
 </div>
 
 <div class="mission-band">
-<h2>Our mission</h2>
-<p>Neuroscience shapes medicine, technology, and public policy — yet only 18% of Americans understand cognitive impairments. NeuroView exists to change that. No PhD required.</p>
-<button class="btn-primary" onclick="showPage('articles')">Start exploring →</button>
+<h2 class="reveal">Our mission</h2>
+<p class="reveal" data-delay="120">Neuroscience shapes medicine, technology, and public policy — yet only 18% of Americans understand cognitive impairments. NeuroView exists to change that. No PhD required.</p>
+<button class="btn-primary btn-magnetic" onclick="showPage('articles')">Start exploring →</button>
 </div>
 
 <div class="footer">
@@ -805,7 +956,7 @@ body {
 <h4>Connect</h4>
 <a href="https://medium.com/@theneuroview" target="_blank">Medium</a>
 <a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube</a>
-<a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
 <a href="tel:+16507851240">+1 (650) 785-1240</a>
 </div>
 </div>
@@ -833,37 +984,37 @@ body {
 <div class="grid-3" id="articles-grid">
 
 <div class="article-card" data-tag="BCI" onclick="openArticle('bcis')">
-<img class="article-cover" src="images/cover-bcis.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-bcis.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="80" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="320" cy="80" r="40" fill="none" stroke="#7F77DD" stroke-width="1.5"/><line x1="80" y1="80" x2="320" y2="80" stroke="#534AB7" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag">BCI</span><h3>A Beginner's Guide to BCIs</h3><p>Imagine controlling a robotic arm, playing a video game, or sending messages — all using just your mind. BCIs are quickly making this a reality.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Personal" onclick="openArticle('chinavsus')">
-<img class="article-cover" src="images/cover-chinavsus.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-chinavsus.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="120" cy="80" r="50" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="280" cy="80" r="50" fill="none" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag">Personal</span><h3>From Foster City to Shenzhen</h3><p>Interning at biotech labs in both the US and China — I expected technical similarities. Science is universal, right? What surprised me were the differences.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroimaging" onclick="openArticle('fmri')">
-<img class="article-cover" src="images/cover-fmri.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-fmri.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><ellipse cx="200" cy="80" rx="100" ry="60" fill="none" stroke="#7F77DD" stroke-width="1.5"/><ellipse cx="200" cy="80" rx="60" ry="35" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="15" fill="#534AB7" opacity="0.5"/></svg></div>
 <div class="article-body"><span class="card-tag">Neuroimaging</span><h3>Mind Reading: An fMRI Approach</h3><p>Have you ever wondered what it would be like to know what someone is thinking at any moment? A new discovery in neuroengineering is getting us closer.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</div></div></div>
 </div>
 
 <div class="article-card" data-tag="AI + Neuro" onclick="openArticle('biocomputing')">
-<img class="article-cover" src="images/cover-biocomputing.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-biocomputing.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><rect x="60" y="40" width="80" height="80" rx="12" fill="none" stroke="#534AB7" stroke-width="1.5"/><rect x="260" y="40" width="80" height="80" rx="12" fill="none" stroke="#7F77DD" stroke-width="1.5"/><path d="M140 80 Q200 20 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 140 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag">AI + Neuro</span><h3>Biocomputing: A Breakthrough in AGI</h3><p>Imagine a computer built not just from silicon, but from living human brain cells. Biocomputing has major implications for the race toward Artificial General Intelligence.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroscience" onclick="openArticle('neuroplasticity')">
-<img class="article-cover" src="images/cover-neuroplasticity.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-neuroplasticity.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><path d="M50 80 Q100 40 150 80 Q200 120 250 80 Q300 40 350 80" fill="none" stroke="#7F77DD" stroke-width="2"/><path d="M50 100 Q100 60 150 100 Q200 140 250 100 Q300 60 350 100" fill="none" stroke="#534AB7" stroke-width="1.5" opacity="0.6"/></svg></div>
 <div class="article-body"><span class="card-tag">Neuroscience</span><h3>What is Neuroplasticity?</h3><p>Your brain is not fixed. Neuroplasticity explains how experience, learning, and environment reshape neural circuits — throughout your entire life.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">FS</span>Finnegan Schoebel</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroscience" onclick="openArticle('brain-death')">
-<img class="article-cover" src="images/cover-brain-death.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-brain-death.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><path d="M200 30 Q280 30 300 90 Q320 150 200 150 Q80 150 100 90 Q120 30 200 30Z" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="90" r="8" fill="#7F77DD" opacity="0.6"/></svg></div>
 <div class="article-body"><span class="card-tag">Neuroscience</span><h3>What Does Your Brain Experience as You Die?</h3><p>Your heart stops. No more oxygen. But your brain isn't done yet — scientists have recorded brain activity up to 10 minutes after clinical death.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
@@ -872,7 +1023,7 @@ body {
 </div>
 <div class="footer">
 <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
 </div>
 </div>
 
@@ -885,9 +1036,9 @@ body {
 <div class="section">
 <div class="grid-2">
 
-<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="260" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-fmri.jpg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
+<img src="images/thumb-fmri.svg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
 <svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/><line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/></svg>
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
@@ -897,9 +1048,9 @@ body {
 </div>
 </a>
 
-<a class="video-card" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="390" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-biocomputing.jpg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
+<img src="images/thumb-biocomputing.svg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
 <svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/><line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/></svg>
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
@@ -917,7 +1068,7 @@ body {
 </div>
 <div class="footer">
 <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube ↗</a><a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a></div>
+<div class="footer-links"><a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube ↗</a><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
 </div>
 </div>
 
@@ -935,28 +1086,28 @@ body {
 </div>
 <div class="resources-grid">
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="0">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-1-cells.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-1-cells.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">01</span>
   <span class="lecture-icon">🧠</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-green"></span>
 <div>
-<h3>Lecture 1 — Cells of the Brain</h3>
+<h3>LECTURE_1_MARKER</h3>
 <p>Neurons, astrocytes, oligodendrocytes, microglia, and endothelial cells — how each cell type shapes brain function, neural communication, and neurological disease.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1G5o9main2SsqgvBTSoEpeDPEsD9q10YfYWBSbk3o8hk/edit?usp=sharing" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/share/xray-stuff/3a02b938-c96c-4c5b-9d5a-967dfde5ac9d" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="90">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-2-microglia.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-2-microglia.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">02</span>
   <span class="lecture-icon">🔬</span>
 </div>
@@ -966,16 +1117,16 @@ body {
 <h3>Lecture 2 — What are Microglia?</h3>
 <p>The brain's resident immune cells — surveillance, DAMPs, membrane asymmetry, protein aggregate clearance (Alzheimer's/Parkinson's), cytokine signaling, and chronic neuroinflammation.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/13Qsyqi0fvgTF4YcunWCKOZeD0a-va6dZhEZuIo3ym-I/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/share/biofreak/24f8afb1-e845-4fa4-8373-17497a38c215" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="180">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-3-bci.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-3-bci.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">03</span>
   <span class="lecture-icon">⚡</span>
 </div>
@@ -985,16 +1136,16 @@ body {
 <h3>Lecture 3 — BCIs and the Foreign Body Response</h3>
 <p>Why implanted brain-computer interfaces fail over time — microglial encapsulation, astrocyte scarring, signal degradation, and immunomodulation strategies for longer-lasting devices.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/14VLy6DvsxzHky4UDcOWIMVCeByIv1VZIQueKdCOF6fU/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/details/c34d0755-54a1-4a33-aa29-1ada72fadcd0" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="270">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-4-staining.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-4-staining.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">04</span>
   <span class="lecture-icon">🎨</span>
 </div>
@@ -1004,16 +1155,16 @@ body {
 <h3>Lecture 4 — Staining Techniques</h3>
 <p>Immunohistochemistry (IHC) and immunofluorescence (IF) — how antibodies bind specific targets, fluorescent labeling, and how these techniques reveal neurons, glial cells, and markers of inflammation.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1wE5QbWAwMZ03b1LzSo-z1Top4-3HIowxKvcTgyGIRHw/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/share/ihc-if/51762252-487e-4436-963b-a85de21a0ddf" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="0">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-5-research.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-5-research.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">05</span>
   <span class="lecture-icon">📄</span>
 </div>
@@ -1023,16 +1174,16 @@ body {
 <h3>Lecture 5 — Intro to Research</h3>
 <p>How to read a scientific paper like a professor — breaking down each section, evaluating methods and controls, identifying statistical relevance, and assessing credibility of primary literature.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1uIwtqyS2wU-PkXB9KPXkmdq8b0-MgL3bew7FsuPVFyk/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/share/biochem-club/4ad79bc3-bc87-441e-9235-da6b7ddf9d73" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="90">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-6-antioxidants.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-6-antioxidants.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">06</span>
   <span class="lecture-icon">⚗️</span>
 </div>
@@ -1042,16 +1193,16 @@ body {
 <h3>Lecture 6 — What are Antioxidants?</h3>
 <p>Reactive oxygen species, oxidative stress, neurodegeneration, and aging — and why antioxidant therapies are more complicated than popular science makes them sound.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1F-ZcIUY21woZySPF6fp0UrYNtKHZlRkBf6bXdNJ5qS4/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/details/792cf26b-0bdc-453e-950e-123c89169683" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="180">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-7-pcr.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-7-pcr.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">07</span>
   <span class="lecture-icon">🧬</span>
 </div>
@@ -1061,16 +1212,16 @@ body {
 <h3>Lecture 7 — What is PCR?</h3>
 <p>Polymerase chain reaction — denaturation, annealing, extension, and why heat-stable Taq polymerase changed molecular biology. Applications in virus detection, forensics, and genetic testing.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1oQhxTeKa1Hm49xsiCUjRQvPWzoRb9cAp4TXmn9v2s2k/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/share/pcr/358d4e70-394a-4734-b4db-5d40f32942cb" target="_blank">Kahoot ↗</a>
 </div>
 </div>
 </div>
 </div>
 
-<div class="resource-card">
+<div class="resource-card reveal" data-delay="270">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-8-ai.jpg" alt="" onerror="this.style.display='none'">
+  <img class="lecture-cover" src="images/lecture-8-ai.svg" alt="" onerror="this.style.display='none'">
   <span class="lecture-num">08</span>
   <span class="lecture-icon">🤖</span>
 </div>
@@ -1080,7 +1231,7 @@ body {
 <h3>Lecture 8 — AI in Biotech</h3>
 <p>Deep learning for protein structure prediction — why folding matters, how traditional methods struggled, and how AI tools like AlphaFold are accelerating drug discovery and biological research.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1LX7YAqYKWPbFwJSqAw7kqhV3HbTZ_R5fS7JoM3gVbKg/edit?usp=sharing" target="_blank">Slides ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1jssqyCGquJLD0WJT4Blvwk5W0R58lJAGoIOfZG5_dIQ/edit?usp=drive_link" target="_blank">Slides ↗</a>
 <a class="res-link" href="https://create.kahoot.it/share/deep-learning-protein-structure-prediction/a51468ef-8978-46b6-8688-87a212593917" target="_blank">Kahoot ↗</a>
 </div>
 </div>
@@ -1096,7 +1247,7 @@ body {
 </div>
 <div class="footer">
 <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
 </div>
 </div>
 
@@ -1109,7 +1260,7 @@ body {
 <div class="section">
 <div class="team-grid">
 
-<div class="team-card">
+<div class="team-card reveal" data-delay="0">
   <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none'">
   <img class="team-photo" src="josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none'">
   <h3>Joseph Sun</h3>
@@ -1118,7 +1269,7 @@ body {
   <span class="team-tag">Writer</span>
 </div>
 
-<div class="team-card">
+<div class="team-card reveal" data-delay="80">
   <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none'">
   <img class="team-photo" src="oliverpayne.jpg" alt="Oliver Payne" onerror="this.style.display='none'">
   <h3>Oliver Payne</h3>
@@ -1127,7 +1278,7 @@ body {
   <span class="team-tag">Writer · Video</span>
 </div>
 
-<div class="team-card">
+<div class="team-card reveal" data-delay="160">
   <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none'">
   <img class="team-photo" src="finneganschoebel.jpg" alt="Finnegan Schoebel" onerror="this.style.display='none'">
   <h3>Finnegan Schoebel</h3>
@@ -1136,7 +1287,7 @@ body {
   <span class="team-tag">Writer</span>
 </div>
 
-<div class="team-card">
+<div class="team-card reveal" data-delay="240">
   <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSGPIxa0WBpLLIwOjz7TH8po5UHBNZB8Jmc5C2KtOmonQHQERbGmg1QKRo6bmNqeZMuFDzCv67tZ4HaQzMfK058Y4ztec_vQbv2YiaV_c3gmE4jLNZ6K8Yv-PyYK_6vhpt2q5ZZIqp8D4IOiYFr2VV4TM2MacMcLDarTEj7GW_s9uTD3QbRJfFYcDbtLUsRYcuLP6M4Q1hujWnLbqvrP82JUr9KhImQR44dMik=w1280" alt="David Wu" onerror="this.style.display='none'">
   <img class="team-photo" src="davidwu.png" alt="David Wu" onerror="this.style.display='none'">
   <h3>David Wu</h3>
@@ -1145,7 +1296,7 @@ body {
   <span class="team-tag">Outreach</span>
 </div>
 
-<div class="team-card">
+<div class="team-card reveal" data-delay="320">
   <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRQupfDLraPIo9_4lueTq4xsLabeby7HwWUMvB8FrOJBTpPtFqfPBqfwEvX77jMPtA7hI44r4hCRsnusKbzwqqD0SDf1iDOmEJ-wYxZr0sFOSjh4qOkLN5LLRYryxiH_boZmnK058xq96Lfphvya_TiGKbSHJbj3EnH5Q0yo3pZvBsM45-10dFRhfWKcgymWQRCoBRvXwEaq_VWmlBxD9rVyQoZk9BstjtYSHY=w1280" alt="Khai Gordon" onerror="this.style.display='none'">
   <img class="team-photo" src="khaigordon.jpg" alt="Khai Gordon" onerror="this.style.display='none'">
   <h3>Khai Gordon</h3>
@@ -1163,7 +1314,7 @@ body {
 </div>
 <div class="footer">
 <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
 </div>
 </div>
 
@@ -1174,23 +1325,23 @@ body {
 <p>No experience required. We provide everything you need to launch, run, and grow a science club at your school — for free.</p>
 </div>
 <div class="steps-grid">
-<div class="step-card"><div class="step-num">01</div><h3>Fill out the form</h3><p>Tell us about your school and what kind of club you want to start. We'll reach out within a few days.</p></div>
-<div class="step-card"><div class="step-num">02</div><h3>Get your resources</h3><p>We send free slide decks, Kahoots, and materials tailored to your club's focus and experience level.</p></div>
-<div class="step-card"><div class="step-num">03</div><h3>Run your first meeting</h3><p>Use our ready-to-go lectures to run an engaging first session. We're here for any questions you have.</p></div>
-<div class="step-card"><div class="step-num">04</div><h3>Grow your chapter</h3><p>Keep getting new materials as you grow. Join our growing network of student-run neuro clubs across the US.</p></div>
+<div class="step-card reveal" data-delay="0"><div class="step-num">01</div><h3>Fill out the form</h3><p>Tell us about your school and what kind of club you want to start. We'll reach out within a few days.</p></div>
+<div class="step-card reveal" data-delay="100"><div class="step-num">02</div><h3>Get your resources</h3><p>We send free slide decks, Kahoots, and materials tailored to your club's focus and experience level.</p></div>
+<div class="step-card reveal" data-delay="200"><div class="step-num">03</div><h3>Run your first meeting</h3><p>Use our ready-to-go lectures to run an engaging first session. We're here for any questions you have.</p></div>
+<div class="step-card reveal" data-delay="300"><div class="step-num">04</div><h3>Grow your chapter</h3><p>Keep getting new materials as you grow. Join our growing network of student-run neuro clubs across the US.</p></div>
 </div>
 <div style="padding:0 2rem 3rem">
 <div class="cta-band">
 <div><h3>Ready to get started?</h3><p>Email us and we'll send you everything you need to launch your club.</p></div>
 <div style="display:flex;gap:10px;flex-wrap:wrap">
-<a class="btn-sm" href="mailto:neuroview.org@gmail.com?subject=Starting a Club&body=Hi NeuroView team, I'd like to start a neuroscience club at my school.">Email us ↗</a>
+<a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=Apply to NeuroView">Email us ↗</a>
 <button class="btn-sm-outline" onclick="showPage('resources')">Browse resources first →</button>
 </div>
 </div>
 </div>
 <div class="footer">
 <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
 </div>
 </div>
 
@@ -1206,18 +1357,18 @@ body {
 <div class="role-item"><span class="role-dot"></span>Club outreach coordinator</div>
 <div class="role-item"><span class="role-dot"></span>Graphic design</div>
 </div>
-<a class="btn-sm" href="mailto:neuroview.org@gmail.com?subject=Application to Join NeuroView&body=Hi, I'd like to apply to join the NeuroView team. Here is some information about me:" style="display:inline-block;width:100%;text-align:center">Apply via email ↗</a>
+<a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=Apply to NeuroView" style="display:inline-block;width:100%;text-align:center">Apply via email ↗</a>
 <div class="contact-info">Or reach us at <a href="tel:+16507851240">+1 (650) 785-1240</a></div>
 </div>
 <div class="footer">
 <div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:neuroview.org@gmail.com">neuroview.org@gmail.com</a></div>
+<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
 </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── PAGE NAVIGATION ── */
-function showPage(id) {
+function _coreShowPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
@@ -1251,7 +1402,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-bcis.jpg',
+    coverImg: 'images/cover-bcis.svg',
     externalUrl: 'https://www.neuro-view.org/a-beginners-guide-to-bcis',
     content: `
       <p>Brain-computer interfaces (BCIs) are devices that create a direct communication pathway between the brain and an external computer or device. They work by reading electrical signals produced by neurons — the brain's fundamental computational units.</p>
@@ -1273,7 +1424,7 @@ const ARTICLES = {
     author: 'Oliver Payne',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280',
     authorInitials: 'OP',
-    coverImg: 'images/cover-fmri.jpg',
+    coverImg: 'images/cover-fmri.svg',
     externalUrl: 'https://www.neuro-view.org/mind-reading-an-fmri-approach',
     content: `
       <p>What if a machine could tell what you're thinking just by watching your brain? This is no longer purely science fiction — it's an active area of neuroscience research, and functional MRI (fMRI) is at the center of it.</p>
@@ -1294,7 +1445,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-biocomputing.jpg',
+    coverImg: 'images/cover-biocomputing.svg',
     externalUrl: 'https://www.neuro-view.org/biocomputing',
     content: `
       <p>What if the next generation of computers wasn't made of silicon at all — but of living human brain cells? This isn't speculative fiction. Researchers at Johns Hopkins have already built "organoid intelligence" systems using lab-grown brain organoids as computing substrates.</p>
@@ -1314,7 +1465,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-chinavsus.jpg',
+    coverImg: 'images/cover-chinavsus.svg',
     externalUrl: 'https://www.neuro-view.org/chinavsus',
     content: `
       <p>Last summer I had the unusual opportunity to intern at biotech labs on both sides of the Pacific — first at a neurotechnology startup in Foster City, California, then at a research institute in Shenzhen, China. I expected to find scientific common ground. What I found were two completely different cultures of doing science.</p>
@@ -1334,7 +1485,7 @@ const ARTICLES = {
     author: 'Finnegan Schoebel',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280',
     authorInitials: 'FS',
-    coverImg: 'images/cover-neuroplasticity.jpg',
+    coverImg: 'images/cover-neuroplasticity.svg',
     externalUrl: 'https://www.neuro-view.org/neuroplasticity',
     content: `
       <p>For most of the 20th century, the brain was thought to be a fixed organ. You were born with a certain number of neurons; they died over time; that was it. We now know this picture was almost entirely wrong. The brain is extraordinarily plastic — capable of reorganizing its connections throughout your entire life.</p>
@@ -1354,7 +1505,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-brain-death.jpg',
+    coverImg: 'images/cover-brain-death.svg',
     externalUrl: 'https://www.neuro-view.org/brain-death',
     content: `
       <p>Your heart stops. Blood flow to the brain ceases. Oxygen runs out within seconds. By every clinical measure, you are dying. But what is your brain doing in those final moments?</p>
@@ -1422,15 +1573,16 @@ function resize() {
 
 function init() {
   nodes = [];
-  const count = Math.floor((W * H) / 14000);
+  const count = Math.floor((W * H) / 12000);
   for (let i = 0; i < count; i++) {
     nodes.push({
       x: Math.random() * W,
       y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r: Math.random() * 2 + 1.5,
+      vx: (Math.random() - 0.5) * 0.38,
+      vy: (Math.random() - 0.5) * 0.38,
+      r: Math.random() * 2.2 + 1.2,
       pulse: Math.random() * Math.PI * 2,
+      brightness: Math.random(),
     });
   }
 }
@@ -1443,7 +1595,7 @@ function draw() {
     n.x += n.vx; n.y += n.vy;
     if (n.x < 0 || n.x > W) n.vx *= -1;
     if (n.y < 0 || n.y > H) n.vy *= -1;
-    const alpha = 0.5 + 0.3 * Math.sin(time + n.pulse);
+    const alpha = 0.4 + 0.4 * Math.sin(time * 0.9 + n.pulse);
     ctx.beginPath();
     ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(127,119,221,${alpha})`;
@@ -1452,11 +1604,11 @@ function draw() {
       const m = nodes[j];
       const dx = n.x - m.x, dy = n.y - m.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 120) {
+      if (dist < 130) {
         ctx.beginPath();
         ctx.moveTo(n.x, n.y);
         ctx.lineTo(m.x, m.y);
-        ctx.strokeStyle = `rgba(83,74,183,${0.25 * (1 - dist/120)})`;
+        ctx.strokeStyle = `rgba(83,74,183,${0.28 * (1 - dist/130)})`;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -1465,11 +1617,215 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-resize();
-init();
-draw();
+resize(); init(); draw();
 window.addEventListener('resize', () => { resize(); init(); });
 })();
+
+/* ══════════════════════════════════════════════
+   SHAZAM ENGINE — all new animations
+══════════════════════════════════════════════ */
+
+// ═══════════════════════════════════════
+// MASTER showPage — single point of control
+// ═══════════════════════════════════════
+function showPage(id) {
+  const veil = document.getElementById('page-veil');
+  function doSwitch() {
+    _coreShowPage(id);
+    updateScrollProgress();
+    // Re-observe reveals on the new page
+    setTimeout(() => {
+      document.querySelectorAll('.page.active .reveal:not(.visible)').forEach(el => {
+        revealObserver.observe(el);
+      });
+      applyMagnetic();
+    }, 50);
+    // Apply-page role stagger
+    if (id === 'apply') {
+      setTimeout(() => {
+        document.querySelectorAll('#page-apply .role-item').forEach((item, i) => {
+          item.style.opacity = '0';
+          item.style.transform = 'translateX(-12px)';
+          item.style.transition = 'none';
+          setTimeout(() => {
+            item.style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1)';
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+          }, i * 80);
+        });
+      }, 200);
+    }
+    // Reset scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  if (veil) {
+    veil.classList.add('out');
+    setTimeout(() => {
+      doSwitch();
+      veil.classList.remove('out');
+    }, 200);
+  } else {
+    doSwitch();
+  }
+}
+
+// ─── 1. SCROLL PROGRESS BAR ───
+const scrollBar = document.getElementById('scroll-progress');
+function updateScrollProgress() {
+  const scrolled = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
+  if (scrollBar) scrollBar.style.width = progress + '%';
+}
+window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+// ─── 2. PAGE TRANSITIONS ─── (handled in master showPage below)
+
+// ─── 3. SCROLL REVEAL with IntersectionObserver ───
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const delay = parseInt(el.dataset.delay || 0);
+      setTimeout(() => {
+        el.classList.add('visible');
+        // Trigger count-up if it's a stat item
+        const counter = el.querySelector('[data-count]');
+        if (counter) animateCount(counter);
+      }, delay);
+      revealObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+function triggerRevealsOnActivePage() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.page.active .reveal:not(.visible)').forEach(el => {
+      revealObserver.observe(el);
+    });
+  });
+}
+
+// Observe reveals on initial load
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ─── 4. COUNT-UP ANIMATION ───
+function animateCount(el) {
+  const target = parseInt(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1400;
+  const startTime = performance.now();
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(eased * target);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ─── 5. MAGNETIC BUTTONS ───
+document.querySelectorAll('.btn-magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) * 0.3;
+    const dy = (e.clientY - cy) * 0.3;
+    btn.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = 'translate(0,0)';
+  });
+});
+
+// Re-apply magnetic to dynamically shown pages
+function applyMagnetic() {
+  document.querySelectorAll('.btn-magnetic').forEach(btn => {
+    if (btn._magnetic) return;
+    btn._magnetic = true;
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.3;
+      const dy = (e.clientY - cy) * 0.3;
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0,0)';
+    });
+  });
+}
+
+// ─── 6. SYNAPSE SPARK RIPPLE on card click ───
+function addSparkRipple(el) {
+  el.addEventListener('click', function(e) {
+    const ring = document.createElement('div');
+    ring.className = 'spark-ring';
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    ring.style.left = x + 'px';
+    ring.style.top = y + 'px';
+    el.style.position = 'relative';
+    el.appendChild(ring);
+    setTimeout(() => ring.remove(), 700);
+  }, { capture: true });
+}
+document.querySelectorAll('.article-card, .resource-card, .team-card, .step-card').forEach(addSparkRipple);
+
+// ─── 7. NAV: shrink on scroll ───
+const nav = document.querySelector('.nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) {
+    nav.style.height = '50px';
+    nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
+  } else {
+    nav.style.height = '60px';
+    nav.style.boxShadow = 'none';
+  }
+}, { passive: true });
+
+// ─── 8. HERO parallax ───
+const heroCanvas = document.getElementById('heroCanvas');
+const heroContent = document.querySelector('.hero-content');
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  if (heroCanvas) heroCanvas.style.transform = `translateY(${scrollY * 0.3}px)`;
+  if (heroContent) heroContent.style.transform = `translateY(${scrollY * 0.15}px)`;
+}, { passive: true });
+
+// ─── 9. STAGGER team photo entrance ───
+function staggerTeamCards() {
+  document.querySelectorAll('.page.active .team-card.visible .team-photo').forEach((img, i) => {
+    img.style.animationDelay = (i * 60) + 'ms';
+    img.style.animation = 'teamPhotoIn 0.5s cubic-bezier(0.22,1,0.36,1) both';
+  });
+}
+
+// Inject keyframe for team photo
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+@keyframes teamPhotoIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+`;
+document.head.appendChild(styleSheet);
+
+// ─── 10. ROLE ITEMS stagger on Apply page ─── (handled in master showPage)
+
+// Initial run
+setTimeout(() => {
+  document.querySelectorAll(".page.active .reveal:not(.visible)").forEach(el => revealObserver.observe(el));
+  applyMagnetic();
+}, 100);
+
 </script>
 </body>
 </html>

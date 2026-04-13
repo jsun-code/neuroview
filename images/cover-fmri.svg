@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" width="400" height="220">
+  <defs>
+    <linearGradient id="bg_cover-fmri" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0818"/>
+      <stop offset="100%" stop-color="#1a0d30"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="220" fill="url(#bg_cover-fmri)"/>
+  
+          <!-- Brain scan rings -->
+          <ellipse cx="200" cy="130" rx="110" ry="85" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.3"/>
+          <ellipse cx="200" cy="130" rx="80" ry="62" fill="none" stroke="#8B5CF6" stroke-width="1.5" opacity="0.5"/>
+          <ellipse cx="200" cy="130" rx="55" ry="42" fill="none" stroke="#A78BFA" stroke-width="1.5" opacity="0.6"/>
+          <ellipse cx="200" cy="130" rx="32" ry="25" fill="none" stroke="#C4B5FD" stroke-width="2" opacity="0.7"/>
+          <!-- hot spots -->
+          <circle cx="200" cy="115" r="10" fill="#7c3aed" opacity="0.6"/>
+          <circle cx="170" cy="140" r="7" fill="#A855F7" opacity="0.5"/>
+          <circle cx="230" cy="135" r="8" fill="#8B5CF6" opacity="0.55"/>
+          <circle cx="190" cy="155" r="5" fill="#C4B5FD" opacity="0.4"/>
+          <!-- color scale bar -->
+          <defs><linearGradient id="heatbar" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#3b0764"/>
+            <stop offset="33%" stop-color="#7c3aed"/>
+            <stop offset="66%" stop-color="#f97316"/>
+            <stop offset="100%" stop-color="#fbbf24"/>
+          </linearGradient></defs>
+          <rect x="80" y="205" width="240" height="8" rx="4" fill="url(#heatbar)" opacity="0.7"/>
+        
+</svg>
