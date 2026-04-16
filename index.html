@@ -299,7 +299,6 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   width: 100%; height: 100%;
   object-fit: cover;
 }
-.thumb-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.4; }
 .play-btn {
   width: 54px; height: 54px; border-radius: 50%;
   background: rgba(83,74,183,0.7);
@@ -807,6 +806,11 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 }
 
 </style>
+<!--
+  Article/video cover photos: Wikimedia Commons — Brain_BCI.jpg (BCI); FMRI Brain Scan.jpg;
+  Human Brain Organoid.jpg (biocomputing); Pipette gallery.jpg (lab/biotech); Celula Cesta Purkinje.jpg
+  (neurons); MRI Head 5 slices.jpg. Check each file’s page on commons.wikimedia.org for attribution.
+-->
 </head>
 <body>
 <div id="scroll-progress"></div>
@@ -866,7 +870,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 <div class="grid-3">
 
 <div class="article-card reveal" data-delay="0" onclick="openArticle('bcis')">
-<img class="article-cover" src="images/cover-bcis.svg" alt="BCIs cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-bcis.jpg" alt="BCIs cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><circle cx="80" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="60" r="30" fill="none" stroke="#7F77DD" stroke-width="1.5"/><circle cx="320" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><line x1="80" y1="80" x2="200" y2="60" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="60" x2="320" y2="80" stroke="#534AB7" stroke-width="1.5"/></svg>
 </div>
@@ -879,7 +883,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </div>
 
 <div class="article-card reveal" data-delay="120" onclick="openArticle('fmri')">
-<img class="article-cover" src="images/cover-fmri.svg" alt="fMRI cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-fmri.jpg" alt="fMRI cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><ellipse cx="200" cy="80" rx="100" ry="60" fill="none" stroke="#7F77DD" stroke-width="1.5"/><ellipse cx="200" cy="80" rx="60" ry="35" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="15" fill="#534AB7" opacity="0.5"/></svg>
 </div>
@@ -892,7 +896,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </div>
 
 <div class="article-card reveal" data-delay="240" onclick="openArticle('biocomputing')">
-<img class="article-cover" src="images/cover-biocomputing.svg" alt="Biocomputing cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-biocomputing.jpg" alt="Biocomputing cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><rect x="60" y="40" width="80" height="80" rx="12" fill="none" stroke="#534AB7" stroke-width="1.5"/><rect x="260" y="40" width="80" height="80" rx="12" fill="none" stroke="#7F77DD" stroke-width="1.5"/><path d="M140 80 Q200 20 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 140 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="8" fill="#534AB7" opacity="0.7"/></svg>
 </div>
@@ -915,8 +919,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 <div class="grid-2">
 <a class="video-card reveal" data-delay="0" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-fmri.svg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
-<svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/><line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/></svg>
+<img src="images/thumb-fmri.jpg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
 <div class="video-info">
@@ -926,8 +929,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </a>
 <a class="video-card reveal" data-delay="130" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-biocomputing.svg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
-<svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/><line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/></svg>
+<img src="images/thumb-biocomputing.jpg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
 <div class="video-info">
@@ -985,37 +987,37 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 <div class="grid-3" id="articles-grid">
 
 <div class="article-card" data-tag="BCI" onclick="openArticle('bcis')">
-<img class="article-cover" src="images/cover-bcis.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-bcis.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="80" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="320" cy="80" r="40" fill="none" stroke="#7F77DD" stroke-width="1.5"/><line x1="80" y1="80" x2="320" y2="80" stroke="#534AB7" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag">BCI</span><h3>A Beginner's Guide to BCIs</h3><p>Imagine controlling a robotic arm, playing a video game, or sending messages — all using just your mind. BCIs are quickly making this a reality.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Personal" onclick="openArticle('chinavsus')">
-<img class="article-cover" src="images/cover-chinavsus.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-chinavsus.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="120" cy="80" r="50" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="280" cy="80" r="50" fill="none" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag">Personal</span><h3>From Foster City to Shenzhen</h3><p>Interning at biotech labs in both the US and China — I expected technical similarities. Science is universal, right? What surprised me were the differences.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroimaging" onclick="openArticle('fmri')">
-<img class="article-cover" src="images/cover-fmri.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-fmri.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><ellipse cx="200" cy="80" rx="100" ry="60" fill="none" stroke="#7F77DD" stroke-width="1.5"/><ellipse cx="200" cy="80" rx="60" ry="35" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="15" fill="#534AB7" opacity="0.5"/></svg></div>
 <div class="article-body"><span class="card-tag">Neuroimaging</span><h3>Mind Reading: An fMRI Approach</h3><p>Have you ever wondered what it would be like to know what someone is thinking at any moment? A new discovery in neuroengineering is getting us closer.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</div></div></div>
 </div>
 
 <div class="article-card" data-tag="AI + Neuro" onclick="openArticle('biocomputing')">
-<img class="article-cover" src="images/cover-biocomputing.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-biocomputing.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><rect x="60" y="40" width="80" height="80" rx="12" fill="none" stroke="#534AB7" stroke-width="1.5"/><rect x="260" y="40" width="80" height="80" rx="12" fill="none" stroke="#7F77DD" stroke-width="1.5"/><path d="M140 80 Q200 20 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 140 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag">AI + Neuro</span><h3>Biocomputing: A Breakthrough in AGI</h3><p>Imagine a computer built not just from silicon, but from living human brain cells. Biocomputing has major implications for the race toward Artificial General Intelligence.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroscience" onclick="openArticle('neuroplasticity')">
-<img class="article-cover" src="images/cover-neuroplasticity.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-neuroplasticity.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><path d="M50 80 Q100 40 150 80 Q200 120 250 80 Q300 40 350 80" fill="none" stroke="#7F77DD" stroke-width="2"/><path d="M50 100 Q100 60 150 100 Q200 140 250 100 Q300 60 350 100" fill="none" stroke="#534AB7" stroke-width="1.5" opacity="0.6"/></svg></div>
 <div class="article-body"><span class="card-tag">Neuroscience</span><h3>What is Neuroplasticity?</h3><p>Your brain is not fixed. Neuroplasticity explains how experience, learning, and environment reshape neural circuits — throughout your entire life.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">FS</span>Finnegan Schoebel</div></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroscience" onclick="openArticle('brain-death')">
-<img class="article-cover" src="images/cover-brain-death.svg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" src="images/cover-brain-death.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><path d="M200 30 Q280 30 300 90 Q320 150 200 150 Q80 150 100 90 Q120 30 200 30Z" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="90" r="8" fill="#7F77DD" opacity="0.6"/></svg></div>
 <div class="article-body"><span class="card-tag">Neuroscience</span><h3>What Does Your Brain Experience as You Die?</h3><p>Your heart stops. No more oxygen. But your brain isn't done yet — scientists have recorded brain activity up to 10 minutes after clinical death.</p><div class="card-meta"><div class="card-author"><img class="avatar-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</div></div></div>
 </div>
@@ -1039,8 +1041,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 
 <a class="video-card reveal" data-delay="260" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-fmri.svg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
-<svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="50" cy="90" r="5" fill="#7F77DD"/><circle cx="150" cy="45" r="4" fill="#534AB7"/><circle cx="250" cy="95" r="5" fill="#7F77DD"/><circle cx="350" cy="50" r="4" fill="#534AB7"/><circle cx="450" cy="88" r="5" fill="#7F77DD"/><line x1="50" y1="90" x2="150" y2="45" stroke="#534AB7" stroke-width="1.5"/><line x1="150" y1="45" x2="250" y2="95" stroke="#534AB7" stroke-width="1.5"/><line x1="250" y1="95" x2="350" y2="50" stroke="#534AB7" stroke-width="1.5"/><line x1="350" y1="50" x2="450" y2="88" stroke="#534AB7" stroke-width="1.5"/></svg>
+<img src="images/thumb-fmri.jpg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
 <div class="video-info">
@@ -1051,8 +1052,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 
 <a class="video-card reveal" data-delay="390" href="https://www.youtube.com/@the_neuroview" target="_blank">
 <div class="video-thumb">
-<img src="images/thumb-biocomputing.svg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
-<svg class="thumb-svg" viewBox="0 0 500 180"><circle cx="80" cy="70" r="5" fill="#534AB7"/><circle cx="200" cy="100" r="6" fill="#7F77DD"/><circle cx="320" cy="65" r="5" fill="#534AB7"/><circle cx="440" cy="95" r="4" fill="#7F77DD"/><line x1="80" y1="70" x2="200" y2="100" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="100" x2="320" y2="65" stroke="#534AB7" stroke-width="1.5"/><line x1="320" y1="65" x2="440" y2="95" stroke="#534AB7" stroke-width="1.5"/></svg>
+<img src="images/thumb-biocomputing.jpg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
 </div>
 <div class="video-info">
@@ -1422,7 +1422,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-bcis.svg',
+    coverImg: 'images/cover-bcis.jpg',
     externalUrl: 'https://www.neuro-view.org/a-beginners-guide-to-bcis',
     content: `
       <p>Brain-computer interfaces (BCIs) are devices that create a direct communication pathway between the brain and an external computer or device. They work by reading electrical signals produced by neurons — the brain's fundamental computational units.</p>
@@ -1444,7 +1444,7 @@ const ARTICLES = {
     author: 'Oliver Payne',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280',
     authorInitials: 'OP',
-    coverImg: 'images/cover-fmri.svg',
+    coverImg: 'images/cover-fmri.jpg',
     externalUrl: 'https://www.neuro-view.org/mind-reading-an-fmri-approach',
     content: `
       <p>What if a machine could tell what you're thinking just by watching your brain? This is no longer purely science fiction — it's an active area of neuroscience research, and functional MRI (fMRI) is at the center of it.</p>
@@ -1465,7 +1465,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-biocomputing.svg',
+    coverImg: 'images/cover-biocomputing.jpg',
     externalUrl: 'https://www.neuro-view.org/biocomputing',
     content: `
       <p>What if the next generation of computers wasn't made of silicon at all — but of living human brain cells? This isn't speculative fiction. Researchers at Johns Hopkins have already built "organoid intelligence" systems using lab-grown brain organoids as computing substrates.</p>
@@ -1485,7 +1485,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-chinavsus.svg',
+    coverImg: 'images/cover-chinavsus.jpg',
     externalUrl: 'https://www.neuro-view.org/chinavsus',
     content: `
       <p>Last summer I had the unusual opportunity to intern at biotech labs on both sides of the Pacific — first at a neurotechnology startup in Foster City, California, then at a research institute in Shenzhen, China. I expected to find scientific common ground. What I found were two completely different cultures of doing science.</p>
@@ -1505,7 +1505,7 @@ const ARTICLES = {
     author: 'Finnegan Schoebel',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280',
     authorInitials: 'FS',
-    coverImg: 'images/cover-neuroplasticity.svg',
+    coverImg: 'images/cover-neuroplasticity.jpg',
     externalUrl: 'https://www.neuro-view.org/neuroplasticity',
     content: `
       <p>For most of the 20th century, the brain was thought to be a fixed organ. You were born with a certain number of neurons; they died over time; that was it. We now know this picture was almost entirely wrong. The brain is extraordinarily plastic — capable of reorganizing its connections throughout your entire life.</p>
@@ -1525,7 +1525,7 @@ const ARTICLES = {
     author: 'Joseph Sun',
     authorImg: 'https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280',
     authorInitials: 'JS',
-    coverImg: 'images/cover-brain-death.svg',
+    coverImg: 'images/cover-brain-death.jpg',
     externalUrl: 'https://www.neuro-view.org/brain-death',
     content: `
       <p>Your heart stops. Blood flow to the brain ceases. Oxygen runs out within seconds. By every clinical measure, you are dying. But what is your brain doing in those final moments?</p>
