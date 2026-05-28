@@ -261,6 +261,13 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 .article-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
 .card-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
 .card-author { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-faint); }
+.card-author.author-link { cursor: pointer; border-radius: var(--radius-sm); padding: 2px 4px; margin: -2px -4px; transition: color 0.15s, background 0.15s; }
+.card-author.author-link:hover { color: var(--purple-600); background: var(--purple-50); }
+.video-author-link {
+  cursor: pointer; text-decoration: underline;
+  text-decoration-color: transparent; transition: color 0.15s, text-decoration-color 0.15s;
+}
+.video-author-link:hover { color: var(--purple-600); text-decoration-color: var(--purple-400); }
 .avatar-img {
   width: 24px; height: 24px; border-radius: 50%;
   object-fit: cover; object-position: top;
@@ -653,6 +660,56 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 .reader-content .callout strong { color: var(--purple-800); }
 .reader-ext-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 2rem; padding: 12px 24px; background: var(--purple-600); color: #fff; text-decoration: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; transition: background 0.15s; }
 .reader-ext-link:hover { background: var(--purple-800); }
+.reader-byline-link { cursor: pointer; border-radius: var(--radius-sm); margin: -4px -8px; padding: 4px 8px; transition: background 0.15s; }
+.reader-byline-link:hover { background: var(--purple-50); }
+
+/* ─── TEAM PROFILE ─── */
+.team-profile {
+  display: none;
+  position: fixed; inset: 0; z-index: 510;
+  background: var(--bg);
+  overflow-y: auto;
+}
+.team-profile.open { display: block; }
+.profile-body {
+  max-width: 640px; margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+}
+.profile-photo {
+  width: 160px; height: 160px; border-radius: 50%;
+  object-fit: cover; object-position: center top;
+  border: 3px solid var(--purple-100);
+  margin: 0 auto 1.25rem; display: block;
+}
+.profile-body h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 400; letter-spacing: -0.5px;
+  text-align: center; margin-bottom: 0.35rem;
+}
+.profile-role {
+  text-align: center; font-size: 15px; font-weight: 500;
+  color: var(--purple-600); margin-bottom: 0.25rem;
+}
+.profile-school {
+  text-align: center; font-size: 13px; color: var(--text-faint);
+  margin-bottom: 2rem;
+}
+.profile-bio { font-size: 16px; line-height: 1.8; color: var(--text); }
+.profile-bio p { margin-bottom: 1.25em; }
+.profile-bio a { color: var(--purple-600); }
+.profile-contact {
+  margin-top: 2.5rem; padding-top: 1.75rem;
+  border-top: 1px solid var(--border);
+}
+.profile-contact h2 {
+  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text-faint); margin-bottom: 0.75rem;
+}
+.profile-contact a {
+  font-size: 15px; color: var(--purple-600); text-decoration: none;
+}
+.profile-contact a:hover { text-decoration: underline; }
 
 /* Resources grid layout */
 .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
@@ -827,6 +884,14 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   </div>
 </div>
 
+<div class="team-profile" id="teamProfile">
+  <div class="reader-nav">
+    <button class="reader-back" onclick="teamProfileBack()">← Back</button>
+    <span class="reader-title" id="teamProfileNavTitle">Team profile</span>
+  </div>
+  <div class="profile-body" id="teamProfileBody"></div>
+</div>
+
 <nav class="nav">
 <a class="nav-logo" href="/" onclick="event.preventDefault(); showPage('home')">Neuro<span>View</span></a>
 <div class="nav-links">
@@ -924,7 +989,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </div>
 <div class="video-info">
 <h3>fMRI: The Tech That Reads Your Mind</h3>
-<p>Oliver Payne · NeuroView YouTube</p>
+<p><span class="video-author-link" role="button" tabindex="0" onclick="event.preventDefault();event.stopPropagation();openTeamProfile('oliver-payne')">Oliver Payne</span> · NeuroView YouTube</p>
 </div>
 </a>
 <a class="video-card reveal" data-delay="130" href="https://www.youtube.com/@the_neuroview" target="_blank">
@@ -934,7 +999,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </div>
 <div class="video-info">
 <h3>Biocomputing: When Neuroscience Meets Technology</h3>
-<p>Joseph Sun · NeuroView YouTube</p>
+<p><span class="video-author-link" role="button" tabindex="0" onclick="event.preventDefault();event.stopPropagation();openTeamProfile('joseph-sun')">Joseph Sun</span> · NeuroView YouTube</p>
 </div>
 </a>
 </div>
@@ -1046,7 +1111,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </div>
 <div class="video-info">
 <h3>fMRI: The Tech That Reads Your Mind</h3>
-<p>Oliver Payne · Functional MRI, BOLD signal, brain imaging applications</p>
+<p><span class="video-author-link" role="button" tabindex="0" onclick="event.preventDefault();event.stopPropagation();openTeamProfile('oliver-payne')">Oliver Payne</span> · Functional MRI, BOLD signal, brain imaging applications</p>
 </div>
 </a>
 
@@ -1057,7 +1122,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 </div>
 <div class="video-info">
 <h3>Biocomputing: When Neuroscience Meets Technology</h3>
-<p>Joseph Sun · Brain organoids, AI, implications for AGI</p>
+<p><span class="video-author-link" role="button" tabindex="0" onclick="event.preventDefault();event.stopPropagation();openTeamProfile('joseph-sun')">Joseph Sun</span> · Brain organoids, AI, implications for AGI</p>
 </div>
 </a>
 
@@ -1261,8 +1326,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 <div class="section">
 <div class="team-grid">
 
-<div class="team-card reveal" data-delay="0">
-  <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQQiCRAjkvNxwP6ZsCK-TF_4bl_sACxg0COTJI_crQKCEzEm5BCfAl87HwZhqIQKwLIVIIGjA7xJU9fhHsruIXfIIVX3kA1PSdPMgci5FfXxVD-82ppeTwvRFpTOpI5ctQmHIDAmfZOBe8NVclKf1qPzi6Z9jYLr5N5IeeTSszFupUqblCmJNIcLGLnvhm8t6b5AQSRVVf_zYv5Tdw-qtNEUQ7ETOKQGB2nxIE=w1280" alt="Joseph Sun" onerror="this.style.display='none'">
+<div class="team-card reveal" data-delay="0" role="button" tabindex="0" onclick="openTeamProfile('joseph-sun')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTeamProfile('joseph-sun')}">
   <img class="team-photo" src="josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none'">
   <h3>Joseph Sun</h3>
   <div class="role">Founder + President</div>
@@ -1270,26 +1334,23 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   <span class="team-tag">Writer</span>
 </div>
 
-<div class="team-card reveal" data-delay="80">
-  <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJrPaUvQ-LGbowUtmT7b6AVtrr3X_5RWLFGau6f88HV7V0o1QcnL1o9ONf58Y17EdmTht1_hkbC9xXPu_T-r_ED64m3MSNfg-3F1Lskv2wj_mfz5GqrakYl6H4Z6B2vVvXPFnlqjtx8tYlsJHlW1tXNKIGjBxRhSA9_uguscddLIa2sPpCuBEocYJnOp_x6DrA1uMRM5GfLhQHFl7g0HfqPCKm3agy8c-9=w1280" alt="Oliver Payne" onerror="this.style.display='none'">
+<div class="team-card reveal" data-delay="80" role="button" tabindex="0" onclick="openTeamProfile('oliver-payne')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTeamProfile('oliver-payne')}">
   <img class="team-photo" src="oliverpayne.jpg" alt="Oliver Payne" onerror="this.style.display='none'">
   <h3>Oliver Payne</h3>
-  <div class="role">Member</div>
+  <div class="role">Vice President</div>
   <div class="school">Palo Alto High School</div>
   <span class="team-tag">Writer · Video</span>
 </div>
 
-<div class="team-card reveal" data-delay="160">
-  <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQY1rdIeWt8gSVZdXN35OiEc1Rfh5DohOl-HhiSjbcs_byo9UHp59wSwhUDR5QxvrzMqiG-KVzONRPPLYnymPzmUPJAxxNvP-JQYCUerdkv7xk8To-3Jb2rMakugOt-GliDNziqroOSWik81VqYP4ovEw0cV_1xeYFUtfNk1bh-UCjhEDOPeVVCRCpYdUVWlgs6aK37N7kMR_QwhVRl2FWproMpWixtkq2V=w1280" alt="Finnegan Schoebel" onerror="this.style.display='none'">
+<div class="team-card reveal" data-delay="160" role="button" tabindex="0" onclick="openTeamProfile('finnegan-schoebel')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTeamProfile('finnegan-schoebel')}">
   <img class="team-photo" src="finneganschoebel.jpg" alt="Finnegan Schoebel" onerror="this.style.display='none'">
   <h3>Finnegan Schoebel</h3>
-  <div class="role">Member</div>
+  <div class="role">Head of Curriculum</div>
   <div class="school">Palo Alto High School</div>
   <span class="team-tag">Writer</span>
 </div>
 
-<div class="team-card reveal" data-delay="240">
-  <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSGPIxa0WBpLLIwOjz7TH8po5UHBNZB8Jmc5C2KtOmonQHQERbGmg1QKRo6bmNqeZMuFDzCv67tZ4HaQzMfK058Y4ztec_vQbv2YiaV_c3gmE4jLNZ6K8Yv-PyYK_6vhpt2q5ZZIqp8D4IOiYFr2VV4TM2MacMcLDarTEj7GW_s9uTD3QbRJfFYcDbtLUsRYcuLP6M4Q1hujWnLbqvrP82JUr9KhImQR44dMik=w1280" alt="David Wu" onerror="this.style.display='none'">
+<div class="team-card reveal" data-delay="240" role="button" tabindex="0" onclick="openTeamProfile('david-wu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTeamProfile('david-wu')}">
   <img class="team-photo" src="davidwu.png" alt="David Wu" onerror="this.style.display='none'">
   <h3>David Wu</h3>
   <div class="role">Outreach Manager</div>
@@ -1297,8 +1358,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   <span class="team-tag">Outreach</span>
 </div>
 
-<div class="team-card reveal" data-delay="320">
-  <img class="team-photo" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRQupfDLraPIo9_4lueTq4xsLabeby7HwWUMvB8FrOJBTpPtFqfPBqfwEvX77jMPtA7hI44r4hCRsnusKbzwqqD0SDf1iDOmEJ-wYxZr0sFOSjh4qOkLN5LLRYryxiH_boZmnK058xq96Lfphvya_TiGKbSHJbj3EnH5Q0yo3pZvBsM45-10dFRhfWKcgymWQRCoBRvXwEaq_VWmlBxD9rVyQoZk9BstjtYSHY=w1280" alt="Khai Gordon" onerror="this.style.display='none'">
+<div class="team-card reveal" data-delay="320" role="button" tabindex="0" onclick="openTeamProfile('khai-gordon')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTeamProfile('khai-gordon')}">
   <img class="team-photo" src="khaigordon.jpg" alt="Khai Gordon" onerror="this.style.display='none'">
   <h3>Khai Gordon</h3>
   <div class="role">Outreach Agent</div>
@@ -1386,6 +1446,83 @@ function nvPathToPage(pathname) {
 function nvPageToPath(id) {
   return NV_PAGE_PATH[id] || '/';
 }
+function nvExtractTeamSlug(pathname) {
+  var p = nvNormalizePath(pathname);
+  if (p.indexOf('/team/') !== 0) return null;
+  var slug = p.slice(6);
+  return slug || null;
+}
+function nvTeamProfilePath(slug) {
+  return '/team/' + slug;
+}
+
+var AUTHOR_SLUGS = {
+  'Joseph Sun': 'joseph-sun',
+  'Oliver Payne': 'oliver-payne',
+  'Finnegan Schoebel': 'finnegan-schoebel',
+  'David Wu': 'david-wu',
+  'Khai Gordon': 'khai-gordon'
+};
+
+var TEAM_MEMBERS = {
+  'joseph-sun': {
+    name: 'Joseph Sun',
+    role: 'Founder + President of NeuroView',
+    school: 'Palo Alto High School',
+    photo: 'josephsun.jpg',
+    email: 'jhhsunx@gmail.com',
+    bio: [
+      "Hi, I'm Joseph Sun, a high school senior passionate about neuroscience, brain-computer interfaces (BCIs), and making complex science accessible to everyone.",
+      "At school, I founded the Biochemistry club to help students explore neuroscience and biochemistry through hands-on experiments, peer-led lectures, and interactive discussions. But in the process of doing so, I realized one thing: it was hard. Creating lecturers and kahoots had me diving deep in complex scientific journals and papers, scrambling to understand what words like \"prolonged myeloablation\" and \"hematologic malignancies\" were. It felt overwhelming, and there wasn't anyone to guide me through that first year.",
+      "Now, as a senior, I want to make sure other students don't have to struggle the same way I did. Alongside a fellow team of neuroscience enthusiasts, I've created a pre-made set of over 40 presentations, lecturers, and Kahoots designed to give new neuroscience clubs a running headstart. By sharing these resources, I aspire to make it easier for others to explore the wonders of the brain without getting bogged down in jargon or spending countless nights deciphering Nature research papers."
+    ]
+  },
+  'oliver-payne': {
+    name: 'Oliver Payne',
+    role: 'Vice President',
+    school: 'Palo Alto High School',
+    photo: 'oliverpayne.jpg',
+    email: 'oliverkpayne@gmail.com',
+    bio: [
+      "Hi! My name is Oliver Payne, and I'm currently a senior at Palo Alto High School. I've loved science ever since I was in middle school, and that has carried over through high school, and eventually into college.",
+      "Neuroscience is one of the coolest subjects in all of science, because the brain is one of the most important parts of life on earth, and there's so much we don't know about it still! Aside from neuroscience and school, I am an avid athlete, adventurer, and animal lover!"
+    ]
+  },
+  'finnegan-schoebel': {
+    name: 'Finnegan Schoebel',
+    role: 'Head of Curriculum',
+    school: 'Palo Alto High School',
+    photo: 'finneganschoebel.jpg',
+    email: 'fs45855@pausd.us',
+    bio: [
+      "Hello! I'm Finn Schoebel, a Senior at Palo Alto High School — aka Paly.",
+      "I've always loved to learn and explore the unknown, in whatever forms I can find. Excitingly, neuroscience gives me the opportunity to do that while staying as close as you can get to home! There's still so much to discover in our own heads, and the applications are potentially limitless!",
+      "Beyond neuroscience, I am a competitive athlete, reader of science fiction and fantasy, journalist and debater!"
+    ]
+  },
+  'david-wu': {
+    name: 'David Wu',
+    role: 'Outreach Manager',
+    school: 'Palo Alto High School',
+    photo: 'davidwu.png',
+    email: 'dw34870@pausd.us',
+    bio: [
+      'My name is David Wu and I am a Senior at Paly. I love biotech and biology because I feel that these fields can improve the health and quality of life of people around the world. Outside of school, I enjoy reading and coding.',
+      'You can read or purchase a copy of my AI book here: <a href="https://www.amazon.com/AI-Young-Curious-David-Wu/dp/B09YVBW9RX" target="_blank" rel="noopener noreferrer">AI for the Young and Curious</a>.'
+    ]
+  },
+  'khai-gordon': {
+    name: 'Khai Gordon',
+    role: 'Outreach Agent',
+    school: 'Palo Alto High School',
+    photo: 'khaigordon.jpg',
+    email: 'khaigordon2007@gmail.com',
+    bio: [
+      "Hi! My name is Khai Gordon and I am a senior at Palo Alto High School. I love biotech because there's so many uses for it that we're still discovering. From genetically modified foods to neural implants, biotechnology is featured in so many different subjects!",
+      "When I'm not in school, I like to go on runs, volunteer at my local makerspace, and help tutor younger students!"
+    ]
+  }
+};
 
 /* ── PAGE NAVIGATION ── */
 function _coreShowPage(id) {
@@ -1546,6 +1683,8 @@ function openArticle(slug) {
   const art = ARTICLES[slug];
   if (!art) return;
 
+  closeTeamProfile({ skipHistory: true });
+
   document.getElementById('readerNavTitle').textContent = art.title;
 
   const imgHtml = `<img class="reader-hero-img" src="${art.coverImg}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -1555,12 +1694,16 @@ function openArticle(slug) {
   </div>`;
 
   const bylineImg = `<img src="${art.authorImg}" alt="${art.author}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="byline-initials" style="display:none">${art.authorInitials}</span>`;
+  const authorSlug = AUTHOR_SLUGS[art.author];
+  const bylineAttrs = authorSlug
+    ? `class="reader-byline reader-byline-link" role="button" tabindex="0" onclick="openTeamProfile('${authorSlug}')"`
+    : 'class="reader-byline"';
 
   document.getElementById('readerBody').innerHTML = `
     ${imgHtml}
     <span class="reader-tag">${art.tag}</span>
     <h1>${art.title}</h1>
-    <div class="reader-byline">${bylineImg} <span>By ${art.author}</span></div>
+    <div ${bylineAttrs}>${bylineImg} <span>By ${art.author}</span></div>
     <div class="reader-content">${art.content}</div>
     <a class="reader-ext-link" href="${art.externalUrl}" target="_blank">Read on neuro-view.org ↗</a>
   `;
@@ -1572,11 +1715,104 @@ function openArticle(slug) {
 
 function closeReader() {
   document.getElementById('articleReader').classList.remove('open');
-  document.body.style.overflow = '';
+  if (!document.getElementById('teamProfile').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+
+function openTeamProfile(slug, opts) {
+  opts = opts || {};
+  var member = TEAM_MEMBERS[slug];
+  if (!member) return;
+
+  closeReader();
+
+  if (!opts.skipHistory) {
+    var path = nvTeamProfilePath(slug);
+    if (nvNormalizePath(location.pathname) !== nvNormalizePath(path)) {
+      history.pushState({ nvPage: 'team', nvTeamSlug: slug }, '', path);
+    }
+  }
+
+  if (!document.getElementById('page-team').classList.contains('active')) {
+    showPage('team', { skipHistory: true, skipVeil: true });
+  }
+
+  document.getElementById('teamProfileNavTitle').textContent = member.name;
+  var bioHtml = member.bio.map(function (para) {
+    return '<p>' + para + '</p>';
+  }).join('');
+
+  document.getElementById('teamProfileBody').innerHTML = `
+    <img class="profile-photo" src="${member.photo}" alt="${member.name}">
+    <h1>${member.name}</h1>
+    <div class="profile-role">${member.role}</div>
+    <div class="profile-school">${member.school}</div>
+    <div class="profile-bio">${bioHtml}</div>
+    <div class="profile-contact">
+      <h2>Contact info</h2>
+      <a href="mailto:${member.email}">Email: ${member.email}</a>
+    </div>
+  `;
+
+  document.getElementById('teamProfile').classList.add('open');
+  document.getElementById('teamProfile').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTeamProfile(opts) {
+  opts = opts || {};
+  var profile = document.getElementById('teamProfile');
+  if (!profile || !profile.classList.contains('open')) return;
+  profile.classList.remove('open');
+  if (!document.getElementById('articleReader').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+  if (opts.skipHistory) return;
+  if (nvExtractTeamSlug(location.pathname)) {
+    history.replaceState({ nvPage: 'team' }, '', '/team');
+  }
+}
+
+function teamProfileBack() {
+  if (nvExtractTeamSlug(location.pathname)) {
+    history.back();
+  } else {
+    closeTeamProfile({ skipHistory: true });
+  }
+}
+
+function initAuthorLinks() {
+  document.querySelectorAll('.card-author').forEach(function (el) {
+    var img = el.querySelector('.avatar-img');
+    var name = img && img.getAttribute('alt') ? img.getAttribute('alt') : el.textContent.trim();
+    var slug = AUTHOR_SLUGS[name];
+    if (!slug) return;
+    el.classList.add('author-link');
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.onclick = function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      openTeamProfile(slug);
+    };
+    el.onkeydown = function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.stopPropagation();
+        e.preventDefault();
+        openTeamProfile(slug);
+      }
+    };
+  });
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeReader();
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('teamProfile').classList.contains('open')) {
+    teamProfileBack();
+    return;
+  }
+  closeReader();
 });
 
 /* ── NEURAL CANVAS ANIMATION ── */
@@ -1661,6 +1897,7 @@ function showPage(id, opts) {
   const useVeil = veil && !opts.skipVeil;
   function doSwitch() {
     closeReader();
+    closeTeamProfile({ skipHistory: true });
     _coreShowPage(id);
     updateScrollProgress();
     // Re-observe reveals on the new page
@@ -1857,17 +2094,30 @@ setTimeout(() => {
 }, 100);
 
 window.addEventListener('popstate', function () {
-  var id = nvPathToPage(location.pathname);
+  var teamSlug = nvExtractTeamSlug(location.pathname);
+  var id = teamSlug ? 'team' : nvPathToPage(location.pathname);
+  closeTeamProfile({ skipHistory: true });
+  closeReader();
   showPage(id, { skipHistory: true, skipVeil: true });
+  if (teamSlug) openTeamProfile(teamSlug, { skipHistory: true });
 });
 
 (function nvInitialRoute() {
+  var teamSlug = nvExtractTeamSlug(location.pathname);
+  if (teamSlug) {
+    history.replaceState({ nvPage: 'team', nvTeamSlug: teamSlug }, '', nvTeamProfilePath(teamSlug));
+    showPage('team', { skipHistory: true, skipVeil: true });
+    openTeamProfile(teamSlug, { skipHistory: true });
+    return;
+  }
   var id = nvPathToPage(location.pathname);
   if (id !== 'home') {
     history.replaceState({ nvPage: id }, '', nvPageToPath(id));
     showPage(id, { skipHistory: true, skipVeil: true });
   }
 })();
+
+initAuthorLinks();
 
 </script>
 </body>
