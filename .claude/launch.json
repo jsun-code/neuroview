@@ -4,8 +4,21 @@
     {
       "name": "neuroview",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4321"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4321"
+      ],
       "port": 4321
+    },
+    {
+      "name": "neuroview (pages-alike)",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        ".claude/pages-server.py",
+        "4322"
+      ],
+      "port": 4322
     }
   ]
 }
