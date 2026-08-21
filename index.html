@@ -743,17 +743,24 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   max-width: var(--maxw-prose); margin: 0 auto;
   padding: 3rem var(--gutter) 5rem;
 }
+.reader-hero { margin-bottom: 2.5rem; }
 .reader-hero-img {
   width: 100%; height: 320px;
   object-fit: cover; border-radius: var(--radius-lg);
-  margin-bottom: 2.5rem;
   display: block;
 }
+.reader-credit {
+  margin-top: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  line-height: var(--lh-tight);
+}
+.reader-credit a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+.reader-credit a:hover { color: var(--purple-600); }
 .reader-hero-placeholder {
   width: 100%; height: 320px;
   background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 50%, var(--ink-900) 100%);
   border-radius: var(--radius-lg);
-  margin-bottom: 2.5rem;
   display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden;
 }
@@ -1036,8 +1043,9 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
   .footer { flex-direction: column; gap: 1.5rem; padding: 2rem var(--gutter); }
 
+  .reader-hero { margin-bottom: 1.5rem; }
   .reader-hero-img,
-  .reader-hero-placeholder { height: 200px; margin-bottom: 1.5rem; }
+  .reader-hero-placeholder { height: 200px; }
   .reader-pdf { height: 70vh; }
   .reader-ext-links { flex-direction: column; }
   .reader-ext-link { justify-content: center; }
@@ -1075,9 +1083,26 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 </style>
 <!--
-  Article/video cover photos: Wikimedia Commons — Brain_BCI.jpg (BCI); FMRI Brain Scan.jpg;
-  Human Brain Organoid.jpg (biocomputing); Pipette gallery.jpg (lab/biotech); Celula Cesta Purkinje.jpg
-  (neurons); MRI Head 5 slices.jpg. Check each file’s page on commons.wikimedia.org for attribution.
+  IMAGE CREDITS — all cover and thumbnail photography comes from Wikimedia Commons.
+  The licences below require attribution, which is rendered visibly under each
+  article's hero image (see NV_IMAGE_CREDITS in the script block). This comment is
+  the source-of-truth mapping; keep the two in sync.
+
+    images/cover-bcis.jpg ............... File:Brain BCI.jpg — Adindva1 — CC BY-SA 4.0
+    images/cover-fmri.jpg ............... File:FMRI Brain Scan.jpg — DrOONeil — CC BY-SA 3.0
+    images/thumb-fmri.jpg ............... (same file as above)
+    images/cover-biocomputing.jpg ....... File:Human Brain Organoid.jpg — Nreis1 — CC BY 4.0
+    images/thumb-biocomputing.jpg ....... (same file as above)
+    images/cover-chinavsus.jpg .......... File:Pipette gallery.jpg — Squidonius and contributors — CC BY-SA 4.0
+    images/cover-neuroplasticity.jpg .... File:Celula Cesta Purkinje.jpg — Zhou, Brown, Lackey,
+                                          Arancillo, Lin and Sillitoe — CC BY 4.0
+    images/cover-brain-death.jpg ........ File:MRI Head 5 slices.jpg — Genesis12 — CC BY 2.5
+    images/cover-empowering-youth-rwanda.jpg
+                                          File:Rwanda Classroom.jpg — Colleen Taugher — CC BY 2.0
+                                          (cropped to the students and shadows lifted)
+
+  All files were downscaled to roughly 2x their largest rendered size. Apart from the
+  Rwanda cover, none were cropped or otherwise altered.
 -->
 </head>
 <body>
@@ -1310,7 +1335,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 
 <div class="article-card" data-tag="Global Perspective" onclick="openArticle('empowering-youth-rwanda')">
-<img class="article-cover" loading="lazy" decoding="async" src="images/cover-empowering-youth-rwanda.png" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-empowering-youth-rwanda.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="200" cy="80" r="60" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 40 260 80 Q200 120 140 80" fill="none" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
 <div class="article-body"><span class="card-tag" data-cat="global">Global Perspective</span><h3>Empowering Youth Through Education</h3><p>Student-led initiatives in Rwanda are driving social change — showing how youth can transform communities through education and leadership.</p><div class="card-meta"><a href="/team/dukuze-angelo-irenee" data-team-profile="dukuze-angelo-irenee" class="card-author"><img class="avatar-img" src="/dukuzeangeloirenee.png" alt="Dukuze Angelo Irenee" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">DA</span>Dukuze Angelo Irenee</a></div></div>
 </div>
@@ -2059,7 +2084,7 @@ const ARTICLES = {
     tag: 'Global Perspective',
     author: 'Dukuze Angelo Irenee',
     authorInitials: 'DA',
-    coverImg: 'images/cover-empowering-youth-rwanda.png',
+    coverImg: 'images/cover-empowering-youth-rwanda.jpg',
     pdfUrl: 'articles/empowering-youth-rwanda.pdf',
     externalUrl: 'https://figshare.com/articles/journal_contribution/Empowering_Youth_Through_Education_Student-Led_Initiatives_Driving_Social_Change_in_Rwanda/30011317',
     content: `
@@ -2067,6 +2092,30 @@ const ARTICLES = {
     `
   }
 };
+
+// Cover photography. Every cover is a Wikimedia Commons file; these strings are
+// the attribution the licences actually require, rendered under each article's
+// hero image. Verified against each file page — do not edit without rechecking.
+var NV_IMAGE_CREDITS = {
+  'bcis':                    { title: 'Brain BCI',                by: 'Adindva1',        lic: 'CC BY-SA 4.0', licUrl: 'https://creativecommons.org/licenses/by-sa/4.0/', page: 'https://commons.wikimedia.org/wiki/File:Brain_BCI.jpg' },
+  'fmri':                    { title: 'FMRI Brain Scan',          by: 'DrOONeil',        lic: 'CC BY-SA 3.0', licUrl: 'https://creativecommons.org/licenses/by-sa/3.0/', page: 'https://commons.wikimedia.org/wiki/File:FMRI_Brain_Scan.jpg' },
+  'biocomputing':            { title: 'Human Brain Organoid',     by: 'Nreis1',          lic: 'CC BY 4.0',    licUrl: 'https://creativecommons.org/licenses/by/4.0/',    page: 'https://commons.wikimedia.org/wiki/File:Human_Brain_Organoid.jpg' },
+  'chinavsus':               { title: 'Pipette gallery',          by: 'Squidonius and contributors', lic: 'CC BY-SA 4.0', licUrl: 'https://creativecommons.org/licenses/by-sa/4.0/', page: 'https://commons.wikimedia.org/wiki/File:Pipette_gallery.jpg' },
+  'neuroplasticity':         { title: 'Celula Cesta Purkinje',    by: 'Zhou, Brown, Lackey, Arancillo, Lin and Sillitoe', lic: 'CC BY 4.0', licUrl: 'https://creativecommons.org/licenses/by/4.0/', page: 'https://commons.wikimedia.org/wiki/File:Celula_Cesta_Purkinje.jpg' },
+  'brain-death':             { title: 'MRI Head 5 slices',        by: 'Genesis12',       lic: 'CC BY 2.5',    licUrl: 'https://creativecommons.org/licenses/by/2.5/',    page: 'https://commons.wikimedia.org/wiki/File:MRI_Head_5_slices.jpg' },
+  'empowering-youth-rwanda': { title: 'Rwanda Classroom',         by: 'Colleen Taugher', lic: 'CC BY 2.0',    licUrl: 'https://creativecommons.org/licenses/by/2.0/',    page: 'https://commons.wikimedia.org/wiki/File:Rwanda_Classroom.jpg', note: 'cropped and lightened' }
+};
+
+function nvCreditHtml(slug) {
+  var c = NV_IMAGE_CREDITS[slug];
+  if (!c) return '';
+  return '<figcaption class="reader-credit">'
+       + '<a href="' + c.page + '" target="_blank" rel="noopener">' + c.title + '</a>'
+       + ' by ' + c.by
+       + (c.note ? ' (' + c.note + ')' : '')
+       + ', <a href="' + c.licUrl + '" target="_blank" rel="noopener">' + c.lic + '</a>'
+       + '</figcaption>';
+}
 
 var NV_CAT_SLUG = {"BCI": "bci", "Neuroimaging": "neuroimaging", "AI + Neuro": "ai-neuro", "Neuroscience": "neuroscience", "Personal": "personal", "Global Perspective": "global"};
 
@@ -2078,11 +2127,14 @@ function openArticle(slug) {
 
   document.getElementById('readerNavTitle').textContent = art.title;
 
-  const imgHtml = `<img class="reader-hero-img" src="${art.coverImg}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-  <div class="reader-hero-placeholder" style="display:none">
-    <svg viewBox="0 0 700 320"><circle cx="350" cy="160" r="120" fill="none" stroke="#534AB7" stroke-width="1.5" opacity="0.4"/><circle cx="350" cy="160" r="70" fill="none" stroke="#7F77DD" stroke-width="1.5" opacity="0.4"/></svg>
-    <span class="rh-label">${art.tag}</span>
-  </div>`;
+  const imgHtml = `<figure class="reader-hero">
+    <img class="reader-hero-img" src="${art.coverImg}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="reader-hero-placeholder" style="display:none">
+      <svg viewBox="0 0 700 320"><circle cx="350" cy="160" r="120" fill="none" stroke="#534AB7" stroke-width="1.5" opacity="0.4"/><circle cx="350" cy="160" r="70" fill="none" stroke="#7F77DD" stroke-width="1.5" opacity="0.4"/></svg>
+      <span class="rh-label">${art.tag}</span>
+    </div>
+    ${nvCreditHtml(slug)}
+  </figure>`;
 
   const authorSlug = AUTHOR_SLUGS[art.author];
   const authorMember = authorSlug ? TEAM_MEMBERS[authorSlug] : null;
