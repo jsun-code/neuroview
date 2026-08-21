@@ -1373,6 +1373,14 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   <span class="team-tag">Outreach</span>
 </a>
 
+<a class="team-card reveal" data-delay="400" href="/team/dukuze-angelo-irenee" data-team-profile="dukuze-angelo-irenee">
+  <img class="team-photo" src="/dukuzeangeloirenee.png" alt="Dukuze Angelo Irenee" onerror="this.style.display='none'">
+  <h3>Dukuze Angelo Irenee</h3>
+  <div class="role">Team Member</div>
+  <div class="school">Hope Haven School</div>
+  <span class="team-tag">Team</span>
+</a>
+
 </div>
 
 <div class="cta-band" style="margin:2rem 0 0">
@@ -1472,7 +1480,8 @@ var AUTHOR_SLUGS = {
   'Oliver Payne': 'oliver-payne',
   'Finnegan Schoebel': 'finnegan-schoebel',
   'David Wu': 'david-wu',
-  'Khai Gordon': 'khai-gordon'
+  'Khai Gordon': 'khai-gordon',
+  'Dukuze Angelo Irenee': 'dukuze-angelo-irenee'
 };
 
 var TEAM_MEMBERS = {
@@ -1531,6 +1540,17 @@ var TEAM_MEMBERS = {
     bio: [
       "Hi! My name is Khai Gordon and I am a senior at Palo Alto High School. I love biotech because there's so many uses for it that we're still discovering. From genetically modified foods to neural implants, biotechnology is featured in so many different subjects!",
       "When I'm not in school, I like to go on runs, volunteer at my local makerspace, and help tutor younger students!"
+    ]
+  },
+  'dukuze-angelo-irenee': {
+    name: 'Dukuze Angelo Irenee',
+    role: 'Team Member',
+    school: 'Hope Haven School',
+    photo: 'dukuzeangeloirenee.png',
+    bio: [
+      'I have a strong passion for neuroscience, driven by a deep interest in understanding the complexities of the human brain and its influence on behavior and cognition. My decision to join NeuroView was motivated by its commitment to advancing knowledge and fostering meaningful discussions within the field.',
+      'I joined NeuroView because I was drawn to its mission of making neuroscience more accessible and engaging to a broader audience. Being part of a team that shares curiosity and enthusiasm for the brain has been incredibly rewarding. I value opportunities to guide and support others while continuing to grow both academically and professionally.',
+      'Outside of my work in neuroscience, I enjoy reading and listening to music, which help me maintain a well-rounded perspective.'
     ]
   }
 };
@@ -1762,10 +1782,10 @@ function openTeamProfile(slug, opts) {
     <div class="profile-role">${member.role}</div>
     <div class="profile-school">${member.school}</div>
     <div class="profile-bio">${bioHtml}</div>
-    <div class="profile-contact">
+    ${member.email ? `<div class="profile-contact">
       <h2>Contact info</h2>
       <a href="mailto:${member.email}">Email: ${member.email}</a>
-    </div>
+    </div>` : ''}
   `;
 
   document.getElementById('teamProfile').classList.add('open');
