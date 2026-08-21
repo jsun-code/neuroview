@@ -2,14 +2,42 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>document.documentElement.className += " js";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NeuroView — Making Neuroscience Accessible</title>
+<meta name="description" content="NeuroView is a student-led platform making neuroscience and brain-computer interface research accessible — free articles, videos, and ready-to-use lecture decks for science clubs.">
+<link rel="canonical" href="https://neuro-view.org/">
+<meta name="theme-color" content="#534AB7">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuroView">
+<meta property="og:url" content="https://neuro-view.org/">
+<meta property="og:title" content="NeuroView — Making Neuroscience Accessible">
+<meta property="og:description" content="A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free — for everyone.">
+<meta property="og:image" content="https://neuro-view.org/images/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuroView — making neuroscience accessible. Student-led, science-driven.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NeuroView — Making Neuroscience Accessible">
+<meta name="twitter:description" content="A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free — for everyone.">
+<meta name="twitter:image" content="https://neuro-view.org/images/og-cover.png">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="alternate icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
+/* ═══ BRAND ═══ */
 --purple-50: #EEEDFE;
 --purple-100: #CECBF6;
 --purple-200: #AFA9EC;
@@ -17,29 +45,73 @@
 --purple-600: #534AB7;
 --purple-800: #3C3489;
 --purple-900: #26215C;
---teal-50: #E1F5EE;
---teal-600: #0F6E56;
---coral-50: #FAECE7;
---coral-600: #993C1D;
---blue-50: #E6F1FB;
---blue-600: #185FA5;
---green-50: #EAF3DE;
---green-600: #3B6D11;
---amber-50: #FAEEDA;
---amber-600: #854F0B;
+--ink-900: #0d0b1e;      /* dark surface: hero, mission band, cover backdrops */
+--ink-800: #1e1a3e;
+
+/* ═══ CATEGORY ACCENTS ═══ */
+--teal-50: #E1F5EE;   --teal-600: #0F6E56;
+--coral-50: #FAECE7;  --coral-600: #993C1D;
+--blue-50: #E6F1FB;   --blue-600: #185FA5;
+--green-50: #EAF3DE;  --green-600: #3B6D11;
+--amber-50: #FAEEDA;  --amber-600: #854F0B;
+
+/* ═══ SURFACES + TEXT ═══
+   Every text step clears WCAG AA (4.5:1) on --bg, --bg-card and --purple-50. */
 --bg: #FAFAF9;
 --bg-card: #FFFFFF;
---text: #1a1a1a;
---text-muted: #6b6b6b;
---text-faint: #9a9a9a;
+--text: #1A1A1A;        /* 16.7:1 */
+--text-muted: #5A5A5A;  /*  6.6:1 */
+--text-faint: #6E6E6E;  /*  4.9:1 */
 --border: rgba(0,0,0,0.08);
 --border-hover: rgba(83,74,183,0.35);
+
+/* ═══ TYPE SCALE ═══ */
+--fs-2xs: 11px;   /* uppercase micro-labels, tags */
+--fs-xs:  12px;   /* meta, captions */
+--fs-sm:  14px;   /* UI controls, secondary body */
+--fs-md:  16px;   /* body */
+--fs-lg:  18px;   /* lead paragraphs */
+--fs-xl:  22px;   /* wordmark, small headings */
+--fs-2xl: 28px;   /* section headings */
+--fs-3xl: 40px;   /* display numerals */
+--fs-4xl: 56px;   /* watermark numerals */
+--fs-display-1: clamp(44px, 7vw, 76px);   /* hero */
+--fs-display-2: clamp(32px, 5vw, 48px);   /* band + article titles */
+--fs-display-3: clamp(28px, 4vw, 40px);   /* page titles */
+
+/* ═══ LINE HEIGHT ═══ */
+--lh-flat:    1;      /* single-line numerals */
+--lh-display: 1.1;
+--lh-tight:   1.35;
+--lh-body:    1.6;
+--lh-relaxed: 1.75;   /* long-form reading */
+
+/* ═══ SPACING — 4pt grid, 2pt half-steps for dense UI ═══ */
+--space-0-5: 2px;   --space-1: 4px;    --space-1-5: 6px;
+--space-2: 8px;     --space-2-5: 10px; --space-3: 12px;
+--space-3-5: 14px;  --space-4: 16px;   --space-5: 20px;
+--space-6: 24px;    --space-8: 32px;   --space-10: 40px;
+
+/* ═══ RADII ═══ */
 --radius-sm: 8px;
 --radius-md: 12px;
 --radius-lg: 16px;
 --radius-xl: 24px;
+--radius-pill: 999px;
+
+/* ═══ ELEVATION — two levels, reused everywhere ═══ */
 --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
 --shadow-hover: 0 4px 16px rgba(83,74,183,0.12), 0 1px 4px rgba(0,0,0,0.06);
+
+/* ═══ MOTION ═══ */
+--ease: cubic-bezier(0.22, 1, 0.36, 1);
+--dur-fast: 0.15s;
+--dur-mid: 0.25s;
+
+/* ═══ LAYOUT ═══
+   --gutter is the single horizontal rhythm; the mobile query below retunes it once. */
+--gutter: 2rem;
+--maxw-prose: 720px;
 }
 
 html { scroll-behavior: smooth; }
@@ -47,8 +119,8 @@ body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -56,14 +128,14 @@ body {
 .nav {
   position: sticky; top: 0; z-index: 200;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2rem; height: 60px;
+  padding: 0 var(--gutter); height: 60px;
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
   font-family: 'DM Serif Display', serif;
-  font-size: 22px; color: var(--text); cursor: pointer;
+  font-size: var(--fs-xl); color: var(--text); cursor: pointer;
   letter-spacing: -0.3px; text-decoration: none;
 }
 .nav-logo span { color: var(--purple-600); }
@@ -71,9 +143,9 @@ body {
 .nav-btn {
   background: none; border: none; cursor: pointer;
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 400;
+  font-size: var(--fs-sm); font-weight: 400;
   color: var(--text-muted);
-  padding: 6px 13px; border-radius: var(--radius-sm);
+  padding: 6px 12px; border-radius: var(--radius-sm);
   transition: background 0.15s, color 0.15s;
 }
 .nav-btn:hover { background: var(--purple-50); color: var(--purple-600); }
@@ -88,6 +160,35 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 }
 .nav-apply:hover { background: var(--purple-800) !important; }
 
+/* Menu button — hidden until the links stop fitting (see responsive block) */
+.nav-toggle {
+  display: none;
+  width: 44px; height: 44px;
+  margin-right: -10px;
+  align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: var(--text);
+  border-radius: var(--radius-sm);
+}
+.nav-toggle:hover { background: var(--purple-50); color: var(--purple-600); }
+.nav-toggle-bars { position: relative; display: block; width: 18px; height: 1.5px; }
+.nav-toggle-bars,
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  background: currentColor;
+  transition: transform var(--dur-mid) var(--ease), background var(--dur-fast);
+}
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  content: ''; position: absolute; left: 0;
+  width: 18px; height: 1.5px;
+}
+.nav-toggle-bars::before { transform: translateY(-6px); }
+.nav-toggle-bars::after  { transform: translateY(6px); }
+.nav.open .nav-toggle-bars { background: transparent; }
+.nav.open .nav-toggle-bars::before { transform: rotate(45deg); }
+.nav.open .nav-toggle-bars::after  { transform: rotate(-45deg); }
+
 /* ─── PAGES ─── */
 .page { display: none; }
 .page.active { display: block; }
@@ -98,8 +199,8 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   min-height: 520px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center;
-  padding: 6rem 2rem 4rem;
-  background: #0d0b1e;
+  padding: 6rem var(--gutter) 4rem;
+  background: var(--ink-900);
 }
 #heroCanvas {
   position: absolute; inset: 0;
@@ -109,30 +210,30 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 .hero-content { position: relative; z-index: 2; }
 .hero-eyebrow {
   display: inline-block;
-  font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+  font-size: var(--fs-xs); font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
   color: var(--purple-200);
   background: rgba(83,74,183,0.2);
   border: 1px solid rgba(175,169,236,0.3);
-  padding: 5px 16px; border-radius: 30px;
+  padding: 6px 16px; border-radius: var(--radius-pill);
   margin-bottom: 1.5rem;
   animation: fadeUp 0.6s ease both;
 }
 .hero h1 {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(48px, 7vw, 80px);
+  font-size: var(--fs-display-1);
   font-weight: 400;
   color: #fff;
-  line-height: 1.05;
+  line-height: var(--lh-display);
   letter-spacing: -2px;
   margin-bottom: 1.25rem;
   animation: fadeUp 0.6s 0.1s ease both;
 }
 .hero h1 em { font-style: italic; color: var(--purple-200); }
 .hero-sub {
-  font-size: 18px; font-weight: 300;
-  color: rgba(255,255,255,0.6);
+  font-size: var(--fs-lg); font-weight: 400;
+  color: rgba(255,255,255,0.72);
   max-width: 520px; margin: 0 auto 2.5rem;
-  line-height: 1.7;
+  line-height: var(--lh-relaxed);
   animation: fadeUp 0.6s 0.2s ease both;
 }
 .hero-btns {
@@ -143,7 +244,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   background: var(--purple-600); color: #fff;
   border: none; padding: 12px 28px;
   border-radius: var(--radius-md);
-  cursor: pointer; font-size: 15px; font-weight: 500;
+  cursor: pointer; font-size: var(--fs-md); font-weight: 500;
   font-family: 'DM Sans', sans-serif;
   transition: background 0.15s, transform 0.1s;
 }
@@ -153,7 +254,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   color: rgba(255,255,255,0.85);
   border: 1px solid rgba(255,255,255,0.15);
   padding: 12px 28px; border-radius: var(--radius-md);
-  cursor: pointer; font-size: 15px; font-weight: 400;
+  cursor: pointer; font-size: var(--fs-md); font-weight: 400;
   font-family: 'DM Sans', sans-serif;
   transition: background 0.15s, transform 0.1s;
 }
@@ -171,30 +272,30 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   background: var(--bg-card);
 }
 .stat-item {
-  padding: 1.75rem 2rem; text-align: center;
+  padding: 1.75rem var(--gutter); text-align: center;
   border-right: 1px solid var(--border);
 }
 .stat-item:last-child { border-right: none; }
 .stat-num {
   font-family: 'DM Serif Display', serif;
-  font-size: 40px; color: var(--purple-600);
-  line-height: 1; margin-bottom: 6px;
+  font-size: var(--fs-3xl); color: var(--purple-600);
+  line-height: var(--lh-flat); margin-bottom: 6px;
 }
-.stat-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+.stat-label { font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--lh-tight); }
 
 /* ─── SECTIONS ─── */
-.section { padding: 3.5rem 2rem; }
-.section-sm { padding: 2rem 2rem; }
+.section { padding: 3.5rem var(--gutter); }
+.section-sm { padding: 2rem var(--gutter); }
 .section-header {
   display: flex; align-items: baseline; justify-content: space-between;
   margin-bottom: 1.75rem;
 }
 .section-header h2 {
   font-family: 'DM Serif Display', serif;
-  font-size: 28px; font-weight: 400; letter-spacing: -0.5px;
+  font-size: var(--fs-2xl); font-weight: 400; letter-spacing: -0.5px;
 }
 .view-all {
-  font-size: 13px; color: var(--purple-600);
+  font-size: var(--fs-sm); color: var(--purple-600);
   background: none; border: none; cursor: pointer;
   font-family: 'DM Sans', sans-serif;
   padding: 4px 0; text-decoration: none;
@@ -228,11 +329,11 @@ a.nav-btn { text-decoration: none; display: inline-block; }
   width: 100%; height: 160px;
   object-fit: cover;
   display: block;
-  background: #0d0b1e;
+  background: var(--ink-900);
 }
 .article-cover-placeholder {
   width: 100%; height: 160px;
-  background: linear-gradient(135deg, #0d0b1e 0%, #1e1a3e 50%, #0d0b1e 100%);
+  background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 50%, var(--ink-900) 100%);
   display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden;
 }
@@ -242,27 +343,35 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 .article-cover-placeholder .cover-label {
   position: relative; z-index: 1;
   font-family: 'DM Serif Display', serif;
-  font-size: 13px; color: rgba(255,255,255,0.5);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.72);
   letter-spacing: 1px; text-transform: uppercase;
 }
 .article-body { padding: 1.25rem 1.5rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
 .card-tag {
   display: inline-block;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+  font-size: var(--fs-2xs); font-weight: 500; letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 4px 11px; border-radius: 20px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
   background: var(--purple-50); color: var(--purple-800);
   margin-bottom: 12px; width: fit-content;
 }
+
+/* Category accents. One pair per subject so a grid of ten articles reads as
+   ten subjects rather than one purple wash. Every pair clears AA. */
+.card-tag[data-cat="neuroimaging"], .reader-tag[data-cat="neuroimaging"] { background: var(--blue-50);  color: var(--blue-600); }
+.card-tag[data-cat="ai-neuro"],     .reader-tag[data-cat="ai-neuro"]     { background: var(--teal-50);  color: var(--teal-600); }
+.card-tag[data-cat="neuroscience"], .reader-tag[data-cat="neuroscience"] { background: var(--green-50); color: var(--green-600); }
+.card-tag[data-cat="personal"],     .reader-tag[data-cat="personal"]     { background: var(--amber-50); color: var(--amber-600); }
+.card-tag[data-cat="global"],       .reader-tag[data-cat="global"]       { background: var(--coral-50); color: var(--coral-600); }
 .article-card h3 {
-  font-size: 16px; font-weight: 500; line-height: 1.4;
+  font-size: var(--fs-md); font-weight: 500; line-height: var(--lh-tight);
   margin-bottom: 8px; flex: 1;
 }
-.article-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+.article-card p { font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--lh-body); margin-bottom: 16px; }
 .card-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
 .card-author, a.card-author {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 12px; color: var(--text-faint);
+  display: flex; align-items: center; gap: 8px;
+  font-size: var(--fs-xs); color: var(--text-faint);
   text-decoration: none; cursor: pointer;
   border-radius: var(--radius-sm); padding: 2px 4px; margin: -2px -4px;
   transition: color 0.15s, background 0.15s;
@@ -283,7 +392,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .avatar-initials {
   width: 24px; height: 24px; border-radius: 50%;
   background: var(--purple-50); color: var(--purple-800);
-  font-size: 9px; font-weight: 600;
+  font-size: var(--fs-2xs); font-weight: 600;
   display: flex; align-items: center; justify-content: center;
 }
 
@@ -303,7 +412,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   transform: translateY(-2px);
 }
 .video-thumb {
-  background: #0d0b1e;
+  background: var(--ink-900);
   height: 180px; position: relative;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
@@ -330,8 +439,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   margin-left: 4px;
 }
 .video-info { padding: 1.1rem 1.25rem; }
-.video-info h3 { font-size: 14px; font-weight: 500; margin-bottom: 5px; line-height: 1.4; }
-.video-info p { font-size: 12px; color: var(--text-muted); }
+.video-info h3 { font-size: var(--fs-sm); font-weight: 500; margin-bottom: 4px; line-height: var(--lh-tight); }
+.video-info p { font-size: var(--fs-xs); color: var(--text-muted); }
 
 /* ─── RESOURCE CARD ─── */
 .resource-card {
@@ -348,33 +457,30 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   width: 100%; height: 140px;
   object-fit: cover;
   display: block;
-  background: #0d0b1e;
+  background: var(--ink-900);
 }
 .lecture-cover-placeholder {
   width: 100%; height: 140px;
-  background: linear-gradient(135deg, #0d0b1e 0%, #1e1a3e 60%, #0d0b1e 100%);
+  background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 60%, var(--ink-900) 100%);
   display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden;
 }
 .lecture-cover-placeholder .lecture-num {
   font-family: 'DM Serif Display', serif;
-  font-size: 52px; color: rgba(127,119,221,0.2);
-  position: absolute; right: 16px; bottom: -4px; line-height: 1;
-}
-.lecture-cover-placeholder .lecture-icon {
-  font-size: 32px; position: relative; z-index: 1;
+  font-size: var(--fs-4xl); color: rgba(127,119,221,0.2);
+  position: absolute; right: 16px; bottom: -4px; line-height: var(--lh-flat);
 }
 .resource-body { padding: 1.25rem 1.5rem; display: grid; grid-template-columns: 10px 1fr; gap: 1rem; align-items: start; }
-.diff-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.diff-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
 .diff-green { background: #3B6D11; }
 .diff-yellow { background: #BA7517; }
 .diff-red { background: #A32D2D; }
-.resource-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 5px; }
-.resource-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+.resource-card h3 { font-size: var(--fs-md); font-weight: 500; margin-bottom: 4px; }
+.resource-card p { font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--lh-body); margin-bottom: 12px; }
 .resource-links { display: flex; gap: 8px; flex-wrap: wrap; }
 .res-link {
-  font-size: 12px; font-weight: 500;
-  padding: 5px 13px; border-radius: 20px;
+  font-size: var(--fs-xs); font-weight: 500;
+  padding: 6px 14px; border-radius: var(--radius-pill);
   border: 1px solid var(--border);
   color: var(--text-muted); background: var(--bg);
   text-decoration: none; font-family: 'DM Sans', sans-serif;
@@ -409,20 +515,20 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   margin: 0 auto 14px;
   display: block;
 }
-.team-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-.team-card .role { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-.team-card .school { font-size: 11px; color: var(--text-faint); }
+.team-card h3 { font-size: var(--fs-md); font-weight: 500; margin-bottom: 4px; }
+.team-card .role { font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 6px; }
+.team-card .school { font-size: var(--fs-2xs); color: var(--text-faint); }
 .team-tag {
   display: inline-block; margin-top: 10px;
-  font-size: 11px; font-weight: 500;
-  padding: 3px 10px; border-radius: 20px;
+  font-size: var(--fs-2xs); font-weight: 500;
+  padding: 4px 10px; border-radius: var(--radius-pill);
   background: var(--purple-50); color: var(--purple-800);
 }
 
 /* ─── MISSION BAND ─── */
 .mission-band {
-  background: #0d0b1e;
-  padding: 5rem 2rem;
+  background: var(--ink-900);
+  padding: 5rem var(--gutter);
   text-align: center;
   position: relative; overflow: hidden;
 }
@@ -434,31 +540,31 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 }
 .mission-band h2 {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: var(--fs-display-2);
   color: #fff; font-weight: 400;
   letter-spacing: -1px; margin-bottom: 1.25rem;
   position: relative;
 }
 .mission-band p {
-  font-size: 17px; font-weight: 300;
-  color: rgba(255,255,255,0.55);
+  font-size: var(--fs-lg); font-weight: 400;
+  color: rgba(255,255,255,0.72);
   max-width: 560px; margin: 0 auto 2rem;
-  line-height: 1.75; position: relative;
+  line-height: var(--lh-relaxed); position: relative;
 }
 
 /* ─── START A CLUB ─── */
 .start-hero {
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
-  padding: 3.5rem 2rem;
+  padding: 3.5rem var(--gutter);
 }
 .start-hero h1 {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(32px, 5vw, 48px); font-weight: 400;
+  font-size: var(--fs-display-2); font-weight: 400;
   letter-spacing: -1px; margin-bottom: 0.75rem;
 }
-.start-hero p { font-size: 16px; color: var(--text-muted); max-width: 540px; line-height: 1.7; }
-.steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; padding: 2.5rem 2rem; }
+.start-hero p { font-size: var(--fs-md); color: var(--text-muted); max-width: 540px; line-height: var(--lh-relaxed); }
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; padding: 2.5rem var(--gutter); }
 .step-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -467,72 +573,72 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 }
 .step-num {
   font-family: 'DM Serif Display', serif;
-  font-size: 36px; color: var(--purple-100);
-  line-height: 1; margin-bottom: 12px;
+  font-size: var(--fs-3xl); color: var(--purple-400);
+  line-height: var(--lh-flat); margin-bottom: 12px;
 }
-.step-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
-.step-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.step-card h3 { font-size: var(--fs-md); font-weight: 500; margin-bottom: 6px; }
+.step-card p { font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--lh-body); }
 
 /* ─── CTA BAND ─── */
 .cta-band {
-  margin: 0 2rem 2rem;
+  margin: 0 var(--gutter) 2rem;
   background: var(--purple-50);
   border: 1px solid var(--purple-100);
   border-radius: var(--radius-xl);
-  padding: 2rem 2rem;
+  padding: 2rem var(--gutter);
   display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
   flex-wrap: wrap;
 }
-.cta-band h3 { font-size: 17px; font-weight: 500; color: var(--purple-900); margin-bottom: 4px; }
-.cta-band p { font-size: 13px; color: var(--purple-600); }
+.cta-band h3 { font-size: var(--fs-lg); font-weight: 500; color: var(--purple-900); margin-bottom: 4px; }
+.cta-band p { font-size: var(--fs-sm); color: var(--purple-600); }
 
 /* ─── APPLY ─── */
-.apply-wrap { padding: 3.5rem 2rem; max-width: 560px; }
+.apply-wrap { padding: 3.5rem var(--gutter); max-width: 560px; }
 .apply-wrap h1 {
   font-family: 'DM Serif Display', serif;
-  font-size: 38px; font-weight: 400; letter-spacing: -1px; margin-bottom: 0.75rem;
+  font-size: var(--fs-display-3); font-weight: 400; letter-spacing: -1px; margin-bottom: 0.75rem;
 }
-.apply-wrap > p { font-size: 15px; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+.apply-wrap > p { font-size: var(--fs-md); color: var(--text-muted); margin-bottom: 2rem; line-height: var(--lh-relaxed); }
 .roles-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
 .role-item {
   display: flex; align-items: center; gap: 12px;
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--radius-md); padding: 14px 16px;
-  font-size: 14px; font-weight: 400;
+  font-size: var(--fs-sm); font-weight: 400;
   box-shadow: var(--shadow-card);
 }
 .role-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple-600); flex-shrink: 0; }
-.contact-info { font-size: 13px; color: var(--text-muted); margin-top: 1.5rem; }
+.contact-info { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 1.5rem; }
 .contact-info a { color: var(--purple-600); text-decoration: none; }
 
 /* ─── PAGE HEADERS ─── */
 .page-header {
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
-  padding: 3rem 2rem 2rem;
+  padding: 3rem var(--gutter) 2rem;
 }
 .page-header h1 {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(30px, 5vw, 44px); font-weight: 400;
+  font-size: var(--fs-display-3); font-weight: 400;
   letter-spacing: -1px; margin-bottom: 0.5rem;
 }
-.page-header p { font-size: 15px; color: var(--text-muted); max-width: 520px; line-height: 1.65; }
+.page-header p { font-size: var(--fs-md); color: var(--text-muted); max-width: 520px; line-height: var(--lh-body); }
 
 /* ─── SEARCH + FILTERS ─── */
-.search-wrap { padding: 0 2rem; margin-top: 2rem; }
+.search-wrap { padding: 0 var(--gutter); margin-top: 2rem; }
 .search-input {
-  width: 100%; padding: 11px 16px;
+  width: 100%; padding: 12px 16px;
   border: 1px solid var(--border); border-radius: var(--radius-md);
   background: var(--bg-card); font-family: 'DM Sans', sans-serif;
-  font-size: 14px; color: var(--text);
+  font-size: var(--fs-md); color: var(--text);
   margin-bottom: 14px; outline: none;
   transition: border-color 0.15s;
 }
 .search-input:focus { border-color: var(--purple-400); }
 .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
 .filter-btn {
-  font-size: 12px; font-weight: 500; padding: 6px 14px;
-  border-radius: 20px; border: 1px solid var(--border);
+  font-size: var(--fs-xs); font-weight: 500; padding: 6px 14px;
+  border-radius: var(--radius-pill); border: 1px solid var(--border);
   background: none; color: var(--text-muted);
   cursor: pointer; font-family: 'DM Sans', sans-serif;
   transition: all 0.15s;
@@ -541,46 +647,51 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 /* ─── DIFFICULTY LEGEND ─── */
 .diff-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.diff-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); }
+.diff-item { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--text-muted); }
 
 /* ─── YOUTUBE CTA ─── */
 .yt-cta {
   margin-top: 2rem;
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 1.5rem 2rem;
+  border-radius: var(--radius-lg); padding: 1.5rem var(--gutter);
   display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
   box-shadow: var(--shadow-card);
 }
-.yt-cta h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-.yt-cta p { font-size: 13px; color: var(--text-muted); }
+.yt-cta h3 { font-size: var(--fs-md); font-weight: 500; margin-bottom: 4px; }
+.yt-cta p { font-size: var(--fs-sm); color: var(--text-muted); }
 
 /* ─── FOOTER ─── */
 .footer {
   background: var(--bg-card);
   border-top: 1px solid var(--border);
-  padding: 2.5rem 2rem;
+  padding: 2.5rem var(--gutter);
   display: flex; justify-content: space-between; align-items: flex-start;
   flex-wrap: wrap; gap: 2rem;
 }
+.footer-brand { min-width: 180px; }
+.field-label {
+  font-size: var(--fs-xs); font-weight: 500; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text-faint); margin-bottom: var(--space-3);
+}
 .footer-logo {
   font-family: 'DM Serif Display', serif;
-  font-size: 20px; color: var(--text); margin-bottom: 6px;
+  font-size: var(--fs-xl); color: var(--text); margin-bottom: 6px;
 }
 .footer-logo span { color: var(--purple-600); }
-.footer-tagline { font-size: 13px; color: var(--text-muted); }
+.footer-tagline { font-size: var(--fs-sm); color: var(--text-muted); }
 .footer-links { display: flex; flex-direction: column; gap: 8px; }
-.footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+.footer-links a { font-size: var(--fs-sm); color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
 .footer-links a:hover { color: var(--purple-600); }
-.footer-links h4 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-faint); margin-bottom: 4px; }
-.footer-bottom { padding: 1rem 2rem; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-faint); }
+.footer-links h4 { font-size: var(--fs-2xs); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-faint); margin-bottom: 4px; }
+.footer-bottom { padding: 1rem var(--gutter); border-top: 1px solid var(--border); font-size: var(--fs-xs); color: var(--text-faint); }
 
 /* ─── INLINE BTNS ─── */
 .btn-sm {
   display: inline-block;
   background: var(--purple-600); color: #fff;
-  border: none; padding: 10px 22px;
+  border: none; padding: 10px 24px;
   border-radius: var(--radius-md);
-  cursor: pointer; font-size: 14px; font-weight: 500;
+  cursor: pointer; font-size: var(--fs-sm); font-weight: 500;
   font-family: 'DM Sans', sans-serif;
   transition: background 0.15s;
   text-decoration: none;
@@ -589,9 +700,9 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .btn-sm-outline {
   display: inline-block;
   background: none; color: var(--text);
-  border: 1px solid var(--border); padding: 10px 22px;
+  border: 1px solid var(--border); padding: 10px 24px;
   border-radius: var(--radius-md);
-  cursor: pointer; font-size: 14px; font-weight: 400;
+  cursor: pointer; font-size: var(--fs-sm); font-weight: 400;
   font-family: 'DM Sans', sans-serif;
   transition: border-color 0.15s, background 0.15s;
   text-decoration: none;
@@ -611,26 +722,26 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 0 2rem; height: 56px;
+  padding: 0 var(--gutter); height: 56px;
   display: flex; align-items: center; gap: 12px;
 }
 .reader-back {
   background: none; border: none; cursor: pointer;
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; color: var(--text-muted);
+  font-size: var(--fs-sm); color: var(--text-muted);
   display: flex; align-items: center; gap: 6px;
   padding: 6px 0;
   transition: color 0.15s;
 }
 .reader-back:hover { color: var(--purple-600); }
 .reader-title {
-  font-size: 14px; color: var(--text-faint);
+  font-size: var(--fs-sm); color: var(--text-faint);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   flex: 1;
 }
 .reader-body {
-  max-width: 720px; margin: 0 auto;
-  padding: 3rem 2rem 5rem;
+  max-width: var(--maxw-prose); margin: 0 auto;
+  padding: 3rem var(--gutter) 5rem;
 }
 .reader-hero-img {
   width: 100%; height: 320px;
@@ -640,7 +751,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 }
 .reader-hero-placeholder {
   width: 100%; height: 320px;
-  background: linear-gradient(135deg, #0d0b1e 0%, #1e1a3e 50%, #0d0b1e 100%);
+  background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 50%, var(--ink-900) 100%);
   border-radius: var(--radius-lg);
   margin-bottom: 2.5rem;
   display: flex; align-items: center; justify-content: center;
@@ -650,22 +761,22 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .reader-hero-placeholder .rh-label {
   position: relative; z-index: 1;
   font-family: 'DM Serif Display', serif;
-  font-size: 18px; color: rgba(255,255,255,0.4);
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.72);
   letter-spacing: 1px;
 }
-.reader-tag { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; padding: 4px 11px; border-radius: 20px; background: var(--purple-50); color: var(--purple-800); margin-bottom: 16px; }
-.reader-body h1 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 42px); font-weight: 400; letter-spacing: -1px; line-height: 1.15; margin-bottom: 1rem; }
-.reader-byline { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+.reader-tag { display: inline-block; font-size: var(--fs-2xs); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; padding: 4px 10px; border-radius: var(--radius-pill); background: var(--purple-50); color: var(--purple-800); margin-bottom: 16px; }
+.reader-body h1 { font-family: 'DM Serif Display', serif; font-size: var(--fs-display-2); font-weight: 400; letter-spacing: -1px; line-height: var(--lh-display); margin-bottom: 1rem; }
+.reader-byline { display: flex; align-items: center; gap: 10px; font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
 .reader-byline img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; object-position: top; border: 1px solid var(--border); }
-.reader-byline .byline-initials { width: 32px; height: 32px; border-radius: 50%; background: var(--purple-50); color: var(--purple-800); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
-.reader-content { font-size: 16px; line-height: 1.8; color: var(--text); }
+.reader-byline .byline-initials { width: 32px; height: 32px; border-radius: 50%; background: var(--purple-50); color: var(--purple-800); font-size: var(--fs-2xs); font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.reader-content { font-size: var(--fs-md); line-height: var(--lh-relaxed); color: var(--text); }
 .reader-content p { margin-bottom: 1.4em; }
-.reader-content h2 { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; letter-spacing: -0.5px; margin: 2em 0 0.75em; }
-.reader-content h3 { font-size: 18px; font-weight: 500; margin: 1.75em 0 0.6em; }
+.reader-content h2 { font-family: 'DM Serif Display', serif; font-size: var(--fs-2xl); font-weight: 400; letter-spacing: -0.5px; margin: 2em 0 0.75em; }
+.reader-content h3 { font-size: var(--fs-lg); font-weight: 500; margin: 1.75em 0 0.6em; }
 .reader-content blockquote { border-left: 3px solid var(--purple-400); padding-left: 1.25rem; color: var(--text-muted); font-style: italic; margin: 1.5em 0; }
 .reader-content .callout { background: var(--purple-50); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin: 1.5em 0; border-left: 3px solid var(--purple-400); }
 .reader-content .callout strong { color: var(--purple-800); }
-.reader-ext-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 2rem; padding: 12px 24px; background: var(--purple-600); color: #fff; text-decoration: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; transition: background 0.15s; }
+.reader-ext-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 2rem; padding: 12px 24px; background: var(--purple-600); color: #fff; text-decoration: none; border-radius: var(--radius-md); font-size: var(--fs-sm); font-weight: 500; transition: background 0.15s; }
 .reader-ext-link:hover { background: var(--purple-800); }
 .reader-body-pdf { max-width: 960px; }
 .reader-pdf-wrap {
@@ -680,7 +791,13 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .reader-ext-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2rem; }
 .reader-ext-link-secondary { background: var(--purple-50); color: var(--purple-800); }
 .reader-ext-link-secondary:hover { background: var(--purple-100); color: var(--purple-900); }
-.reader-byline-link { cursor: pointer; border-radius: var(--radius-sm); margin: -4px -8px; padding: 4px 8px; transition: background 0.15s; }
+.reader-byline-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  cursor: pointer; border-radius: var(--radius-sm);
+  /* Inline-axis only — vertical spacing belongs to .reader-byline */
+  margin: 0 -8px; padding: 4px 8px;
+  transition: background var(--dur-fast);
+}
 .reader-byline-link:hover { background: var(--purple-50); }
 
 /* ─── TEAM PROFILE ─── */
@@ -693,7 +810,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .team-profile.open { display: block; }
 .profile-body {
   max-width: 640px; margin: 0 auto;
-  padding: 2.5rem 2rem 5rem;
+  padding: 2.5rem var(--gutter) 5rem;
 }
 .profile-photo {
   width: 160px; height: 160px; border-radius: 50%;
@@ -703,19 +820,19 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 }
 .profile-body h1 {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 4vw, 36px);
+  font-size: var(--fs-display-3);
   font-weight: 400; letter-spacing: -0.5px;
   text-align: center; margin-bottom: 0.35rem;
 }
 .profile-role {
-  text-align: center; font-size: 15px; font-weight: 500;
+  text-align: center; font-size: var(--fs-md); font-weight: 500;
   color: var(--purple-600); margin-bottom: 0.25rem;
 }
 .profile-school {
-  text-align: center; font-size: 13px; color: var(--text-faint);
+  text-align: center; font-size: var(--fs-sm); color: var(--text-faint);
   margin-bottom: 2rem;
 }
-.profile-bio { font-size: 16px; line-height: 1.8; color: var(--text); }
+.profile-bio { font-size: var(--fs-md); line-height: var(--lh-relaxed); color: var(--text); }
 .profile-bio p { margin-bottom: 1.25em; }
 .profile-bio a { color: var(--purple-600); }
 .profile-contact {
@@ -723,11 +840,11 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   border-top: 1px solid var(--border);
 }
 .profile-contact h2 {
-  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  font-size: var(--fs-xs); font-weight: 500; text-transform: uppercase;
   letter-spacing: 1px; color: var(--text-faint); margin-bottom: 0.75rem;
 }
 .profile-contact a {
-  font-size: 15px; color: var(--purple-600); text-decoration: none;
+  font-size: var(--fs-md); color: var(--purple-600); text-decoration: none;
 }
 .profile-contact a:hover { text-decoration: underline; }
 
@@ -735,151 +852,225 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 
 /* ═══════════════════════════════════════════
-   SHAZAM ANIMATIONS
+   MOTION
+   Every effect below is tied to user intent
+   (scroll position, hover, focus). Nothing
+   moves for decoration. All of it is disabled
+   under prefers-reduced-motion at the end.
 ═══════════════════════════════════════════ */
 
-/* ─── SCROLL PROGRESS BAR ─── */
+/* ─── Reading progress ─── */
 #scroll-progress {
   position: fixed; top: 0; left: 0; z-index: 9999;
-  height: 3px; width: 0%;
-  background: linear-gradient(90deg, var(--purple-400), var(--purple-600), var(--purple-800));
+  height: 2px; width: 0%;
+  background: var(--purple-600);
   transition: width 0.05s linear;
   pointer-events: none;
-  border-radius: 0 2px 2px 0;
 }
 
-/* ─── PAGE TRANSITION OVERLAY ─── */
-#page-veil {
-  position: fixed; inset: 0; z-index: 9998;
-  background: var(--bg);
+/* ─── Scroll reveal ───
+   Gated on .js so the page is fully readable with JavaScript off or broken;
+   without the class these rules never apply and content renders at rest. */
+.js .reveal {
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.22s ease;
+  transform: translateY(16px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
 }
-#page-veil.out { opacity: 1; pointer-events: all; }
-
-/* ─── SCROLL REVEAL ─── */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
-              transform 0.55s cubic-bezier(0.22,1,0.36,1);
-}
-.reveal.visible {
+.js .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* stagger delays for children — JS will set inline delays */
-
-/* ─── NEURAL PULSE: card hover glow ─── */
-.article-card, .video-card, .resource-card, .team-card, .step-card {
-  position: relative;
+/* ─── Nav settles onto the page once you scroll past the fold ─── */
+.nav {
+  transition: box-shadow var(--dur-mid) ease;
 }
-.article-card::after, .video-card::after, .team-card::after {
-  content: '';
-  position: absolute; inset: -1px;
-  border-radius: inherit;
-  opacity: 0;
-  box-shadow: 0 0 0 2px var(--purple-400), 0 0 18px 2px rgba(127,119,221,0.22);
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 1;
-}
-.article-card:hover::after, .video-card:hover::after, .team-card:hover::after {
-  opacity: 1;
-  animation: neuralPulse 1.6s ease infinite;
-}
-@keyframes neuralPulse {
-  0%,100% { box-shadow: 0 0 0 2px var(--purple-400), 0 0 14px 2px rgba(127,119,221,0.18); }
-  50%      { box-shadow: 0 0 0 2px var(--purple-200), 0 0 28px 4px rgba(127,119,221,0.35); }
+.nav.scrolled {
+  box-shadow: 0 1px 12px rgba(0,0,0,0.06);
 }
 
-/* ─── CARD IMAGE ZOOM on hover ─── */
+/* ─── Card cover: slow editorial zoom ─── */
 .article-cover, .lecture-cover, .video-thumb img {
-  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
+  transition: transform 0.45s var(--ease), opacity var(--dur-mid);
 }
 .article-card:hover .article-cover,
 .resource-card:hover .lecture-cover,
 .video-card:hover .video-thumb img {
-  transform: scale(1.07);
+  transform: scale(1.04);
 }
 
-/* ─── TEAM CARD: avatar glow ─── */
-.team-card:hover .team-photo {
-  border-color: var(--purple-400);
-  box-shadow: 0 0 0 3px rgba(127,119,221,0.25), 0 0 20px rgba(127,119,221,0.3);
-  transform: scale(1.05);
-  transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
-}
+/* ─── Team photo: border only, no glow ─── */
 .team-photo {
-  transition: all 0.35s ease;
+  transition: border-color var(--dur-mid) ease;
+}
+.team-card:hover .team-photo,
+.team-card:focus-visible .team-photo {
+  border-color: var(--purple-400);
 }
 
-/* ─── MAGNETIC BUTTON ─── */
-.btn-magnetic {
-  display: inline-block;
-  will-change: transform;
-  transition: transform 0.15s cubic-bezier(0.22,1,0.36,1), background 0.15s;
-}
-
-/* ─── FLOATING PARTICLES (behind hero, lightweight) ─── */
-.hero-particles {
-  position: absolute; inset: 0; pointer-events: none; z-index: 1;
-}
-
-/* ─── STAT NUMBER ─── */
-.stat-num {
-  transition: color 0.3s;
-}
-
-/* ─── SYNAPSE SPARK on click ─── */
-@keyframes sparkRipple {
-  0%   { transform: scale(0); opacity: 0.7; }
-  100% { transform: scale(3.5); opacity: 0; }
-}
-.spark-ring {
-  position: absolute;
-  border-radius: 50%;
-  width: 60px; height: 60px;
-  margin-left: -30px; margin-top: -30px;
-  border: 2px solid var(--purple-400);
-  pointer-events: none;
-  animation: sparkRipple 0.6s cubic-bezier(0.22,1,0.36,1) both;
-  z-index: 10;
-}
-
-/* ─── MISSION BAND text reveal ─── */
-.mission-band h2, .mission-band p, .mission-band .btn-primary {
-  /* handled by reveal class, added via JS */
-}
-
-/* ─── STEP CARDS: icon pulse ─── */
-.step-num {
-  transition: color 0.3s, transform 0.3s;
+/* ─── Numerals tint on hover, no scaling ─── */
+.stat-num, .step-num {
+  transition: color var(--dur-mid) ease;
 }
 .step-card:hover .step-num {
   color: var(--purple-400);
-  transform: scale(1.08);
 }
 
-/* ─── NAV entrance ─── */
-.nav {
-  animation: navSlideDown 0.5s cubic-bezier(0.22,1,0.36,1) both;
-}
-@keyframes navSlideDown {
-  from { transform: translateY(-100%); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
-}
-
-/* ─── ROLE ITEMS stagger ─── */
+/* ─── Role items ─── */
 .role-item {
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  transition: border-color var(--dur-fast), background var(--dur-fast);
 }
 .role-item:hover {
   border-color: var(--purple-200);
   background: var(--purple-50);
-  transform: translateX(4px);
+}
+
+/* ─── Focus: one visible ring, same everywhere ─── */
+:focus-visible {
+  outline: 2px solid var(--purple-600);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   Three breakpoints, in order. 900px is where
+   the nav links stop fitting; 640px is where
+   multi-column layout stops being readable.
+═══════════════════════════════════════════ */
+
+/* ─── Tablet / narrow desktop: collapse the nav ─── */
+@media (max-width: 900px) {
+  .nav-toggle { display: inline-flex; }
+
+  .nav-links {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: var(--space-2) var(--gutter) var(--space-4);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+    /* Collapsed by default; opacity+visibility so it stays keyboard-inert. */
+    opacity: 0; visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity var(--dur-fast) ease, transform var(--dur-fast) var(--ease), visibility var(--dur-fast);
+  }
+  .nav.open .nav-links {
+    opacity: 1; visibility: visible;
+    transform: translateY(0);
+  }
+  .nav-btn {
+    padding: var(--space-3) var(--space-3);
+    font-size: var(--fs-md);
+    text-align: left;
+  }
+  .nav-apply {
+    margin-left: 0;
+    margin-top: var(--space-2);
+    text-align: center;
+    padding: var(--space-3) var(--space-3);
+  }
+}
+
+/* ─── Phone ─── */
+@media (max-width: 640px) {
+  :root {
+    --gutter: 1.25rem;
+  }
+
+  .nav { height: 56px; }
+
+  .hero {
+    min-height: 0;
+    padding: 3.5rem var(--gutter) 3rem;
+  }
+  .hero h1 { letter-spacing: -1px; }
+  .hero-sub { font-size: var(--fs-md); }
+  .hero-btns { flex-direction: column; align-items: stretch; }
+  .hero-btns .btn-primary,
+  .hero-btns .btn-ghost { width: 100%; }
+
+  /* Three stats side by side is unreadable at this width */
+  .stat-bar { grid-template-columns: 1fr; }
+  .stat-item {
+    padding: 1.25rem var(--gutter);
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    /* Stacked: numerals share a left edge so the column reads as a list,
+       not three separately-centred rows. */
+    display: flex; align-items: baseline; justify-content: flex-start;
+    gap: var(--space-4); text-align: left;
+  }
+  .stat-num { min-width: 3.2ch; text-align: right; }
+  .stat-item:last-child { border-bottom: none; }
+  .stat-num { margin-bottom: 0; }
+  .stat-label { flex: 1; }
+
+  .section { padding: 2.5rem var(--gutter); }
+  .page-header { padding: 2.5rem var(--gutter) 1.5rem; }
+  .mission-band { padding: 3.5rem var(--gutter); }
+  .start-hero { padding: 2.5rem var(--gutter); }
+  .steps-grid { padding: 2rem var(--gutter); }
+  .apply-wrap { padding: 2.5rem var(--gutter); }
+  .reader-body { padding: 2rem var(--gutter) 4rem; }
+  .profile-body { padding: 2rem var(--gutter) 4rem; }
+
+  /* 200px min would leave one card per row and a very long page */
+  .team-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .team-card { padding: 1.5rem 1rem; }
+  .team-photo { width: 64px; height: 64px; }
+
+  .cta-band {
+    flex-direction: column; align-items: stretch;
+    gap: var(--space-4);
+    padding: 1.5rem;
+  }
+  .cta-band .btn-sm { text-align: center; }
+
+  .yt-cta { flex-direction: column; align-items: stretch; gap: var(--space-4); }
+  .yt-cta .btn-sm { text-align: center; }
+
+  .footer { flex-direction: column; gap: 1.5rem; padding: 2rem var(--gutter); }
+
+  .reader-hero-img,
+  .reader-hero-placeholder { height: 200px; margin-bottom: 1.5rem; }
+  .reader-pdf { height: 70vh; }
+  .reader-ext-links { flex-direction: column; }
+  .reader-ext-link { justify-content: center; }
+
+  .profile-photo { width: 120px; height: 120px; }
+
+  .diff-legend { gap: var(--space-3); }
+  .section-header { margin-bottom: 1.25rem; }
+}
+
+/* ─── Small phone ─── */
+@media (max-width: 380px) {
+  .filters { gap: var(--space-1-5); }
+  .filter-btn { padding: var(--space-1-5) var(--space-2-5); }
+  .article-cover,
+  .article-cover-placeholder { height: 140px; }
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION
+═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js .reveal { opacity: 1 !important; transform: none !important; }
+  .article-card:hover .article-cover,
+  .resource-card:hover .lecture-cover,
+  .video-card:hover .video-thumb img { transform: none; }
 }
 
 </style>
@@ -891,7 +1082,6 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </head>
 <body>
 <div id="scroll-progress"></div>
-<div id="page-veil"></div>
 
 <!-- ══════════════ ARTICLE READER OVERLAY ══════════════ -->
 <div class="article-reader" id="articleReader">
@@ -912,9 +1102,12 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   <div class="profile-body" id="teamProfileBody"></div>
 </div>
 
-<nav class="nav">
+<nav class="nav" id="siteNav">
 <a class="nav-logo" href="/" onclick="event.preventDefault(); showPage('home')">Neuro<span>View</span></a>
-<div class="nav-links">
+<button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+  <span class="nav-toggle-bars" aria-hidden="true"></span>
+</button>
+<div class="nav-links" id="navLinks">
 <a class="nav-btn active" id="nav-home" href="/" onclick="event.preventDefault(); showPage('home')">Home</a>
 <a class="nav-btn" id="nav-articles" href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
 <a class="nav-btn" id="nav-videos" href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
@@ -935,8 +1128,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h1>Your brain on<br><em>NeuroView</em></h1>
 <p class="hero-sub">A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free — for everyone.</p>
 <div class="hero-btns">
-<button class="btn-primary btn-magnetic" onclick="showPage('articles')">Read Articles</button>
-<button class="btn-ghost btn-magnetic" onclick="showPage('resources')">Get Club Resources</button>
+<button class="btn-primary" onclick="showPage('articles')">Read Articles</button>
+<button class="btn-ghost" onclick="showPage('resources')">Get Club Resources</button>
 </div>
 </div>
 </div>
@@ -955,12 +1148,12 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <div class="grid-3">
 
 <div class="article-card reveal" data-delay="0" onclick="openArticle('bcis')">
-<img class="article-cover" src="images/cover-bcis.jpg" alt="BCIs cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-bcis.jpg" alt="BCIs cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><circle cx="80" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="60" r="30" fill="none" stroke="#7F77DD" stroke-width="1.5"/><circle cx="320" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><line x1="80" y1="80" x2="200" y2="60" stroke="#534AB7" stroke-width="1.5"/><line x1="200" y1="60" x2="320" y2="80" stroke="#534AB7" stroke-width="1.5"/></svg>
 </div>
 <div class="article-body">
-<span class="card-tag">BCI</span>
+<span class="card-tag" data-cat="bci">BCI</span>
 <h3>A Beginner's Guide to BCIs</h3>
 <p>Control a robotic arm, play video games, or send messages — all with your mind. BCIs are going from sci-fi to reality.</p>
 <div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div>
@@ -968,12 +1161,12 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 
 <div class="article-card reveal" data-delay="120" onclick="openArticle('fmri')">
-<img class="article-cover" src="images/cover-fmri.jpg" alt="fMRI cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-fmri.jpg" alt="fMRI cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><ellipse cx="200" cy="80" rx="100" ry="60" fill="none" stroke="#7F77DD" stroke-width="1.5"/><ellipse cx="200" cy="80" rx="60" ry="35" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="15" fill="#534AB7" opacity="0.5"/></svg>
 </div>
 <div class="article-body">
-<span class="card-tag">Neuroimaging</span>
+<span class="card-tag" data-cat="neuroimaging">Neuroimaging</span>
 <h3>Mind Reading: An fMRI Approach</h3>
 <p>New discoveries in neuroengineering are pushing telepathic communication closer to reality than ever before.</p>
 <div class="card-meta"><a href="/team/oliver-payne" data-team-profile="oliver-payne" class="card-author"><img class="avatar-img" src="/oliverpayne.jpg" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</a></div>
@@ -981,12 +1174,12 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 
 <div class="article-card reveal" data-delay="240" onclick="openArticle('biocomputing')">
-<img class="article-cover" src="images/cover-biocomputing.jpg" alt="Biocomputing cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-biocomputing.jpg" alt="Biocomputing cover" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none">
   <svg viewBox="0 0 400 160"><rect x="60" y="40" width="80" height="80" rx="12" fill="none" stroke="#534AB7" stroke-width="1.5"/><rect x="260" y="40" width="80" height="80" rx="12" fill="none" stroke="#7F77DD" stroke-width="1.5"/><path d="M140 80 Q200 20 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 140 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="8" fill="#534AB7" opacity="0.7"/></svg>
 </div>
 <div class="article-body">
-<span class="card-tag">AI + Neuro</span>
+<span class="card-tag" data-cat="ai-neuro">AI + Neuro</span>
 <h3>Biocomputing &amp; AGI</h3>
 <p>What happens when you build a computer with living human brain cells? The implications for AGI are enormous.</p>
 <div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div>
@@ -1002,7 +1195,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <button class="view-all" onclick="showPage('videos')">All videos →</button>
 </div>
 <div class="grid-2">
-<a class="video-card reveal" data-delay="0" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="0" href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">
 <div class="video-thumb">
 <img src="images/thumb-fmri.jpg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
@@ -1012,7 +1205,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <p><a href="/team/oliver-payne" data-team-profile="oliver-payne" class="video-author-link">Oliver Payne</a> · NeuroView YouTube</p>
 </div>
 </a>
-<a class="video-card reveal" data-delay="130" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="130" href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">
 <div class="video-thumb">
 <img src="images/thumb-biocomputing.jpg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
@@ -1028,11 +1221,14 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <div class="mission-band">
 <h2 class="reveal">Our mission</h2>
 <p class="reveal" data-delay="120">Neuroscience shapes medicine, technology, and public policy — yet only 18% of Americans understand cognitive impairments. NeuroView exists to change that. No PhD required.</p>
-<button class="btn-primary btn-magnetic" onclick="showPage('articles')">Start exploring →</button>
+<button class="btn-primary" onclick="showPage('articles')">Start exploring →</button>
 </div>
 
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
+</div>
 <div class="footer-links">
 <h4>Navigate</h4>
 <a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
@@ -1041,14 +1237,19 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
 </div>
 <div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
 <h4>Connect</h4>
-<a href="https://medium.com/@theneuroview" target="_blank">Medium</a>
-<a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube</a>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
 <a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
 <a href="tel:+16507851240">+1 (650) 785-1240</a>
 </div>
-</div>
-<div class="footer-bottom">© 2025 NeuroView. All rights reserved.</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <!-- ══════════════ ARTICLES ══════════════ -->
@@ -1073,53 +1274,75 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <div class="grid-3" id="articles-grid">
 
 <div class="article-card" data-tag="BCI" onclick="openArticle('bcis')">
-<img class="article-cover" src="images/cover-bcis.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-bcis.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="80" cy="80" r="40" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="320" cy="80" r="40" fill="none" stroke="#7F77DD" stroke-width="1.5"/><line x1="80" y1="80" x2="320" y2="80" stroke="#534AB7" stroke-width="1.5"/></svg></div>
-<div class="article-body"><span class="card-tag">BCI</span><h3>A Beginner's Guide to BCIs</h3><p>Imagine controlling a robotic arm, playing a video game, or sending messages — all using just your mind. BCIs are quickly making this a reality.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="bci">BCI</span><h3>A Beginner's Guide to BCIs</h3><p>Imagine controlling a robotic arm, playing a video game, or sending messages — all using just your mind. BCIs are quickly making this a reality.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
 </div>
 
 <div class="article-card" data-tag="Personal" onclick="openArticle('chinavsus')">
-<img class="article-cover" src="images/cover-chinavsus.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-chinavsus.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="120" cy="80" r="50" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="280" cy="80" r="50" fill="none" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
-<div class="article-body"><span class="card-tag">Personal</span><h3>From Foster City to Shenzhen</h3><p>Interning at biotech labs in both the US and China — I expected technical similarities. Science is universal, right? What surprised me were the differences.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="personal">Personal</span><h3>From Foster City to Shenzhen</h3><p>Interning at biotech labs in both the US and China — I expected technical similarities. Science is universal, right? What surprised me were the differences.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroimaging" onclick="openArticle('fmri')">
-<img class="article-cover" src="images/cover-fmri.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-fmri.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><ellipse cx="200" cy="80" rx="100" ry="60" fill="none" stroke="#7F77DD" stroke-width="1.5"/><ellipse cx="200" cy="80" rx="60" ry="35" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="80" r="15" fill="#534AB7" opacity="0.5"/></svg></div>
-<div class="article-body"><span class="card-tag">Neuroimaging</span><h3>Mind Reading: An fMRI Approach</h3><p>Have you ever wondered what it would be like to know what someone is thinking at any moment? A new discovery in neuroengineering is getting us closer.</p><div class="card-meta"><a href="/team/oliver-payne" data-team-profile="oliver-payne" class="card-author"><img class="avatar-img" src="/oliverpayne.jpg" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="neuroimaging">Neuroimaging</span><h3>Mind Reading: An fMRI Approach</h3><p>Have you ever wondered what it would be like to know what someone is thinking at any moment? A new discovery in neuroengineering is getting us closer.</p><div class="card-meta"><a href="/team/oliver-payne" data-team-profile="oliver-payne" class="card-author"><img class="avatar-img" src="/oliverpayne.jpg" alt="Oliver Payne" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">OP</span>Oliver Payne</a></div></div>
 </div>
 
 <div class="article-card" data-tag="AI + Neuro" onclick="openArticle('biocomputing')">
-<img class="article-cover" src="images/cover-biocomputing.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-biocomputing.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><rect x="60" y="40" width="80" height="80" rx="12" fill="none" stroke="#534AB7" stroke-width="1.5"/><rect x="260" y="40" width="80" height="80" rx="12" fill="none" stroke="#7F77DD" stroke-width="1.5"/><path d="M140 80 Q200 20 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 140 260 80" fill="none" stroke="#534AB7" stroke-width="1.5"/></svg></div>
-<div class="article-body"><span class="card-tag">AI + Neuro</span><h3>Biocomputing: A Breakthrough in AGI</h3><p>Imagine a computer built not just from silicon, but from living human brain cells. Biocomputing has major implications for the race toward Artificial General Intelligence.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="ai-neuro">AI + Neuro</span><h3>Biocomputing: A Breakthrough in AGI</h3><p>Imagine a computer built not just from silicon, but from living human brain cells. Biocomputing has major implications for the race toward Artificial General Intelligence.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroscience" onclick="openArticle('neuroplasticity')">
-<img class="article-cover" src="images/cover-neuroplasticity.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-neuroplasticity.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><path d="M50 80 Q100 40 150 80 Q200 120 250 80 Q300 40 350 80" fill="none" stroke="#7F77DD" stroke-width="2"/><path d="M50 100 Q100 60 150 100 Q200 140 250 100 Q300 60 350 100" fill="none" stroke="#534AB7" stroke-width="1.5" opacity="0.6"/></svg></div>
-<div class="article-body"><span class="card-tag">Neuroscience</span><h3>What is Neuroplasticity?</h3><p>Your brain is not fixed. Neuroplasticity explains how experience, learning, and environment reshape neural circuits — throughout your entire life.</p><div class="card-meta"><a href="/team/finnegan-schoebel" data-team-profile="finnegan-schoebel" class="card-author"><img class="avatar-img" src="/finneganschoebel.jpg" alt="Finnegan Schoebel" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">FS</span>Finnegan Schoebel</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="neuroscience">Neuroscience</span><h3>What is Neuroplasticity?</h3><p>Your brain is not fixed. Neuroplasticity explains how experience, learning, and environment reshape neural circuits — throughout your entire life.</p><div class="card-meta"><a href="/team/finnegan-schoebel" data-team-profile="finnegan-schoebel" class="card-author"><img class="avatar-img" src="/finneganschoebel.jpg" alt="Finnegan Schoebel" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">FS</span>Finnegan Schoebel</a></div></div>
 </div>
 
 <div class="article-card" data-tag="Neuroscience" onclick="openArticle('brain-death')">
-<img class="article-cover" src="images/cover-brain-death.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-brain-death.jpg" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><path d="M200 30 Q280 30 300 90 Q320 150 200 150 Q80 150 100 90 Q120 30 200 30Z" fill="none" stroke="#534AB7" stroke-width="1.5"/><circle cx="200" cy="90" r="8" fill="#7F77DD" opacity="0.6"/></svg></div>
-<div class="article-body"><span class="card-tag">Neuroscience</span><h3>What Does Your Brain Experience as You Die?</h3><p>Your heart stops. No more oxygen. But your brain isn't done yet — scientists have recorded brain activity up to 10 minutes after clinical death.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="neuroscience">Neuroscience</span><h3>What Does Your Brain Experience as You Die?</h3><p>Your heart stops. No more oxygen. But your brain isn't done yet — scientists have recorded brain activity up to 10 minutes after clinical death.</p><div class="card-meta"><a href="/team/joseph-sun" data-team-profile="joseph-sun" class="card-author"><img class="avatar-img" src="/josephsun.jpg" alt="Joseph Sun" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">JS</span>Joseph Sun</a></div></div>
 </div>
 
 <div class="article-card" data-tag="Global Perspective" onclick="openArticle('empowering-youth-rwanda')">
-<img class="article-cover" src="images/cover-empowering-youth-rwanda.png" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+<img class="article-cover" loading="lazy" decoding="async" src="images/cover-empowering-youth-rwanda.png" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
 <div class="article-cover-placeholder" style="display:none"><svg viewBox="0 0 400 160"><circle cx="200" cy="80" r="60" fill="none" stroke="#534AB7" stroke-width="1.5"/><path d="M140 80 Q200 40 260 80 Q200 120 140 80" fill="none" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
-<div class="article-body"><span class="card-tag">Global Perspective</span><h3>Empowering Youth Through Education</h3><p>Student-led initiatives in Rwanda are driving social change — showing how youth can transform communities through education and leadership.</p><div class="card-meta"><a href="/team/dukuze-angelo-irenee" data-team-profile="dukuze-angelo-irenee" class="card-author"><img class="avatar-img" src="/dukuzeangeloirenee.png" alt="Dukuze Angelo Irenee" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">DA</span>Dukuze Angelo Irenee</a></div></div>
+<div class="article-body"><span class="card-tag" data-cat="global">Global Perspective</span><h3>Empowering Youth Through Education</h3><p>Student-led initiatives in Rwanda are driving social change — showing how youth can transform communities through education and leadership.</p><div class="card-meta"><a href="/team/dukuze-angelo-irenee" data-team-profile="dukuze-angelo-irenee" class="card-author"><img class="avatar-img" src="/dukuzeangeloirenee.png" alt="Dukuze Angelo Irenee" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="avatar-initials" style="display:none">DA</span>Dukuze Angelo Irenee</a></div></div>
 </div>
 
 </div>
 </div>
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
 </div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
+<a href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
+<a href="/resources" onclick="event.preventDefault(); showPage('resources')">Club Resources</a>
+<a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
+</div>
+<div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <!-- ══════════════ VIDEOS ══════════════ -->
@@ -1131,7 +1354,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <div class="section">
 <div class="grid-2">
 
-<a class="video-card reveal" data-delay="260" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="260" href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">
 <div class="video-thumb">
 <img src="images/thumb-fmri.jpg" alt="fMRI video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
@@ -1142,7 +1365,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 </a>
 
-<a class="video-card reveal" data-delay="390" href="https://www.youtube.com/@the_neuroview" target="_blank">
+<a class="video-card reveal" data-delay="390" href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">
 <div class="video-thumb">
 <img src="images/thumb-biocomputing.jpg" alt="Biocomputing video thumbnail" onerror="this.style.display='none'">
 <div class="play-btn"><div class="play-icon"></div></div>
@@ -1156,13 +1379,35 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 <div class="yt-cta">
 <div><h3>More on YouTube</h3><p>Subscribe to @the_neuroview for new videos on neuroscience, BCIs, and more.</p></div>
-<a class="btn-sm" href="https://www.youtube.com/@the_neuroview" target="_blank">Visit our channel ↗</a>
+<a class="btn-sm" href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">Visit our channel ↗</a>
 </div>
 </div>
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="https://www.youtube.com/@the_neuroview" target="_blank">YouTube ↗</a><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
 </div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
+<a href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
+<a href="/resources" onclick="event.preventDefault(); showPage('resources')">Club Resources</a>
+<a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
+</div>
+<div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <!-- ══════════════ RESOURCES ══════════════ -->
@@ -1181,18 +1426,17 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="0">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-1-cells.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">01</span>
-  <span class="lecture-icon">🧠</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-1-cells.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">01</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-green"></span>
 <div>
-<h3>LECTURE_1_MARKER</h3>
+<h3>Lecture 1 — Cells of the Brain</h3>
 <p>Neurons, astrocytes, oligodendrocytes, microglia, and endothelial cells — how each cell type shapes brain function, neural communication, and neurological disease.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1G5o9main2SsqgvBTSoEpeDPEsD9q10YfYWBSbk3o8hk/edit?usp=sharing" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/share/xray-stuff/3a02b938-c96c-4c5b-9d5a-967dfde5ac9d" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1G5o9main2SsqgvBTSoEpeDPEsD9q10YfYWBSbk3o8hk/edit?usp=sharing" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/xray-stuff/3a02b938-c96c-4c5b-9d5a-967dfde5ac9d" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1200,9 +1444,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="90">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-2-microglia.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">02</span>
-  <span class="lecture-icon">🔬</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-2-microglia.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">02</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-red"></span>
@@ -1210,8 +1453,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 2 — What are Microglia?</h3>
 <p>The brain's resident immune cells — surveillance, DAMPs, membrane asymmetry, protein aggregate clearance (Alzheimer's/Parkinson's), cytokine signaling, and chronic neuroinflammation.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/13Qsyqi0fvgTF4YcunWCKOZeD0a-va6dZhEZuIo3ym-I/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/share/biofreak/24f8afb1-e845-4fa4-8373-17497a38c215" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/13Qsyqi0fvgTF4YcunWCKOZeD0a-va6dZhEZuIo3ym-I/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/biofreak/24f8afb1-e845-4fa4-8373-17497a38c215" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1219,9 +1462,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="180">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-3-bci.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">03</span>
-  <span class="lecture-icon">⚡</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-3-bci.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">03</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-yellow"></span>
@@ -1229,8 +1471,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 3 — BCIs and the Foreign Body Response</h3>
 <p>Why implanted brain-computer interfaces fail over time — microglial encapsulation, astrocyte scarring, signal degradation, and immunomodulation strategies for longer-lasting devices.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/14VLy6DvsxzHky4UDcOWIMVCeByIv1VZIQueKdCOF6fU/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/details/c34d0755-54a1-4a33-aa29-1ada72fadcd0" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/14VLy6DvsxzHky4UDcOWIMVCeByIv1VZIQueKdCOF6fU/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/details/c34d0755-54a1-4a33-aa29-1ada72fadcd0" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1238,9 +1480,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="270">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-4-staining.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">04</span>
-  <span class="lecture-icon">🎨</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-4-staining.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">04</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-red"></span>
@@ -1248,8 +1489,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 4 — Staining Techniques</h3>
 <p>Immunohistochemistry (IHC) and immunofluorescence (IF) — how antibodies bind specific targets, fluorescent labeling, and how these techniques reveal neurons, glial cells, and markers of inflammation.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1wE5QbWAwMZ03b1LzSo-z1Top4-3HIowxKvcTgyGIRHw/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/share/ihc-if/51762252-487e-4436-963b-a85de21a0ddf" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1wE5QbWAwMZ03b1LzSo-z1Top4-3HIowxKvcTgyGIRHw/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/ihc-if/51762252-487e-4436-963b-a85de21a0ddf" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1257,9 +1498,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="0">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-5-research.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">05</span>
-  <span class="lecture-icon">📄</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-5-research.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">05</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-green"></span>
@@ -1267,8 +1507,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 5 — Intro to Research</h3>
 <p>How to read a scientific paper like a professor — breaking down each section, evaluating methods and controls, identifying statistical relevance, and assessing credibility of primary literature.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1uIwtqyS2wU-PkXB9KPXkmdq8b0-MgL3bew7FsuPVFyk/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/share/biochem-club/4ad79bc3-bc87-441e-9235-da6b7ddf9d73" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1uIwtqyS2wU-PkXB9KPXkmdq8b0-MgL3bew7FsuPVFyk/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/biochem-club/4ad79bc3-bc87-441e-9235-da6b7ddf9d73" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1276,9 +1516,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="90">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-6-antioxidants.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">06</span>
-  <span class="lecture-icon">⚗️</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-6-antioxidants.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">06</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-yellow"></span>
@@ -1286,8 +1525,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 6 — What are Antioxidants?</h3>
 <p>Reactive oxygen species, oxidative stress, neurodegeneration, and aging — and why antioxidant therapies are more complicated than popular science makes them sound.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1F-ZcIUY21woZySPF6fp0UrYNtKHZlRkBf6bXdNJ5qS4/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/details/792cf26b-0bdc-453e-950e-123c89169683" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1F-ZcIUY21woZySPF6fp0UrYNtKHZlRkBf6bXdNJ5qS4/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/details/792cf26b-0bdc-453e-950e-123c89169683" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1295,9 +1534,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="180">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-7-pcr.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">07</span>
-  <span class="lecture-icon">🧬</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-7-pcr.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">07</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-green"></span>
@@ -1305,8 +1543,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 7 — What is PCR?</h3>
 <p>Polymerase chain reaction — denaturation, annealing, extension, and why heat-stable Taq polymerase changed molecular biology. Applications in virus detection, forensics, and genetic testing.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1oQhxTeKa1Hm49xsiCUjRQvPWzoRb9cAp4TXmn9v2s2k/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/share/pcr/358d4e70-394a-4734-b4db-5d40f32942cb" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1oQhxTeKa1Hm49xsiCUjRQvPWzoRb9cAp4TXmn9v2s2k/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/pcr/358d4e70-394a-4734-b4db-5d40f32942cb" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1314,9 +1552,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="resource-card reveal" data-delay="270">
 <div class="lecture-cover-placeholder">
-  <img class="lecture-cover" src="images/lecture-8-ai.svg" alt="" onerror="this.style.display='none'">
-  <span class="lecture-num">08</span>
-  <span class="lecture-icon">🤖</span>
+  <img class="lecture-cover" loading="lazy" decoding="async" src="images/lecture-8-ai.svg" alt="" onerror="this.style.display='none'">
+  <span class="lecture-num" aria-hidden="true">08</span>
 </div>
 <div class="resource-body">
 <span class="diff-dot diff-red"></span>
@@ -1324,8 +1561,8 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <h3>Lecture 8 — AI in Biotech</h3>
 <p>Deep learning for protein structure prediction — why folding matters, how traditional methods struggled, and how AI tools like AlphaFold are accelerating drug discovery and biological research.</p>
 <div class="resource-links">
-<a class="res-link slides" href="https://docs.google.com/presentation/d/1jssqyCGquJLD0WJT4Blvwk5W0R58lJAGoIOfZG5_dIQ/edit?usp=drive_link" target="_blank">Slides ↗</a>
-<a class="res-link" href="https://create.kahoot.it/share/deep-learning-protein-structure-prediction/a51468ef-8978-46b6-8688-87a212593917" target="_blank">Kahoot ↗</a>
+<a class="res-link slides" href="https://docs.google.com/presentation/d/1jssqyCGquJLD0WJT4Blvwk5W0R58lJAGoIOfZG5_dIQ/edit?usp=drive_link" target="_blank" rel="noopener">Slides ↗</a>
+<a class="res-link" href="https://create.kahoot.it/share/deep-learning-protein-structure-prediction/a51468ef-8978-46b6-8688-87a212593917" target="_blank" rel="noopener">Kahoot ↗</a>
 </div>
 </div>
 </div>
@@ -1338,10 +1575,32 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <button class="btn-sm" onclick="showPage('start')">Start a Club →</button>
 </div>
 </div>
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
 </div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
+<a href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
+<a href="/resources" onclick="event.preventDefault(); showPage('resources')">Club Resources</a>
+<a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
+</div>
+<div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <!-- ══════════════ TEAM ══════════════ -->
@@ -1408,10 +1667,32 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <button class="btn-sm" onclick="showPage('apply')">Apply now →</button>
 </div>
 </div>
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
 </div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
+<a href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
+<a href="/resources" onclick="event.preventDefault(); showPage('resources')">Club Resources</a>
+<a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
+</div>
+<div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <!-- ══════════════ START A CLUB ══════════════ -->
@@ -1426,7 +1707,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <div class="step-card reveal" data-delay="200"><div class="step-num">03</div><h3>Run your first meeting</h3><p>Use our ready-to-go lectures to run an engaging first session. We're here for any questions you have.</p></div>
 <div class="step-card reveal" data-delay="300"><div class="step-num">04</div><h3>Grow your chapter</h3><p>Keep getting new materials as you grow. Join our growing network of student-run neuro clubs across the US.</p></div>
 </div>
-<div style="padding:0 2rem 3rem">
+<div style="padding:0 var(--gutter) 3rem">
 <div class="cta-band">
 <div><h3>Ready to get started?</h3><p>Email us and we'll send you everything you need to launch your club.</p></div>
 <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -1435,10 +1716,32 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 </div>
 </div>
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
 </div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
+<a href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
+<a href="/resources" onclick="event.preventDefault(); showPage('resources')">Club Resources</a>
+<a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
+</div>
+<div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <!-- ══════════════ APPLY ══════════════ -->
@@ -1446,7 +1749,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <div class="apply-wrap">
 <h1>Apply to join our team</h1>
 <p>We're always looking for curious students who want to make neuroscience accessible. No prior experience required — just genuine interest and a willingness to learn.</p>
-<div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--text-faint);margin-bottom:12px">Open roles</div>
+<div class="field-label">Open roles</div>
 <div class="roles-list">
 <div class="role-item"><span class="role-dot"></span>Article writer</div>
 <div class="role-item"><span class="role-dot"></span>Content creator / video</div>
@@ -1456,10 +1759,32 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 <a class="btn-sm" href="mailto:theneuroview@gmail.com?subject=Apply to NeuroView" style="display:inline-block;width:100%;text-align:center">Apply via email ↗</a>
 <div class="contact-info">Or reach us at <a href="tel:+16507851240">+1 (650) 785-1240</a></div>
 </div>
-<div class="footer">
-<div><div class="footer-logo">Neuro<span>View</span></div><div class="footer-tagline">Student-led. Science-driven.</div></div>
-<div class="footer-links"><a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a></div>
+<footer class="footer">
+<div class="footer-brand">
+<div class="footer-logo">Neuro<span>View</span></div>
+<div class="footer-tagline">Student-led. Science-driven.</div>
 </div>
+<div class="footer-links">
+<h4>Navigate</h4>
+<a href="/articles" onclick="event.preventDefault(); showPage('articles')">Articles</a>
+<a href="/videos" onclick="event.preventDefault(); showPage('videos')">Videos</a>
+<a href="/resources" onclick="event.preventDefault(); showPage('resources')">Club Resources</a>
+<a href="/team" onclick="event.preventDefault(); showPage('team')">Team</a>
+</div>
+<div class="footer-links">
+<h4>Get involved</h4>
+<a href="/start" onclick="event.preventDefault(); showPage('start')">Start a Club</a>
+<a href="/apply" onclick="event.preventDefault(); showPage('apply')">Apply to join</a>
+</div>
+<div class="footer-links">
+<h4>Connect</h4>
+<a href="https://medium.com/@theneuroview" target="_blank" rel="noopener">Medium</a>
+<a href="https://www.youtube.com/@the_neuroview" target="_blank" rel="noopener">YouTube</a>
+<a href="mailto:theneuroview@gmail.com">theneuroview@gmail.com</a>
+<a href="tel:+16507851240">+1 (650) 785-1240</a>
+</div>
+</footer>
+<div class="footer-bottom">© <span class="footer-year">2026</span> NeuroView. Student-run and independent.</div>
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1547,7 +1872,7 @@ var TEAM_MEMBERS = {
     photo: 'davidwu.png',
     email: 'dw34870@pausd.us',
     bio: [
-      'My name is Ravid Dape and I am a Senior at Paly. I love biotech and biology because I feel that these fields can improve the health and quality of life of people around the world. Outside of school, I enjoy reading and coding.',
+      'My name is David Wu and I am a Senior at Paly. I love biotech and biology because I feel that these fields can improve the health and quality of life of people around the world. Outside of school, I enjoy reading and coding.',
       'You can read or purchase a copy of my AI book here: <a href="https://www.amazon.com/AI-Young-Curious-David-Wu/dp/B09YVBW9RX" target="_blank" rel="noopener noreferrer">AI for the Young and Curious</a>.'
     ]
   },
@@ -1743,6 +2068,8 @@ const ARTICLES = {
   }
 };
 
+var NV_CAT_SLUG = {"BCI": "bci", "Neuroimaging": "neuroimaging", "AI + Neuro": "ai-neuro", "Neuroscience": "neuroscience", "Personal": "personal", "Global Perspective": "global"};
+
 function openArticle(slug) {
   const art = ARTICLES[slug];
   if (!art) return;
@@ -1762,7 +2089,7 @@ function openArticle(slug) {
   const authorImgSrc = authorMember ? nvAsset(authorMember.photo) : art.authorImg;
   const bylineImg = `<img src="${authorImgSrc}" alt="${art.author}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="byline-initials" style="display:none">${art.authorInitials}</span>`;
   const bylineHtml = authorSlug
-    ? `<a href="${nvTeamProfilePath(authorSlug)}" data-team-profile="${authorSlug}" class="reader-byline reader-byline-link">${bylineImg} <span>By ${art.author}</span></a>`
+    ? `<div class="reader-byline"><a href="${nvTeamProfilePath(authorSlug)}" data-team-profile="${authorSlug}" class="reader-byline-link">${bylineImg} <span>By ${art.author}</span></a></div>`
     : `<div class="reader-byline">${bylineImg} <span>By ${art.author}</span></div>`;
 
   const readerBody = document.getElementById('readerBody');
@@ -1781,7 +2108,7 @@ function openArticle(slug) {
 
   readerBody.innerHTML = `
     ${imgHtml}
-    <span class="reader-tag">${art.tag}</span>
+    <span class="reader-tag" data-cat="${NV_CAT_SLUG[art.tag] || ''}">${art.tag}</span>
     <h1>${art.title}</h1>
     ${bylineHtml}
     ${contentHtml}
@@ -1815,7 +2142,7 @@ function openTeamProfile(slug, opts) {
   }
 
   if (!document.getElementById('page-team').classList.contains('active')) {
-    showPage('team', { skipHistory: true, skipVeil: true });
+    showPage('team', { skipHistory: true });
   }
 
   document.getElementById('teamProfileNavTitle').textContent = member.name;
@@ -1824,7 +2151,7 @@ function openTeamProfile(slug, opts) {
   }).join('');
 
   document.getElementById('teamProfileBody').innerHTML = `
-    <img class="profile-photo" src="${nvAsset(member.photo)}" alt="">
+    <img class="profile-photo" src="${nvAsset(member.photo)}" alt="${member.name}">
     <h1>${member.name}</h1>
     <div class="profile-role">${member.role}</div>
     <div class="profile-school">${member.school}</div>
@@ -1959,49 +2286,12 @@ function showPage(id, opts) {
       history.pushState({ nvPage: id }, '', path);
     }
   }
-
-  const veil = document.getElementById('page-veil');
-  const useVeil = veil && !opts.skipVeil;
-  function doSwitch() {
-    closeReader();
-    closeTeamProfile({ skipHistory: true });
-    _coreShowPage(id);
-    updateScrollProgress();
-    // Re-observe reveals on the new page
-    setTimeout(() => {
-      document.querySelectorAll('.page.active .reveal:not(.visible)').forEach(el => {
-        revealObserver.observe(el);
-      });
-      applyMagnetic();
-    }, 50);
-    // Apply-page role stagger
-    if (id === 'apply') {
-      setTimeout(() => {
-        document.querySelectorAll('#page-apply .role-item').forEach((item, i) => {
-          item.style.opacity = '0';
-          item.style.transform = 'translateX(-12px)';
-          item.style.transition = 'none';
-          setTimeout(() => {
-            item.style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1)';
-            item.style.opacity = '1';
-            item.style.transform = 'translateX(0)';
-          }, i * 80);
-        });
-      }, 200);
-    }
-    // Reset scroll to top
-    window.scrollTo(0, 0);
-  }
-
-  if (useVeil) {
-    veil.classList.add('out');
-    setTimeout(() => {
-      doSwitch();
-      veil.classList.remove('out');
-    }, 200);
-  } else {
-    doSwitch();
-  }
+  closeReader();
+  closeTeamProfile({ skipHistory: true });
+  _coreShowPage(id);
+  window.scrollTo(0, 0);
+  updateScrollProgress();
+  triggerRevealsOnActivePage();
 }
 
 // ─── 1. SCROLL PROGRESS BAR ───
@@ -2012,9 +2302,6 @@ function updateScrollProgress() {
   const progress = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
   if (scrollBar) scrollBar.style.width = progress + '%';
 }
-window.addEventListener('scroll', updateScrollProgress, { passive: true });
-
-// ─── 2. PAGE TRANSITIONS ─── (handled in master showPage below)
 
 // ─── 3. SCROLL REVEAL with IntersectionObserver ───
 const revealObserver = new IntersectionObserver((entries) => {
@@ -2062,111 +2349,91 @@ function animateCount(el) {
   requestAnimationFrame(step);
 }
 
-// ─── 5. MAGNETIC BUTTONS ───
-document.querySelectorAll('.btn-magnetic').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const rect = btn.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) * 0.3;
-    const dy = (e.clientY - cy) * 0.3;
-    btn.style.transform = `translate(${dx}px, ${dy}px)`;
-  });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = 'translate(0,0)';
-  });
+// ─── 5. NAV: shadow once you scroll past the fold ───
+// Toggles a class instead of writing inline height, so the header never
+// reflows the page mid-scroll.
+const navEl = document.querySelector('.nav');
+let navIsScrolled = false;
+function updateNavShadow() {
+  const scrolled = window.scrollY > 24;
+  if (scrolled !== navIsScrolled) {
+    navIsScrolled = scrolled;
+    navEl.classList.toggle('scrolled', scrolled);
+  }
+}
+
+// ─── 6. MOBILE MENU ───
+const navToggle = document.getElementById('navToggle');
+const navLinksEl = document.getElementById('navLinks');
+
+function setMenu(open) {
+  navEl.classList.toggle('open', open);
+  navToggle.setAttribute('aria-expanded', String(open));
+  navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+}
+function closeMenu() { if (navEl.classList.contains('open')) setMenu(false); }
+
+navToggle.addEventListener('click', () => setMenu(!navEl.classList.contains('open')));
+
+// Any destination inside the panel dismisses it
+navLinksEl.addEventListener('click', (e) => {
+  if (e.target.closest('a')) closeMenu();
 });
 
-// Re-apply magnetic to dynamically shown pages
-function applyMagnetic() {
-  document.querySelectorAll('.btn-magnetic').forEach(btn => {
-    if (btn._magnetic) return;
-    btn._magnetic = true;
-    btn.addEventListener('mousemove', e => {
-      const rect = btn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) * 0.3;
-      const dy = (e.clientY - cy) * 0.3;
-      btn.style.transform = `translate(${dx}px, ${dy}px)`;
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.transform = 'translate(0,0)';
-    });
-  });
-}
-
-// ─── 6. SYNAPSE SPARK RIPPLE on card click ───
-function addSparkRipple(el) {
-  el.addEventListener('click', function(e) {
-    const ring = document.createElement('div');
-    ring.className = 'spark-ring';
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    ring.style.left = x + 'px';
-    ring.style.top = y + 'px';
-    el.style.position = 'relative';
-    el.appendChild(ring);
-    setTimeout(() => ring.remove(), 700);
-  }, { capture: true });
-}
-document.querySelectorAll('.article-card, .resource-card, .step-card').forEach(addSparkRipple);
-
-// ─── 7. NAV: shrink on scroll ───
-const nav = document.querySelector('.nav');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 60) {
-    nav.style.height = '50px';
-    nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
-  } else {
-    nav.style.height = '60px';
-    nav.style.boxShadow = 'none';
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && navEl.classList.contains('open')) {
+    closeMenu();
+    navToggle.focus();
   }
-}, { passive: true });
+});
 
-// ─── 8. HERO parallax ───
-const heroCanvas = document.getElementById('heroCanvas');
-const heroContent = document.querySelector('.hero-content');
+document.addEventListener('click', (e) => {
+  if (!navEl.contains(e.target)) closeMenu();
+});
+
+// Rotating past the breakpoint must not leave a stuck panel
+const navBreakpoint = window.matchMedia('(min-width: 901px)');
+navBreakpoint.addEventListener('change', (e) => { if (e.matches) closeMenu(); });
+
+// ─── 7. Scroll listener: one handler, rAF-throttled ───
+let scrollTicking = false;
 window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  if (heroCanvas) heroCanvas.style.transform = `translateY(${scrollY * 0.3}px)`;
-  if (heroContent) heroContent.style.transform = `translateY(${scrollY * 0.15}px)`;
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(() => {
+    updateScrollProgress();
+    updateNavShadow();
+    scrollTicking = false;
+  });
 }, { passive: true });
 
-// ─── 9. STAGGER team photo entrance ───
-function staggerTeamCards() {
-  document.querySelectorAll('.page.active .team-card.visible .team-photo').forEach((img, i) => {
-    img.style.animationDelay = (i * 60) + 'ms';
-    img.style.animation = 'teamPhotoIn 0.5s cubic-bezier(0.22,1,0.36,1) both';
-  });
-}
-
-// Inject keyframe for team photo
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-@keyframes teamPhotoIn {
-  from { opacity: 0; transform: scale(0.7); }
-  to   { opacity: 1; transform: scale(1); }
-}
-`;
-document.head.appendChild(styleSheet);
-
-// ─── 10. ROLE ITEMS stagger on Apply page ─── (handled in master showPage)
 
 // Initial run
-setTimeout(() => {
-  document.querySelectorAll(".page.active .reveal:not(.visible)").forEach(el => revealObserver.observe(el));
-  applyMagnetic();
-}, 100);
+triggerRevealsOnActivePage();
+updateNavShadow();
+
+// Safety net: if the observer never fires (obscure browser, load race, an
+// element that starts offscreen and is never scrolled to), reveal everything
+// rather than leaving the page blank.
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible');
+    });
+  }, 1200);
+});
 
 window.addEventListener('popstate', function () {
   var teamSlug = nvExtractTeamSlug(location.pathname);
   var id = teamSlug ? 'team' : nvPathToPage(location.pathname);
   closeTeamProfile({ skipHistory: true });
   closeReader();
-  showPage(id, { skipHistory: true, skipVeil: true });
+  showPage(id, { skipHistory: true });
   if (teamSlug) openTeamProfile(teamSlug, { skipHistory: true });
+});
+
+document.querySelectorAll('.footer-year').forEach(el => {
+  el.textContent = new Date().getFullYear();
 });
 
 bindTeamProfileLinks();
@@ -2175,14 +2442,14 @@ bindTeamProfileLinks();
   var teamSlug = nvExtractTeamSlug(location.pathname);
   if (teamSlug) {
     history.replaceState({ nvPage: 'team', nvTeamSlug: teamSlug }, '', nvTeamProfilePath(teamSlug));
-    showPage('team', { skipHistory: true, skipVeil: true });
+    showPage('team', { skipHistory: true });
     openTeamProfile(teamSlug, { skipHistory: true });
     return;
   }
   var id = nvPathToPage(location.pathname);
   if (id !== 'home') {
     history.replaceState({ nvPage: id }, '', nvPageToPath(id));
-    showPage(id, { skipHistory: true, skipVeil: true });
+    showPage(id, { skipHistory: true });
   }
 })();
 

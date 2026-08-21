@@ -1,0 +1,14 @@
+{
+  "name": "NeuroView",
+  "short_name": "NeuroView",
+  "description": "A student-led platform making neuroscience and brain-computer interface research clear, engaging, and free.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0b1e",
+  "theme_color": "#534AB7",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
