@@ -330,19 +330,34 @@ a.btn-primary, a.btn-ghost { display: inline-block; text-decoration: none; text-
 }
 
 /* ─── STAT BAR ─── */
-.stat-bar { background: transparent; border-block: 1px solid var(--border); }
-.stat-bar-inner { display: grid; grid-template-columns: repeat(3, 1fr); }
-.stat-item {
-  padding: 1.75rem var(--gutter); text-align: center;
-  border-right: 1px solid var(--border);
+.stat-bar { background: transparent; padding: 0 var(--gutter) var(--space-8); }
+.stat-bar-inner {
+  display: grid; grid-template-columns: repeat(3, minmax(min(200px, 100%), 1fr));
+  gap: var(--space-4);
 }
-.stat-item:last-child { border-right: none; }
+.stat-item {
+  padding: var(--space-8) var(--space-6); text-align: center;
+  border-radius: var(--radius-xl);
+  border: 1px solid transparent;
+  border-color: color-mix(in srgb, var(--stat-ink) 22%, transparent);
+  background: var(--stat-tint);
+  transition: transform var(--dur-mid) var(--ease), box-shadow var(--dur-mid) var(--ease);
+}
+.stat-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+/* Cool -> warm across the row. Decorative only: each figure keeps its own
+   label, so no meaning depends on the hue. */
+.stat-item[data-accent="blue"]  { --stat-tint: var(--blue-50);  --stat-ink: var(--blue-600);  }
+.stat-item[data-accent="teal"]  { --stat-tint: var(--teal-50);  --stat-ink: var(--teal-600);  }
+.stat-item[data-accent="amber"] { --stat-tint: var(--amber-50); --stat-ink: var(--amber-600); }
+
 .stat-num {
   font-family: 'DM Serif Display', serif;
-  font-size: var(--fs-3xl); color: var(--purple-600);
-  line-height: var(--lh-flat); margin-bottom: 6px;
+  font-size: var(--fs-3xl); color: var(--stat-ink, var(--purple-600));
+  line-height: var(--lh-flat); margin-bottom: var(--space-2);
+  font-variant-numeric: tabular-nums;
 }
 .stat-label { font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--lh-tight); }
+.stat-item .stat-label { color: #45435A; }
 
 /* ─── SECTIONS ─── */
 .section { padding: var(--space-20) var(--gutter); }
@@ -1154,17 +1169,13 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
   /* Three stats side by side is unreadable at this width */
   .stat-bar-inner { grid-template-columns: 1fr; }
   .stat-item {
-    padding: 1.25rem var(--gutter);
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+    padding: var(--space-5) var(--space-6);
     /* Stacked: numerals share a left edge so the column reads as a list,
        not three separately-centred rows. */
     display: flex; align-items: baseline; justify-content: flex-start;
     gap: var(--space-4); text-align: left;
   }
-  .stat-num { min-width: 3.2ch; text-align: right; }
-  .stat-item:last-child { border-bottom: none; }
-  .stat-num { margin-bottom: 0; }
+  .stat-num { min-width: 3.2ch; text-align: right; margin-bottom: 0; }
   .stat-label { flex: 1; }
 
   .section { padding: var(--space-12) var(--gutter); }
@@ -1325,9 +1336,9 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="stat-bar">
 <div class="stat-bar-inner">
-<div class="stat-item reveal" data-delay="0"><div class="stat-num" data-count="40" data-suffix="+">0+</div><div class="stat-label">Presentations and Lectures Made</div></div>
-<div class="stat-item reveal" data-delay="120"><div class="stat-num" data-count="20" data-suffix="+">0+</div><div class="stat-label">Schools Reached</div></div>
-<div class="stat-item reveal" data-delay="240"><div class="stat-num" data-count="4" data-suffix="">0</div><div class="stat-label">Continents Reached</div></div>
+<div class="stat-item reveal" data-accent="blue" data-delay="0"><div class="stat-num" data-count="40" data-suffix="+">0+</div><div class="stat-label">Presentations and Lectures Made</div></div>
+<div class="stat-item reveal" data-accent="teal" data-delay="120"><div class="stat-num" data-count="20" data-suffix="+">0+</div><div class="stat-label">Schools Reached</div></div>
+<div class="stat-item reveal" data-accent="amber" data-delay="240"><div class="stat-num" data-count="4" data-suffix="">0</div><div class="stat-label">Continents Reached</div></div>
 </div>
 </div>
 
