@@ -420,6 +420,17 @@ a.btn-primary, a.btn-ghost { display: inline-block; text-decoration: none; text-
 
 /* ─── GRID ─── */
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr)); gap: var(--space-4); }
+/* The articles grid is filterable, so its track count must not depend on how
+   many cards survive. auto-fit collapses the empty tracks and stretches what is
+   left, so a single search hit took the whole 1400px row — and since
+   .article-cover is aspect-ratio 16/10 with height auto, that made the cover
+   875px tall. auto-fill keeps the tracks, so a lone result stays one card wide.
+   .grid-3 itself keeps auto-fit because the home page's Latest row is always
+   exactly three cards and does want them stretched to fill. */
+#articles-grid { grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr)); }
+/* Belt and braces: never let a card exceed a sane reading width even if a
+   future grid change hands it a huge track. */
+#articles-grid .article-card { max-width: 460px; }
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: var(--space-4); }
 
 /* ─── ARTICLE CARD ─── */
