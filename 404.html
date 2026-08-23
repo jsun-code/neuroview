@@ -2693,8 +2693,16 @@ document.querySelectorAll('.footer-year').forEach(el => {
   if (!hero || !ctx) return;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
-  var CLUSTER = 54, RELAY = 6, POOL = 190;
-  var nodes = [], edges = [], trunkIdx = [], pulses = [];
+  var CLUSTER = 36, OUTER = 22, POOL = 190;
+  /* Occupancy grid of the warm brain mass, sampled off the photograph itself
+     (red-minus-blue > 2 above y 0.44, dilated, 26x16, occupancy 3-9;
+     cells below 3 are dropped so the glow spilling onto the hand is excluded). Nodes are rejection-
+     sampled against it in image space and then projected through the same
+     object-fit: cover box as the ignition, so firing stays on the brain and
+     never drifts onto the hand, jaw or neck at any panel size. */
+  var BGX = 26, BGY = 16;
+  var BRAIN = '00000000000000000000000000000000030000000000000000000000004878630000000000000000000059999800000000000000000005068997000000000000000000003349940000000000000000000034387000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+  var nodes = [], edges = [], trunkIdx = [], outerIdx = [], pulses = [];
   var raf = 0, last = 0, running = false, W = 0, H = 0, dpr = 1;
   var ignite = { x: 0, y: 0 }, wave = -1, cycle = 0;
   var ptr = { x: -1e4, y: -1e4, on: false };
@@ -2757,37 +2765,56 @@ document.querySelectorAll('.footer-year').forEach(el => {
 
     var rand = rng(20260823);
     nodes = [];
-    /* Seeded over the warm brain mass measured off the photograph
-       (x .18-.46, y .10-.52), biased toward the ignition so density
-       follows the light rather than filling the panel evenly. */
-    for (var n = 0; n < CLUSTER; n++) {
-      var bias = Math.pow(rand(), 0.62);
-      var ang = rand() * 6.2832;
-      var x = P.x + P.w * (0.325 + Math.cos(ang) * 0.235 * bias * 1.45);
-      var y = P.y + P.h * (0.300 + Math.sin(ang) * 0.230 * bias * 1.45);
-      x = Math.min(Math.max(x, P.x + P.w * 0.08), P.x + P.w * 0.88);
-      y = Math.min(Math.max(y, P.y + P.h * 0.07), P.y + P.h * 0.76);
-      nodes.push({ x: x, y: y, r: 1.4 + rand() * 1.5, ph: rand() * 6.28, lit: 0, d: 0 });
+
+    // image-space -> hero-space, through the same cover box as the ignition
+    var nw = img ? (img.naturalWidth || 1024) : 1024;
+    var nh = img ? (img.naturalHeight || 682) : 682;
+    var isc = Math.max(P.w / nw, P.h / nh);
+    var irw = nw * isc, irh = nh * isc;
+    var iox = P.x + (P.w - irw) / 2, ioy = P.y + (P.h - irh) / 2;
+    function toHero(fx, fy) { return { x: iox + fx * irw, y: ioy + fy * irh }; }
+
+    /* Rejection-sample the mask: pick a cell, accept with probability equal to
+       its occupancy, then jitter within the cell. Guarantees every node lands
+       on the glowing brain rather than the hand, jaw or neck. */
+    var guard = 0;
+    while (nodes.length < CLUSTER && guard < CLUSTER * 400) {
+      guard++;
+      var gx = (rand() * BGX) | 0, gy = (rand() * BGY) | 0;
+      var occ = BRAIN.charCodeAt(gy * BGX + gx) - 48;
+      if (occ <= 0 || rand() > occ / 9) continue;
+      var pt = toHero((gx + rand()) / BGX, (gy + rand()) / BGY);
+      nodes.push({ x: pt.x, y: pt.y, r: 1.4 + rand() * 1.5, ph: rand() * 6.28, lit: 0, d: 0, out: 0 });
     }
-    /* Relay out of the panel and in behind the wordmark. When the hero stacks
-       the panel below the copy, that same path becomes a long diagonal drawn
-       across the buttons and headline, which reads as a stray scratch rather
-       than a signal, so the chain stays inside the panel instead. */
+    // mask degenerate or image not yet measurable: fall back to the panel centre
+    while (nodes.length < CLUSTER) {
+      var fp = toHero(0.20 + rand() * 0.28, 0.12 + rand() * 0.40);
+      nodes.push({ x: fp.x, y: fp.y, r: 1.5, ph: rand() * 6.28, lit: 0, d: 0, out: 0 });
+    }
+    /* Outside the panel: a field that expands rather than a single chain. A lone
+       relay line was a thin, weak payoff, so signals now leave the brain and
+       spread through a wider mesh across the copy side of the hero.
+
+       When the hero stacks the panel below the copy, that field would be drawn
+       over the headline and buttons and read as stray scratches, so it is not
+       built at all and everything stays inside the panel. */
     var stacked = sr.top >= hd.bottom - 4;
-    var from = { x: P.x + P.w * 0.10, y: P.y + P.h * 0.34 };
-    var to = stacked
-      ? { x: P.x + P.w * 0.82, y: P.y + P.h * 0.78 }
-      : { x: Hd.x + Hd.w * 0.42, y: Hd.y + Hd.h * 0.52 };
-    trunkIdx = [];
-    for (var k = 0; k <= RELAY; k++) {
-      var t = k / RELAY;
-      var jit = (rand() - 0.5) * Math.min(W, H) * 0.085 * (1 - t);
-      nodes.push({
-        x: from.x + (to.x - from.x) * t,
-        y: from.y + (to.y - from.y) * t + jit,
-        r: 2.0, ph: rand() * 6.28, lit: 0, d: 0
-      });
-      trunkIdx.push(nodes.length - 1);
+    outerIdx = []; trunkIdx = [];
+    if (!stacked) {
+      var exit = { x: P.x + P.w * 0.06, y: P.y + P.h * 0.34 };
+      var span = exit.x - Math.max(Hd.x - Hd.w * 0.10, W * 0.04);   // leftward reach
+      for (var k = 0; k < OUTER; k++) {
+        // rings marching left, widening vertically as they go
+        var t = Math.pow((k + 0.6) / OUTER, 0.85);
+        var spread = (0.10 + t * 0.62) * H;
+        nodes.push({
+          x: exit.x - span * t + (rand() - 0.5) * span * 0.10,
+          y: exit.y + (rand() - 0.5) * spread,
+          r: 1.3 + rand() * 1.2, ph: rand() * 6.28, lit: 0, d: 0, out: t
+        });
+        outerIdx.push(nodes.length - 1);
+      }
+      trunkIdx = outerIdx;
     }
 
     for (var q = 0; q < nodes.length; q++) {
@@ -2815,15 +2842,28 @@ document.querySelectorAll('.footer-year').forEach(el => {
       near.sort(function (u, v) { return u.d - v.d; });
       for (var z = 0; z < 3 && z < near.length; z++) add(c, near[z].m, false);
     }
-    for (var t2 = 0; t2 < trunkIdx.length - 1; t2++) add(trunkIdx[t2], trunkIdx[t2 + 1], true);
-    // graft the chain onto its nearest cluster node so it has a real source
-    var best = 0, bd = Infinity;
-    for (var g2 = 0; g2 < CLUSTER; g2++) {
-      var gx = nodes[g2].x - nodes[trunkIdx[0]].x, gy = nodes[g2].y - nodes[trunkIdx[0]].y;
-      var d2 = gx * gx + gy * gy;
-      if (d2 < bd) { bd = d2; best = g2; }
+    /* Mesh the outer field to itself so a signal entering it has somewhere to
+       branch, and graft its innermost nodes onto the brain so the expansion has
+       a real source rather than appearing from nothing. */
+    for (var o = 0; o < outerIdx.length; o++) {
+      var oi = outerIdx[o], nearO = [];
+      for (var o2 = 0; o2 < outerIdx.length; o2++) {
+        if (o === o2) continue;
+        var ox = nodes[oi].x - nodes[outerIdx[o2]].x, oy = nodes[oi].y - nodes[outerIdx[o2]].y;
+        nearO.push({ i: outerIdx[o2], d: ox * ox + oy * oy });
+      }
+      nearO.sort(function (u, v) { return u.d - v.d; });
+      for (var z2 = 0; z2 < 3 && z2 < nearO.length; z2++) add(oi, nearO[z2].i, true);
     }
-    add(best, trunkIdx[0], true);
+    for (var gi = 0; gi < Math.min(2, outerIdx.length); gi++) {
+      var target = outerIdx[gi], best = 0, bd = Infinity;
+      for (var g2 = 0; g2 < CLUSTER; g2++) {
+        var gx = nodes[g2].x - nodes[target].x, gy = nodes[g2].y - nodes[target].y;
+        var d2 = gx * gx + gy * gy;
+        if (d2 < bd) { bd = d2; best = g2; }
+      }
+      add(best, target, true);
+    }
   }
 
   function take() {
@@ -2856,26 +2896,32 @@ document.querySelectorAll('.footer-year').forEach(el => {
     nodes[idx].lit = 1;
   }
 
-  /* The relay is directed and terminates. Firing every trunk edge of an
-     arriving node sent a signal back the way it came as well as onward, so
-     each hop doubled and the chain became an exponential generator: it
-     produced 93% of all signals and swamped the cascade it was supposed to
-     carry. One hop forward, stop at the wordmark. */
-  function relayOnward(from, gain) {
-    var pos = trunkIdx.indexOf(from);
-    if (pos < 0 || pos + 1 >= trunkIdx.length) return;   // reached the wordmark
-    var nxt = trunkIdx[pos + 1];
-    for (var i = 0; i < edges.length; i++) {
+  /* Expansion through the outer field: strictly outward, branching at most
+     twice, with the gain decaying each hop until it dies.
+
+     Direction and decay are both load-bearing. An earlier version fired every
+     trunk edge of an arriving node, which sent a signal back the way it came as
+     well as onward; each hop doubled and the chain became an exponential
+     generator producing 93% of all signals. Requiring the next node to be
+     further out (node.out) makes the wave one-way, and the decay bounds it
+     without needing a hop counter. */
+  function propagateOut(from, gain) {
+    if (gain < 0.24) return;                       // faded out
+    var branched = 0;
+    for (var i = 0; i < edges.length && branched < 2; i++) {
       var e = edges[i];
-      if ((e.a === from && e.b === nxt) || (e.b === from && e.a === nxt)) {
-        var pu = take(); if (!pu) return;
-        pu.on = true; pu.e = i; pu.t = 0; pu.fwd = (e.a === from);
-        pu.trunk = true; pu.gain = gain;
-        pu.sp = 0.95 + Math.random() * 0.35;
-        nodes[from].lit = 1;
-        return;
-      }
+      if (!e.trunk) continue;
+      var other = e.a === from ? e.b : (e.b === from ? e.a : -1);
+      if (other < 0) continue;
+      if (nodes[other].out <= nodes[from].out + 1e-6) continue;   // outward only
+      if (branched === 1 && Math.random() > 0.32) continue;        // usually one, sometimes two
+      var pu = take(); if (!pu) return;
+      pu.on = true; pu.e = i; pu.t = 0; pu.fwd = (e.a === from);
+      pu.trunk = true; pu.gain = gain;
+      pu.sp = 1.05 + Math.random() * 0.5;
+      branched++;
     }
+    nodes[from].lit = Math.max(nodes[from].lit, gain);
   }
 
   function draw(t) {
@@ -2893,8 +2939,8 @@ document.querySelectorAll('.footer-year').forEach(el => {
       var nd = nodes[n];
       nd.lit *= 0.94;
       var k = 0.5 + 0.5 * Math.sin(t * 0.0013 + nd.ph);
-      var amp = 0.30 + 0.26 * k + nd.lit * 0.9;
-      var rad = (nd.r + k * 0.7 + nd.lit * 3.4) * 3.4;
+      var amp = 0.20 + 0.18 * k + nd.lit * 0.62;
+      var rad = (nd.r + k * 0.6 + nd.lit * 2.6) * 2.15;
       ctx.globalAlpha = Math.min(1, amp);
       ctx.drawImage(sprite, nd.x - rad, nd.y - rad, rad * 2, rad * 2);
     }
@@ -2940,8 +2986,8 @@ document.querySelectorAll('.footer-year').forEach(el => {
       wave += dt * Math.max(W, H) * 0.58;
       for (var n = 0; n < nodes.length; n++) {
         if (nodes[n].d > prev && nodes[n].d <= wave) {
-          if (n === trunkIdx[0]) relayOnward(n, 1);      // hand off to the chain
-          else if (trunkIdx.indexOf(n) < 0) fireNode(n, nodes[n].d > Math.max(W, H) * 0.55 ? 0.7 : 1);
+          if (nodes[n].out > 0) propagateOut(n, 1);     // hand off to the outer field
+          else fireNode(n, nodes[n].d > Math.max(W, H) * 0.55 ? 0.7 : 1);
         }
       }
       if (wave > Math.max(W, H) * 1.9) wave = -1;
@@ -2967,7 +3013,7 @@ document.querySelectorAll('.footer-year').forEach(el => {
         // a signal arriving at a chain node keeps the relay running to the wordmark
         if (pu.trunk) {
           var ed2 = edges[pu.e];
-          relayOnward(pu.fwd ? ed2.b : ed2.a, 0.95);
+          propagateOut(pu.fwd ? ed2.b : ed2.a, pu.gain * 0.74);
         }
       }
     }
@@ -2983,9 +3029,9 @@ document.querySelectorAll('.footer-year').forEach(el => {
     // the brain -> wordmark relationship still reads with nothing moving
     for (var p = 0; p < POOL; p++) pulses[p].on = false;
     for (var e = 0; e < edges.length; e++) {
-      if (!edges[e].trunk) continue;
+      if (!edges[e].trunk || Math.random() < 0.45) continue;
       var pu = take(); if (!pu) break;
-      pu.on = true; pu.e = e; pu.t = 0.55; pu.sp = 0; pu.fwd = true; pu.trunk = true; pu.gain = 1;
+      pu.on = true; pu.e = e; pu.t = 0.55; pu.sp = 0; pu.fwd = true; pu.trunk = true; pu.gain = 0.8;
     }
     for (var n = 0; n < nodes.length; n++) nodes[n].lit = 0;
     draw(0);
