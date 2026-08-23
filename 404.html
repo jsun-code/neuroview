@@ -2719,7 +2719,7 @@ function nvNetwork(cfg) {
   if (!ctx) return null;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
-  var nodes = [], edges = [], pulses = [], sprite = null;
+  var nodes = [], edges = [], pulses = [], sprite = null, halo = null, darkBox = null;
   var W = 0, H = 0, dpr = 1, raf = 0, last = 0, running = false, onScreen = true;
   var docTop = 0, docH = 0;                 // page mode: node field in document space
   var burst = 0, wave = -1, igniteAt = null, headlineNode = -1;
@@ -2734,17 +2734,42 @@ function nvNetwork(cfg) {
     return function () { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
   }
 
+  /* Two sprites, both with a fast falloff. The old single sprite held solid to
+     0.16 of its radius and trailed to 1.0, so the halo ran 6x the core and every
+     node read as a soft haze. Core holds to 0.34 and the halo dies by 0.9, which
+     puts the glow at roughly 2.6x the dot. */
   function buildSprite() {
-    var c = document.createElement('canvas');
-    c.width = c.height = SPR;
-    var g = c.getContext('2d');
-    var rg = g.createRadialGradient(SPR / 2, SPR / 2, 0, SPR / 2, SPR / 2, SPR / 2);
-    rg.addColorStop(0.00, 'rgba(255,255,255,1)');
-    rg.addColorStop(0.16, 'rgba(232,244,255,0.88)');
-    rg.addColorStop(0.42, 'rgba(150,190,255,0.30)');
-    rg.addColorStop(1.00, 'rgba(120,150,255,0)');
-    g.fillStyle = rg; g.fillRect(0, 0, SPR, SPR);
-    sprite = c;
+    function mk(stops) {
+      var c = document.createElement('canvas');
+      c.width = c.height = SPR;
+      var g = c.getContext('2d');
+      var rg = g.createRadialGradient(SPR / 2, SPR / 2, 0, SPR / 2, SPR / 2, SPR / 2);
+      for (var i = 0; i < stops.length; i++) rg.addColorStop(stops[i][0], stops[i][1]);
+      g.fillStyle = rg; g.fillRect(0, 0, SPR, SPR);
+      return c;
+    }
+    // over the dark panel, where additive light genuinely emits
+    sprite = mk([
+      [0.00, 'rgba(214,206,255,1)'],
+      [0.34, 'rgba(163,142,255,0.80)'],
+      [0.56, 'rgba(116,94,240,0.16)'],
+      [0.90, 'rgba(104,84,228,0.01)'],
+      [1.00, 'rgba(104,84,228,0)']
+    ]);
+    // a tight accent bloom for an active node on the light field; kept small and
+    // saturated so it never becomes the pale wash additive blending produces
+    halo = mk([
+      [0.00, 'rgba(112,96,226,0.42)'],
+      [0.42, 'rgba(112,96,226,0.14)'],
+      [0.80, 'rgba(112,96,226,0.02)'],
+      [1.00, 'rgba(112,96,226,0)']
+    ]);
+  }
+
+  function overDark(x, y) {
+    if (!darkBox) return false;
+    return x > darkBox.x && x < darkBox.x + darkBox.w &&
+           y > darkBox.y && y < darkBox.y + darkBox.h;
   }
 
   /* Dart throwing with a minimum separation. A uniform grid reads as a grid and
@@ -2800,8 +2825,13 @@ function nvNetwork(cfg) {
     if (cfg.mode === 'page') {
       // viewport-sized canvas, node field in document space: a canvas as tall as
       // the document would cost tens of megabytes of backing store at dpr 2
-      W = innerWidth; H = innerHeight;
-      docTop = host.top; docH = host.height;
+      var de = document.documentElement;
+      W = de.clientWidth || window.innerWidth || 0;
+      H = de.clientHeight || window.innerHeight || 0;
+      if (W < 1 || H < 1) return false;         // a 0 read would collapse the field
+      docTop = host.top;
+      // clamp: an anomalous measurement must not seed a field kilometres tall
+      docH = Math.max(0, Math.min(host.height, de.scrollHeight));
     } else {
       var r = host.getBoundingClientRect();
       W = Math.max(1, r.width); H = Math.max(1, r.height);
@@ -2822,6 +2852,7 @@ function nvNetwork(cfg) {
         tag: placed[i].tag || 0
       });
     }
+    darkBox = cfg.dark ? cfg.dark() : null;
     igniteAt = cfg.ignite ? cfg.ignite(nodes, { W: W, H: H }) : null;
     if (igniteAt) {
       for (var q = 0; q < nodes.length; q++) {
@@ -2829,7 +2860,8 @@ function nvNetwork(cfg) {
         nodes[q].d = Math.sqrt(ex * ex + ey * ey);
       }
     }
-    link(rand, cfg.maxDegree, cfg.maxLen, cfg.keep);
+    var mlen = typeof cfg.maxLen === 'function' ? cfg.maxLen(W, H) : cfg.maxLen;
+    link(rand, cfg.maxDegree, mlen, cfg.keep);
     headlineNode = cfg.headline ? cfg.headline(nodes, { W: W, H: H }) : -1;
     /* The brief requires at least one pulse path running from the brain toward
        the wordmark. maxLen would never span that distance, so the route is added
@@ -2896,7 +2928,7 @@ function nvNetwork(cfg) {
     for (var i = 0; i < edges.length && fired < 2; i++) {
       var e = edges[i];
       if (e.a !== nodeIdx && e.b !== nodeIdx) continue;
-      if (fired === 1 && Math.random() > 0.3) continue;
+      if (fired === 1 && Math.random() > 0.14) continue;   // a second branch is rare
       firePulse(i, gain, e.a === nodeIdx);
       fired++;
     }
@@ -2906,36 +2938,65 @@ function nvNetwork(cfg) {
   function draw(t, scroll) {
     ctx.clearRect(0, 0, W, H);
     var oy = cfg.mode === 'page' ? docTop - scroll : 0;
-    ctx.globalCompositeOperation = 'lighter';
 
-    // resting connections: barely there until a pulse passes
+    /* Blend per surface. 'lighter' can only move a pixel toward white, so on a
+       near-white page it turns any colour into a pale haze regardless of what
+       colour was asked for. Additive is used only where the backdrop is the dark
+       panel; on the light field nodes are drawn source-over as saturated ink,
+       which is what keeps the core crisp and the colour actually purple. */
+
+    // ── resting structure: lines ──
     ctx.lineWidth = 1;
-    for (var i = 0; i < edges.length; i++) {
-      var e = edges[i];
-      var a = nodes[e.a], b = nodes[e.b];
-      var ay = a.y + oy, by = b.y + oy;
-      if ((ay < -60 && by < -60) || (ay > H + 60 && by > H + 60)) continue;
-      e.lit *= 0.93;
-      var al = cfg.lineAlpha + e.lit * cfg.lineLitBoost;
-      ctx.strokeStyle = 'rgba(' + cfg.lineRGB + ',' + al.toFixed(3) + ')';
-      ctx.beginPath(); ctx.moveTo(a.x, ay); ctx.lineTo(b.x, by); ctx.stroke();
+    for (var pass = 0; pass < 2; pass++) {
+      ctx.globalCompositeOperation = pass === 0 ? 'source-over' : 'lighter';
+      for (var i = 0; i < edges.length; i++) {
+        var e = edges[i];
+        var a = nodes[e.a], b = nodes[e.b];
+        var ay = a.y + oy, by = b.y + oy;
+        if ((ay < -60 && by < -60) || (ay > H + 60 && by > H + 60)) continue;
+        var dk = overDark((a.x + b.x) / 2, (ay + by) / 2);
+        if ((pass === 1) !== dk) continue;
+        if (pass === 0) e.lit *= 0.92;                 // decay once, in pass 0
+        var al = (dk ? cfg.lineAlphaDark : cfg.lineAlpha) + e.lit * cfg.lineLitBoost;
+        ctx.strokeStyle = 'rgba(' + (dk ? cfg.lineRGBDark : cfg.lineRGB) + ',' + al.toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(a.x, ay); ctx.lineTo(b.x, by); ctx.stroke();
+      }
     }
 
-    // somas: fixed, with only a slow breath so they never read as drifting
+    // ── resting structure: nodes ──
     for (var n = 0; n < nodes.length; n++) {
       var nd = nodes[n];
       var ny = nd.y + oy;
       if (ny < -40 || ny > H + 40) continue;
-      nd.lit *= 0.93;
-      var k = 0.5 + 0.5 * Math.sin(t * 0.0009 + nd.ph);
-      var amp = cfg.nodeAlpha * (0.62 + 0.38 * k) + nd.lit * cfg.nodeLitBoost;
-      var rad = (nd.r + nd.lit * 2.2) * cfg.glowScale;
-      ctx.globalAlpha = Math.min(1, amp);
-      ctx.drawImage(sprite, nd.x - rad, ny - rad, rad * 2, rad * 2);
+      nd.lit *= 0.92;
+      var lit = nd.lit;
+      if (overDark(nd.x, ny)) {
+        // additive, tight: a bright speck on the panel that swells when lit
+        ctx.globalCompositeOperation = 'lighter';
+        var radD = (nd.r * 0.9 + lit * 2.4) * cfg.glowScale;
+        ctx.globalAlpha = Math.min(1, cfg.nodeAlphaDark + lit * cfg.nodeLitBoost);
+        ctx.drawImage(sprite, nd.x - radD, ny - radD, radD * 2, radD * 2);
+        ctx.globalAlpha = 1;
+      } else {
+        /* Crisp ink. A filled arc is sharp by construction, so the resting state
+           is a hard 1px dot rather than a blur, and only an active node earns a
+           halo at all. */
+        ctx.globalCompositeOperation = 'source-over';
+        if (lit > 0.06) {
+          var hr = (nd.r + 1.4) * cfg.haloScale * (0.5 + 0.5 * lit);
+          ctx.globalAlpha = Math.min(1, lit * 1.1);
+          ctx.drawImage(halo, nd.x - hr, ny - hr, hr * 2, hr * 2);
+          ctx.globalAlpha = 1;
+        }
+        var rl = nd.r * (1 + lit * 0.85);
+        ctx.fillStyle = 'rgba(' + (lit > 0.35 ? cfg.nodeRGBLit : cfg.nodeRGB) + ',' +
+                        Math.min(0.96, cfg.nodeAlpha + lit * cfg.nodeLitBoost).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(nd.x, ny, rl, 0, 6.2832); ctx.fill();
+      }
     }
     ctx.globalAlpha = 1;
 
-    // travelling heads
+    // ── travelling heads ──
     for (var p = 0; p < cfg.pool; p++) {
       var pu = pulses[p];
       if (!pu.on) continue;
@@ -2949,19 +3010,33 @@ function nvNetwork(cfg) {
       if (fade <= 0) continue;
       var hx = s.x + (d.x - s.x) * u, hy = sy + (dy2 - sy) * u;
       if (hy < -40 || hy > H + 40) continue;
-      // short trail behind the head, not a glow along the whole edge
+      var dk2 = overDark(hx, hy);
       var tail = Math.max(0, u - 0.20);
-      ctx.strokeStyle = 'rgba(' + cfg.pulseRGB + ',' + (0.62 * fade).toFixed(3) + ')';
+
+      ctx.globalCompositeOperation = dk2 ? 'lighter' : 'source-over';
+      ctx.strokeStyle = 'rgba(' + (dk2 ? cfg.pulseRGBDark : cfg.pulseRGB) + ',' +
+                       ((dk2 ? 0.70 : 0.58) * fade).toFixed(3) + ')';
       ctx.lineWidth = cfg.pulseWidth;
       ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(s.x + (d.x - s.x) * tail, sy + (dy2 - sy) * tail);
       ctx.lineTo(hx, hy);
       ctx.stroke();
-      var hr = cfg.headSize * (0.75 + 0.45 * fade);
-      ctx.globalAlpha = Math.min(1, fade);
-      ctx.drawImage(sprite, hx - hr, hy - hr, hr * 2, hr * 2);
-      ctx.globalAlpha = 1;
+
+      if (dk2) {
+        var hrD = cfg.headSize * (0.55 + 0.45 * fade);
+        ctx.globalAlpha = Math.min(1, fade);
+        ctx.drawImage(sprite, hx - hrD, hy - hrD, hrD * 2, hrD * 2);
+        ctx.globalAlpha = 1;
+      } else {
+        // tight bloom then a hard core: bright, small, unmistakably purple
+        var hb = cfg.headSize * cfg.haloScale * 0.62 * (0.6 + 0.4 * fade);
+        ctx.globalAlpha = Math.min(1, fade * 0.9);
+        ctx.drawImage(halo, hx - hb, hy - hb, hb * 2, hb * 2);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = 'rgba(' + cfg.pulseRGB + ',' + (0.94 * fade).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(hx, hy, cfg.headCore, 0, 6.2832); ctx.fill();
+      }
     }
     ctx.globalCompositeOperation = 'source-over';
   }
@@ -3000,7 +3075,9 @@ function nvNetwork(cfg) {
         var prev = wave;
         wave += dt * Math.max(W, H) * 0.55;
         for (var n = 0; n < nodes.length; n++) {
-          if (nodes[n].d > prev && nodes[n].d <= wave) fireFrom(n, nodes[n].tag === 1 ? 1 : 0.8);
+          if (nodes[n].d > prev && nodes[n].d <= wave && Math.random() < cfg.sweepTake) {
+            fireFrom(n, nodes[n].tag === 1 ? 1 : 0.8);
+          }
         }
         if (wave > Math.max(W, H) * 1.6) wave = -1;
       }
@@ -3116,15 +3193,33 @@ function nvNetwork(cfg) {
     canvas: canvas, mode: 'hero', seed: 20260824,
     host: function () { return hero; },
     watch: function () { return hero; },
+    /* The opaque photo panel. Everything inside it is composited additively,
+       everything outside as ink; 'lighter' on a near-white page can only push
+       pixels toward white, which is what turned a purple glow into pale haze. */
+    dark: function () {
+      var st = hero.querySelector('.nv-stage');
+      if (!st) return null;
+      var hr = hero.getBoundingClientRect(), sr = st.getBoundingClientRect();
+      return { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
+    },
     pool: 90,
-    maxDegree: 3, maxLen: 190, keep: 0.62,
-    lineRGB: '116,136,224', lineAlpha: 0.14, lineLitBoost: 0.34,
-    nodeRGB: '150,150,235', nodeAlpha: 0.40, nodeLitBoost: 0.55, glowScale: 2.0,
-    pulseRGB: '214,238,255', pulseWidth: 1.8, headSize: 7.5,
+    maxDegree: 2, keep: 0.66,
+    maxLen: function (W, H) { return Math.max(112, Math.min(215, Math.min(W, H) * 0.42)); },
+    /* Resting values are deliberately near-invisible. The previous set put the
+       resting node at 0.25-0.40 alpha against an active 0.95, a ratio under 4x,
+       so all 46 nodes read as lit and the travelling pulse had nothing to stand
+       out from. Resting is now 0.13 against 0.93, a ratio over 7x. */
+    lineRGB: '83,74,183', lineAlpha: 0.075, lineLitBoost: 0.50,
+    lineRGBDark: '150,132,255', lineAlphaDark: 0.16,
+    nodeRGB: '83,74,183', nodeRGBLit: '104,86,232',
+    nodeAlpha: 0.13, nodeLitBoost: 0.80,
+    nodeAlphaDark: 0.10, glowScale: 1.5, haloScale: 2.6,
+    pulseRGB: '92,74,214', pulseRGBDark: '196,182,255',
+    pulseWidth: 1.6, headSize: 5.5, headCore: 2.3,
     durMin: 1.0, durMax: 2.0,               // travel time, per the brief
-    gapMin: 3.4, gapMax: 14.0, fireChance: 0.38,
+    gapMin: 4.5, gapMax: 18.0, fireChance: 0.30,
     burstMin: 4.6, burstSpread: 2.2,
-    relayChance: 0.48, relayDecay: 0.72, relayFloor: 0.34,
+    relayChance: 0.20, relayDecay: 0.70, relayFloor: 0.38, sweepTake: 0.30,
     routeGap: 5.0, routeSpread: 3.0,
 
     place: function (rand, scatter, geo) {
@@ -3142,7 +3237,7 @@ function nvNetwork(cfg) {
         var irw = nw * isc, irh = nh * isc;
         var iox = P.x + (P.w - irw) / 2, ioy = P.y + (P.h - irh) / 2;
         // brain sub-cluster, rejection-sampled against the mask
-        var want = 16, guard = 0;
+        var want = 7, guard = 0;
         while (out.length < want && guard < 6000) {
           guard++;
           var gx = (rand() * BGX) | 0, gy = (rand() * BGY) | 0;
@@ -3160,7 +3255,7 @@ function nvNetwork(cfg) {
         var sr = stage.getBoundingClientRect();
         return { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
       })() : null;
-      var wide = scatter(rand, 30, Math.min(geo.W, geo.H) * 0.085,
+      var wide = scatter(rand, 24, Math.min(geo.W, geo.H) * 0.095,
         { x: geo.W * 0.02, y: geo.H * 0.04, w: geo.W * 0.96, h: geo.H * 0.92 },
         function (x, y) {
           if (stageBox) {
@@ -3236,14 +3331,19 @@ function nvNetwork(cfg) {
     canvas: canvas, mode: 'page', seed: 20260825,
     host: field,
     pool: 40,
-    maxDegree: 2, maxLen: 420, keep: 0.46,
-    lineRGB: '116,136,224', lineAlpha: 0.10, lineLitBoost: 0.22,
-    nodeRGB: '150,150,235', nodeAlpha: 0.22, nodeLitBoost: 0.34, glowScale: 1.7,
-    pulseRGB: '206,230,255', pulseWidth: 1.5, headSize: 6,
+    maxDegree: 2, keep: 0.46,
+    maxLen: function (W) { return Math.max(240, Math.min(430, W * 0.30)); },
+    lineRGB: '83,74,183', lineAlpha: 0.05, lineLitBoost: 0.32,
+    lineRGBDark: '150,132,255', lineAlphaDark: 0.10,
+    nodeRGB: '83,74,183', nodeRGBLit: '104,86,232',
+    nodeAlpha: 0.09, nodeLitBoost: 0.58,
+    nodeAlphaDark: 0.08, glowScale: 1.3, haloScale: 2.3,
+    pulseRGB: '92,74,214', pulseRGBDark: '196,182,255',
+    pulseWidth: 1.4, headSize: 4.6, headCore: 1.9,
     durMin: 1.4, durMax: 2.0,
     gapMin: 5.0, gapMax: 18.0, fireChance: 0.4,
     burstMin: 1e9, burstSpread: 0,          // no ignition sweep down here
-    relayChance: 0.34, relayDecay: 0.7, relayFloor: 0.34,
+    relayChance: 0.22, relayDecay: 0.7, relayFloor: 0.36, sweepTake: 1,
     routeGap: 0, routeSpread: 0,
 
     place: function (rand, scatter, geo) {
@@ -3253,8 +3353,11 @@ function nvNetwork(cfg) {
          edge and read as scattered dots rather than a network. Mean spacing at
          this count is ~300px, so maxLen has to clear that. */
       var area = geo.W * geo.docH;
-      var n = Math.max(14, Math.min(56, Math.round(area / 95000)));
-      var pts = scatter(rand, n, 130,
+      var n = Math.max(12, Math.min(30, Math.round(area / 120000)));
+      /* Separation scales with width: a fixed 130px on a 375px column leaves so
+         few nodes in range that the field reads as unconnected specks. */
+      var sep = Math.max(76, Math.min(130, geo.W * 0.11));
+      var pts = scatter(rand, n, sep,
         { x: geo.W * 0.03, y: 0, w: geo.W * 0.94, h: geo.docH }, null);
       for (var i = 0; i < pts.length; i++) pts[i].r = 0.9 + rand() * 1.0;
       return pts;
