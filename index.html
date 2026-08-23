@@ -216,13 +216,27 @@ a.nav-btn { text-decoration: none; display: inline-block; }
     radial-gradient(38% 46% at 22% 34%, rgba(127,119,221,0.28) 0%, transparent 68%),
     radial-gradient(42% 50% at 82% 20%, rgba(120,168,232,0.26) 0%, transparent 70%);
 }
+/* ── SYNAPSE LAYER ──
+   One canvas across the whole hero. It sits above the bloom but below
+   .hero-inner, so the headline is never drawn over — legibility comes from
+   z-order, not from a scrim the light page would not tolerate. */
+#synapseCanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 2; pointer-events: none;
+}
+/* z-index:auto here on purpose — a stacking context would trap .nv-stage
+   underneath the canvas and the in-brain nodes would never show. */
+/* z-index deliberately omitted: a stacking context here would trap .nv-stage
+   beneath the canvas and the in-brain nodes would never render. Paint order
+   inside .hero is bloom(0) < panel(1) < canvas(2) < copy(3). */
 .hero-inner {
-  position: relative; z-index: 2;
+  position: relative;
   max-width: var(--maxw-page); margin: 0 auto;
   display: grid; grid-template-columns: minmax(0,1fr) minmax(0,0.92fr);
   gap: var(--space-12); align-items: center;
 }
-.hero-copy { min-width: 0; }
+.hero-copy { position: relative; z-index: 3; min-width: 0; }
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: var(--space-2);
@@ -242,7 +256,7 @@ a.nav-btn { text-decoration: none; display: inline-block; }
    alpha so it can sit on any panel. Glow needs darkness to read as emission,
    so the figure keeps its own dark slab inside the light hero. */
 .nv-stage {
-  position: relative; overflow: hidden;
+  position: relative; z-index: 1; overflow: hidden;
   aspect-ratio: 16 / 11;
   border-radius: var(--radius-2xl);
   background: radial-gradient(64% 62% at 48% 46%, #16103A 0%, #0A0722 62%, #05040F 100%);
@@ -1306,6 +1320,7 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 
 <div class="hero">
 <div class="hero-bloom" aria-hidden="true"></div>
+<canvas id="synapseCanvas" aria-hidden="true"></canvas>
 <div class="hero-inner">
 <div class="hero-copy">
 <span class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Student-led · Science-driven</span>
@@ -2666,6 +2681,209 @@ window.addEventListener('popstate', function () {
 document.querySelectorAll('.footer-year').forEach(el => {
   el.textContent = new Date().getFullYear();
 });
+
+/* ── SYNAPSE LAYER ───────────────────────────────────────────────────────────
+   One authored sequence: signals fire inside the brain panel and travel left
+   along a relay chain until they pass behind the wordmark. Nodes are stored in
+   normalised hero coordinates so a resize is a re-project, not a re-seed.     */
+(function () {
+  var canvas = document.getElementById('synapseCanvas');
+  if (!canvas || !canvas.getContext) return;
+  var hero = canvas.closest('.hero');
+  var ctx = canvas.getContext('2d', { alpha: true });
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Node positions are derived from where the panel and headline actually are,
+  // not fixed fractions. The hero is two columns on desktop and stacked on
+  // mobile, so a fraction-based seed produces stringy diagonals on phones.
+  var CLUSTER = 15, RELAY = 5;
+  var nodes = [], edges = [], trunkIdx = [], pulses = [];
+  var raf = 0, last = 0, spawn = 0, running = false, W = 0, H = 0, dpr = 1;
+
+  function rng(seed) {                     // deterministic: resize must not re-scatter
+    return function () {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    };
+  }
+
+  function layout() {
+    var hr = hero.getBoundingClientRect();
+    W = Math.max(1, hr.width); H = Math.max(1, hr.height);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);   // cap: 3x costs fill rate for nothing
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var stage = hero.querySelector('.nv-stage');
+    var head  = hero.querySelector('h1');
+    if (!stage || !head) return;
+    var sr = stage.getBoundingClientRect(), hd = head.getBoundingClientRect();
+    var P = { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
+    var Hd = { x: hd.left - hr.left, y: hd.top - hr.top, w: hd.width, h: hd.height };
+
+    var rand = rng(20260822);
+    nodes = [];
+    // cluster over the brain panel, inset so nodes stay off the rounded corners
+    for (var i = 0; i < CLUSTER; i++) {
+      nodes.push({
+        x: P.x + P.w * (0.14 + rand() * 0.72),
+        y: P.y + P.h * (0.16 + rand() * 0.68),
+        r: 2.2, ph: i * 0.7
+      });
+    }
+    // relay chain from the panel edge to just past the headline's far edge
+    var from = { x: P.x + P.w * 0.16, y: P.y + P.h * 0.42 };
+    var to   = { x: Hd.x - Math.min(64, Hd.x * 0.7), y: Hd.y + Hd.h * 0.55 };
+    trunkIdx = [0];
+    for (var k = 1; k <= RELAY; k++) {
+      var t = k / RELAY;
+      var jitter = (rand() - 0.5) * Math.min(W, H) * 0.10;
+      nodes.push({
+        x: from.x + (to.x - from.x) * t,
+        y: from.y + (to.y - from.y) * t + jitter * (1 - t),
+        r: 1.9, ph: k * 1.1
+      });
+      trunkIdx.push(nodes.length - 1);
+    }
+
+    // k-nearest, not radius. A radius pass over a tight cluster produces a mesh,
+    // and a mesh reads as a static web instead of axons carrying signals.
+    edges = [];
+    var seen = {};
+    function add(a, b, trunk) {
+      var key = a < b ? a + ':' + b : b + ':' + a;
+      if (seen[key] !== undefined) { if (trunk) edges[seen[key]].trunk = true; return; }
+      seen[key] = edges.length;
+      edges.push({ a: a, b: b, trunk: !!trunk });
+    }
+    for (var n = 0; n < CLUSTER; n++) {
+      var near = [];
+      for (var m = 0; m < CLUSTER; m++) {
+        if (n === m) continue;
+        var dx = nodes[n].x - nodes[m].x, dy = nodes[n].y - nodes[m].y;
+        near.push({ m: m, d: dx * dx + dy * dy });
+      }
+      near.sort(function (u, v) { return u.d - v.d; });
+      for (var q = 0; q < 2 && q < near.length; q++) add(n, near[q].m, false);
+    }
+    for (var t2 = 0; t2 < trunkIdx.length - 1; t2++) add(trunkIdx[t2], trunkIdx[t2 + 1], true);
+  }
+
+  function firePulse(trunkOnly) {
+    if (pulses.length > 14) return;
+    var pool = [];
+    for (var i = 0; i < edges.length; i++) if (!trunkOnly || edges[i].trunk) pool.push(i);
+    if (!pool.length) return;
+    var e = pool[(Math.random() * pool.length) | 0];
+    var fwd = edges[e].trunk ? true : Math.random() < 0.5;   // trunk always runs brain -> headline
+    pulses.push({ e: e, t: 0, sp: 0.34 + Math.random() * 0.30, fwd: fwd, trunk: edges[e].trunk });
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+
+    // dendrites
+    ctx.lineWidth = 1;
+    for (var i = 0; i < edges.length; i++) {
+      var a = nodes[edges[i].a], b = nodes[edges[i].b];
+      ctx.strokeStyle = edges[i].trunk ? 'rgba(127,119,221,0.42)' : 'rgba(127,119,221,0.26)';
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+
+    // somas — breathe only when animating
+    for (var n = 0; n < nodes.length; n++) {
+      var nd = nodes[n];
+      var k = reduce.matches ? 0.6 : 0.5 + 0.5 * Math.sin(t * 0.0011 + nd.ph);
+      ctx.fillStyle = 'rgba(139,131,231,' + (0.42 + 0.42 * k).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(nd.x, nd.y, nd.r + k * 0.9, 0, 6.2832); ctx.fill();
+    }
+
+    // travelling signals, with a short trailing comet
+    for (var p = 0; p < pulses.length; p++) {
+      var pu = pulses[p], ed = edges[pu.e];
+      var s = pu.fwd ? nodes[ed.a] : nodes[ed.b];
+      var d = pu.fwd ? nodes[ed.b] : nodes[ed.a];
+      var u = pu.t, tail = Math.max(0, u - 0.16);
+      var fade = u < 0.12 ? u / 0.12 : (u > 0.82 ? (1 - u) / 0.18 : 1);
+      var g = ctx.createLinearGradient(
+        s.x + (d.x - s.x) * tail, s.y + (d.y - s.y) * tail,
+        s.x + (d.x - s.x) * u,    s.y + (d.y - s.y) * u);
+      g.addColorStop(0, 'rgba(143,211,255,0)');
+      g.addColorStop(1, 'rgba(' + (pu.trunk ? '186,232,255' : '143,180,255') + ',' + (0.85 * fade).toFixed(3) + ')');
+      ctx.strokeStyle = g; ctx.lineWidth = pu.trunk ? 2.4 : 1.8; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(s.x + (d.x - s.x) * tail, s.y + (d.y - s.y) * tail);
+      ctx.lineTo(s.x + (d.x - s.x) * u,    s.y + (d.y - s.y) * u);
+      ctx.stroke();
+
+      var hx = s.x + (d.x - s.x) * u, hy = s.y + (d.y - s.y) * u;
+      var halo = ctx.createRadialGradient(hx, hy, 0, hx, hy, pu.trunk ? 9 : 6);
+      halo.addColorStop(0, 'rgba(226,244,255,' + (0.9 * fade).toFixed(3) + ')');
+      halo.addColorStop(1, 'rgba(143,211,255,0)');
+      ctx.fillStyle = halo;
+      ctx.beginPath(); ctx.arc(hx, hy, pu.trunk ? 9 : 6, 0, 6.2832); ctx.fill();
+    }
+  }
+
+  function frame(ts) {
+    if (!last) last = ts;
+    var dt = Math.min((ts - last) / 1000, 0.05);   // clamp: tab-restore must not teleport pulses
+    last = ts;
+    spawn -= dt;
+    if (spawn <= 0) { firePulse(Math.random() < 0.45); spawn = 0.28 + Math.random() * 0.42; }
+    for (var i = pulses.length - 1; i >= 0; i--) {
+      pulses[i].t += pulses[i].sp * dt;
+      if (pulses[i].t >= 1) pulses.splice(i, 1);
+    }
+    draw(ts);
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (running || reduce.matches) return;
+    running = true; last = 0; raf = requestAnimationFrame(frame);
+  }
+  function stop() {
+    running = false;
+    if (raf) cancelAnimationFrame(raf); raf = 0;
+  }
+  function staticFrame() {
+    // reduced motion: same composition, signals frozen mid-path so the
+    // brain -> headline relationship still reads without any movement
+    pulses = [];
+    for (var e = 0; e < edges.length; e++) {
+      if (edges[e].trunk) pulses.push({ e: e, t: 0.5, sp: 0, fwd: true, trunk: true });
+    }
+    draw(0);
+  }
+
+  function apply() {
+    layout();
+    if (reduce.matches) { stop(); staticFrame(); } else { start(); }
+  }
+
+  var rt;
+  addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { var was = running; stop(); layout(); if (reduce.matches) staticFrame(); else if (was) start(); }, 160);
+  }, { passive: true });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stop(); else if (!reduce.matches) start();
+  });
+
+  // don't burn frames once the hero is scrolled away
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) {
+      if (en[0].isIntersecting) { if (!reduce.matches) start(); } else stop();
+    }, { threshold: 0 }).observe(hero);
+  }
+
+  (reduce.addEventListener ? reduce.addEventListener('change', apply)
+                           : reduce.addListener(apply));
+  apply();
+})();
 
 bindTeamProfileLinks();
 
