@@ -2976,7 +2976,14 @@ document.querySelectorAll('.footer-year').forEach(el => {
      away at 5px/s collapsed the whole field inward: dots near the brain went
      1 to 23 in 30s and mean degree 2.25 to 7.25. The gate makes it self-
      limiting rather than relying on the rates happening to balance. */
-  var EMIT_EVERY = 5.5, EMIT_NEAR_CAP = 12, EMIT_NEAR_R = 420;
+  /* Occupancy grid of the glowing brain mass, sampled off the photograph itself
+     (red-minus-blue above y 0.44, dilated, 26x16, occupancy 3-9). The brain
+     network is confined to this shape and bounces off it. Bounding the zone by
+     the panel rect instead let dots roam the hand, jaw, neck and spine, which
+     is what made the whole thing read as one overlay. */
+  var BGX = 26, BGY = 16;
+  var BRAIN = '00000000000000000000000000000000030000000000000000000000004878630000000000000000000059999800000000000000000005068997000000000000000000003349940000000000000000000034387000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+  var brainImg = null;   // cover-box projection for the mask
 
   var INK = '83,74,183';                       // --purple-600
   var INK_LIT = '104,86,232';
@@ -2986,7 +2993,7 @@ document.querySelectorAll('.footer-year').forEach(el => {
   var raf = 0, last = 0, running = false, onScreen = true;
   var vw = 0, vh = 0, dpr = 1, docH = 0;
   var heroBox = null, brainBox = null, pageTop = 0;
-  var emitAt = 0, fireAt = 0, routeAt = 0;
+  var  fireAt = 0, routeAt = 0;
 
   for (var i = 0; i < POOL; i++) pulses.push({ on: false, a: 0, b: 0, t: 0, sp: 1, gain: 1, dead: 0 });
 
@@ -3023,7 +3030,16 @@ document.querySelectorAll('.footer-year').forEach(el => {
     if (st) {
       var sr = st.getBoundingClientRect();
       brainBox = { x: sr.left, y: sr.top + sy, w: sr.width, h: sr.height };
-    } else brainBox = null;
+      // the photo is object-fit: cover, so the mask has to be projected through
+      // the same box the image itself is painted into
+      var im = hero.querySelector('.nv-render');
+      var nw = im ? (im.naturalWidth || 1024) : 1024;
+      var nh = im ? (im.naturalHeight || 682) : 682;
+      var isc = Math.max(brainBox.w / nw, brainBox.h / nh);
+      brainImg = { w: nw * isc, h: nh * isc };
+      brainImg.x = brainBox.x + (brainBox.w - brainImg.w) / 2;
+      brainImg.y = brainBox.y + (brainBox.h - brainImg.h) / 2;
+    } else { brainBox = null; brainImg = null; }
     pageTop = heroBox.y + heroBox.h;
 
     heroCv.width = Math.round(heroBox.w * dpr);
@@ -3043,9 +3059,19 @@ document.querySelectorAll('.footer-year').forEach(el => {
            dots toward the centre, which pushes real local density well above
            what the area-based link radius assumes and webs the panel up. */
         var a = Math.random() * 6.2832, s = Math.sqrt(Math.random());
+        // rejection-sample the mask so every dot starts on the brain
+        var px = 0, py = 0, ok = false;
+        for (var t = 0; t < 260 && !ok; t++) {
+          var gx = (Math.random() * BGX) | 0, gy = (Math.random() * BGY) | 0;
+          var occ = BRAIN.charCodeAt(gy * BGX + gx) - 48;
+          if (occ <= 0 || Math.random() > occ / 9) continue;
+          px = brainImg.x + ((gx + Math.random()) / BGX) * brainImg.w;
+          py = brainImg.y + ((gy + Math.random()) / BGY) * brainImg.h;
+          ok = true;
+        }
+        if (!ok) continue;
         nodes.push({
-          x: brainBox.x + brainBox.w * (0.33 + Math.cos(a) * 0.27 * s),
-          y: brainBox.y + brainBox.h * (0.32 + Math.sin(a) * 0.26 * s),
+          x: px, y: py,
           vx: rnd(-1, 1), vy: rnd(-1, 1), r: rnd(1.0, 2.1),
           zone: 1, fade: 1, lit: 0
         });
@@ -3097,6 +3123,15 @@ document.querySelectorAll('.footer-year').forEach(el => {
     }
   }
 
+  // is this document-space point on the brain mass?
+  function onBrain(x, y) {
+    if (!brainImg) return false;
+    var fx = (x - brainImg.x) / brainImg.w, fy = (y - brainImg.y) / brainImg.h;
+    if (fx < 0 || fx >= 1 || fy < 0 || fy >= 1) return false;
+    var gx = (fx * BGX) | 0, gy = (fy * BGY) | 0;
+    return BRAIN.charCodeAt(gy * BGX + gx) > 48;
+  }
+
   function inBrain(nd) {
     return brainBox && nd.x > brainBox.x && nd.x < brainBox.x + brainBox.w &&
            nd.y > brainBox.y && nd.y < brainBox.y + brainBox.h;
@@ -3126,8 +3161,12 @@ document.querySelectorAll('.footer-year').forEach(el => {
     }
     return out;
   }
+  /* Two separate networks, not one graph with two densities. A mixed pair used
+     to get the 172px page distance, which drew lines straight out of the brain
+     and across the hand, neck and headline. */
   function linkDist(a, b) {
-    return (a.zone && b.zone) ? LINK_BRAIN : LINK_PAGE;
+    if (a.zone !== b.zone) return 0;
+    return a.zone ? LINK_BRAIN : LINK_PAGE;
   }
 
   function take() { for (var i = 0; i < POOL; i++) if (!pulses[i].on) return pulses[i]; return null; }
@@ -3161,46 +3200,6 @@ document.querySelectorAll('.footer-year').forEach(el => {
 
   /* A dot at the brain's boundary fades out and one fades in just outside it, so
      the page field is fed from the brain instead of existing independently. */
-  function emit() {
-    if (!brainBox) return;
-    var best = -1, bd = Infinity;
-    for (var i = 0; i < nodes.length; i++) {
-      if (!nodes[i].zone || nodes[i].fade < 0.9) continue;
-      var dx = Math.min(nodes[i].x - brainBox.x, brainBox.x + brainBox.w - nodes[i].x);
-      var dy = Math.min(nodes[i].y - brainBox.y, brainBox.y + brainBox.h - nodes[i].y);
-      var d = Math.min(dx, dy);
-      if (d < bd) { bd = d; best = i; }
-    }
-    if (best < 0 || bd > Math.min(brainBox.w, brainBox.h) * 0.22) return;
-    // already enough page dots around the brain: skip, or the field concentrates
-    var cx0 = brainBox.x + brainBox.w / 2, cy0 = brainBox.y + brainBox.h / 2, near = 0;
-    for (var c = 0; c < nodes.length; c++) {
-      if (nodes[c].zone) continue;
-      if (Math.hypot(nodes[c].x - cx0, nodes[c].y - cy0) < EMIT_NEAR_R) near++;
-    }
-    if (near >= EMIT_NEAR_CAP) return;
-    var src = nodes[best];
-    // recycle the page dot that is furthest away, so counts stay constant
-    var far = -1, fd = -1;
-    for (var p = 0; p < nodes.length; p++) {
-      if (nodes[p].zone) continue;
-      var q2 = Math.hypot(nodes[p].x - src.x, nodes[p].y - src.y);
-      if (q2 > fd) { fd = q2; far = p; }
-    }
-    if (far < 0) return;
-    var ang = Math.atan2(src.y - (brainBox.y + brainBox.h / 2), src.x - (brainBox.x + brainBox.w / 2));
-    var nd = nodes[far];
-    nd.x = src.x + Math.cos(ang) * rnd(30, 90);
-    nd.y = src.y + Math.sin(ang) * rnd(30, 90);
-    nd.y = Math.max(heroBox.y + 8, Math.min(docH - 8, nd.y));
-    nd.x = Math.max(6, Math.min(vw - 6, nd.x));
-    nd.fade = 0;                      // fades in at its new home
-    nd.lit = 1;
-    src.fade = 0.45;                  // and dims briefly at the boundary
-    var m = Math.hypot(nd.vx, nd.vy) || 1;
-    nd.vx = Math.cos(ang) * SPEED_PAGE * 1.15 + nd.vx / m * 0.4;
-    nd.vy = Math.sin(ang) * SPEED_PAGE * 1.15 + nd.vy / m * 0.4;
-  }
 
   function step(dt) {
     for (var i = 0; i < nodes.length; i++) {
@@ -3210,12 +3209,22 @@ document.querySelectorAll('.footer-year').forEach(el => {
       nd.fade = Math.min(1, nd.fade + dt * 1.6);
 
       if (nd.zone) {
-        // reflect inside the panel so the brain never empties
-        if (brainBox) {
-          if (nd.x < brainBox.x + 6) { nd.x = brainBox.x + 6; nd.vx = Math.abs(nd.vx); }
-          if (nd.x > brainBox.x + brainBox.w - 6) { nd.x = brainBox.x + brainBox.w - 6; nd.vx = -Math.abs(nd.vx); }
-          if (nd.y < brainBox.y + 6) { nd.y = brainBox.y + 6; nd.vy = Math.abs(nd.vy); }
-          if (nd.y > brainBox.y + brainBox.h - 6) { nd.y = brainBox.y + brainBox.h - 6; nd.vy = -Math.abs(nd.vy); }
+        /* Bounce off the mask itself. Each axis is tested separately against the
+           position it would have reached, and only the axis that left the shape
+           is reverted and flipped, which approximates a normal well enough on a
+           26x16 grid and keeps dots on the brain without them sticking to it. */
+        if (brainImg) {
+          var hitX = !onBrain(nd.x, nd.y - nd.vy * dt);
+          var hitY = !onBrain(nd.x - nd.vx * dt, nd.y);
+          if (hitX || hitY) {
+            if (hitX) { nd.x -= nd.vx * dt; nd.vx = -nd.vx; }
+            if (hitY) { nd.y -= nd.vy * dt; nd.vy = -nd.vy; }
+            // cornered: back out entirely and turn around
+            if (!onBrain(nd.x, nd.y)) {
+              nd.x -= nd.vx * dt; nd.y -= nd.vy * dt;
+              nd.vx = -nd.vx; nd.vy = -nd.vy;
+            }
+          }
         }
       } else {
         if (nd.x < -20) nd.x = vw + 20;             // wrap horizontally
@@ -3224,9 +3233,6 @@ document.querySelectorAll('.footer-year').forEach(el => {
         if (nd.y > docH - 4) { nd.y = docH - 4; nd.vy = -Math.abs(nd.vy); }
       }
     }
-
-    emitAt -= dt;
-    if (emitAt <= 0) { emit(); emitAt = EMIT_EVERY * rnd(0.7, 1.4); }
 
     fireAt -= dt;
     if (fireAt <= 0) { fireSomewhere(Math.random() < 0.55); fireAt = rnd(0.14, 0.58); }
@@ -3260,17 +3266,35 @@ document.querySelectorAll('.footer-year').forEach(el => {
     }
   }
 
-  function paint(ctx, ox, oy, w, h) {
-    ctx.clearRect(0, 0, w, h);
+  /* Drawn per zone, under a clip, because the hero canvas sits above the panel
+     photo: without this the page network painted straight over the hand, neck
+     and spine, which is what made two networks look like one overlay.
+     zone 1 clips to the panel, zone 0 to everything except the panel. */
+  function paint(ctx, ox, oy, w, h, zone) {
     var nb = [];
+    ctx.save();
+    if (brainBox) {
+      var cpx = brainBox.x - ox, cpy = brainBox.y - oy;
+      var cp = new Path2D();
+      if (zone) {
+        cp.rect(cpx, cpy, brainBox.w, brainBox.h);
+        ctx.clip(cp);
+      } else {
+        cp.rect(0, 0, w, h);
+        cp.rect(cpx, cpy, brainBox.w, brainBox.h);
+        ctx.clip(cp, 'evenodd');
+      }
+    } else if (zone) { ctx.restore(); return; }
 
     // ── links, recomputed from current positions ──
     ctx.lineWidth = 1;
     for (var i = 0; i < nodes.length; i++) {
       var A = nodes[i];
+      if (A.zone !== zone) continue;
       neighbours(i, nb);
       for (var q = 0; q < nb.length; q++) {
         var j = nb[q], B = nodes[j];
+        if (B.zone !== zone) continue;
         var lim = linkDist(A, B);
         var dx = A.x - B.x, dy = A.y - B.y;
         var d2 = dx * dx + dy * dy;
@@ -3293,6 +3317,7 @@ document.querySelectorAll('.footer-year').forEach(el => {
     // ── dots ──
     for (var n = 0; n < nodes.length; n++) {
       var nd = nodes[n];
+      if (nd.zone !== zone) continue;
       var x = nd.x - ox, y = nd.y - oy;
       if (x < -30 || x > w + 30 || y < -30 || y > h + 30) continue;
       var lit = nd.lit, f = nd.fade;
@@ -3322,6 +3347,7 @@ document.querySelectorAll('.footer-year').forEach(el => {
       var pu = pulses[p];
       if (!pu.on) continue;
       var A2 = nodes[pu.a], B2 = nodes[pu.b];
+      if (A2.zone !== zone || B2.zone !== zone) continue;
       var u = pu.t;
       var fade = (u < 0.12 ? u / 0.12 : (u > 0.82 ? (1 - u) / 0.18 : 1)) * pu.gain * (1 - pu.dead);
       if (fade <= 0.01) continue;
@@ -3351,13 +3377,18 @@ document.querySelectorAll('.footer-year').forEach(el => {
       }
     }
     ctx.globalCompositeOperation = 'source-over';
+    ctx.restore();
   }
 
   function render() {
     hash();
     var sy = window.scrollY || window.pageYOffset || 0;
-    paint(hctx, heroBox.x, heroBox.y, heroBox.w, heroBox.h);
-    paint(pctx, 0, sy, vw, vh);
+    hctx.clearRect(0, 0, heroBox.w, heroBox.h);
+    paint(hctx, heroBox.x, heroBox.y, heroBox.w, heroBox.h, 1);
+    paint(hctx, heroBox.x, heroBox.y, heroBox.w, heroBox.h, 0);
+    pctx.clearRect(0, 0, vw, vh);
+    paint(pctx, 0, sy, vw, vh, 1);
+    paint(pctx, 0, sy, vw, vh, 0);
   }
 
   function frame(ts) {
