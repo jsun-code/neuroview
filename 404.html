@@ -237,34 +237,34 @@ a.nav-btn { text-decoration: none; display: inline-block; }
 }
 .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple-600); flex-shrink: 0; }
 
-/* ── HERO FIGURE: X-ray panel ──
-   Glow only reads against darkness, so the figure keeps its own dark slab
-   inside the light hero rather than the page reverting to dark. */
+/* ── HERO FIGURE ──
+   The render is a greyscale 3D model on a flat dark ground; it is cut out to
+   alpha so it can sit on any panel. Glow needs darkness to read as emission,
+   so the figure keeps its own dark slab inside the light hero. */
 .nv-stage {
   position: relative; overflow: hidden;
+  aspect-ratio: 16 / 11;
   border-radius: var(--radius-2xl);
-  /* Near-black to match the render's own background, so the panel edge is a
-     clean crop rather than a visible seam. The aura comes from the coloured
-     outer shadow, not from blending the image. */
-  background: #05040F;
+  background: radial-gradient(64% 62% at 48% 46%, #16103A 0%, #0A0722 62%, #05040F 100%);
   box-shadow:
-    0 18px 44px rgba(83,74,183,0.28),
-    0 40px 90px rgba(20,14,58,0.30),
+    0 18px 44px rgba(83,74,183,0.26),
+    0 40px 90px rgba(20,14,58,0.28),
     inset 0 0 0 1px rgba(160,190,255,0.12);
   animation: fadeUp 0.6s 0.2s ease both;
-  aspect-ratio: 16 / 11;
 }
 .nv-render {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  /* the source is near-square; cover fills the landscape panel, trading the
-     lower brainstem for a bolder read at hero size */
-  object-fit: cover; object-position: 52% 40%;
+  object-fit: contain;
+  padding: 6%; box-sizing: border-box;
+  /* the source is greyscale, so sepia+hue-rotate tints it reliably —
+     more predictable across engines than a blend mode */
+  filter: sepia(1) hue-rotate(212deg) saturate(3.2) brightness(1.02)
+          drop-shadow(0 0 34px rgba(140,110,255,0.55));
 }
-/* Scrim only under the credit, so it stays legible over bright fibres
-   without dimming the render. */
+/* Scrim only under the credit, so it stays legible without dimming the render. */
 .nv-stage::after {
-  content: ''; position: absolute; inset: auto 0 0 0; height: 74px;
+  content: ''; position: absolute; inset: auto 0 0 0; height: 64px;
   background: linear-gradient(to top, rgba(5,4,15,0.72), rgba(5,4,15,0));
   pointer-events: none;
 }
@@ -1317,10 +1317,10 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 </div>
 <div class="nv-stage">
-  <img class="nv-render" src="images/hero-tractography.jpg" width="950" height="902"
-       alt="Diffusion-tensor imaging of a human brain, showing reconstructed nerve-fibre tracts through the mid-sagittal plane"
-       decoding="async">
-  <p class="nv-credit">DTI tractography — <a href="https://commons.wikimedia.org/wiki/File:DTI-sagittal-fibers.jpg" target="_blank" rel="noopener">Thomas Schultz</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a></p>
+  <img class="nv-render" src="images/hero-brain.webp" width="1000" height="867"
+       alt="Three-dimensional render of a human brain, lateral view"
+       decoding="async" fetchpriority="high">
+  <p class="nv-credit">Brain model — <a href="https://commons.wikimedia.org/wiki/File:Brain_AS.stl" target="_blank" rel="noopener">AgnieszkaStarostecka</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></p>
 </div>
 </div>
 </div>
