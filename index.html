@@ -940,6 +940,61 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 .reader-content p { margin-bottom: 1.4em; }
 .reader-content h2 { font-family: 'DM Serif Display', serif; font-size: var(--fs-2xl); font-weight: 400; letter-spacing: -0.5px; margin: 2em 0 0.75em; }
 .reader-content h3 { font-size: var(--fs-lg); font-weight: 500; margin: 1.75em 0 0.6em; }
+/* ── TESTIMONIALS ──
+   Quote first at a larger size, attribution under it, initials avatar rather
+   than a stock silhouette so the card carries the same tokens as the team
+   cards. Two per row, stacking under the grid's own minmax. */
+.quote-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: var(--space-4);
+}
+.quote-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-8) var(--space-8) var(--space-6);
+  display: flex; flex-direction: column; gap: var(--space-5);
+}
+.quote-card blockquote {
+  margin: 0; border: 0; padding: 0;
+  font-size: var(--fs-lg); line-height: var(--lh-body);
+  color: var(--text); font-style: normal;
+}
+.quote-who { display: flex; align-items: center; gap: var(--space-3); margin-top: auto; }
+.quote-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: var(--purple-50); color: var(--purple-800);
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.3px;
+  display: flex; align-items: center; justify-content: center;
+}
+.quote-name { font-size: var(--fs-sm); font-weight: 500; color: var(--text); }
+.quote-meta { font-size: var(--fs-xs); color: var(--text-faint); margin-top: 2px; }
+
+/* In-article figures. Images break out slightly wider than the prose measure so
+   they read as illustrations rather than inline content, and clamp back inside
+   the column once the viewport is narrower than the breakout. */
+.reader-content figure {
+  margin: 2em 0 2.2em;
+  width: 100%;
+}
+.reader-content figure img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+}
+.reader-content figcaption {
+  margin-top: var(--space-2-5);
+  font-size: var(--fs-xs); line-height: var(--lh-tight);
+  color: var(--text-faint);
+}
+.reader-content figure.wide { }
+@media (min-width: 900px) {
+  /* --maxw-prose is 720px; 820 gives a modest breakout without dwarfing the text */
+  .reader-content figure.wide { width: 820px; margin-left: -50px; }
+}
+.reader-content > p:first-child { font-size: var(--fs-lg); color: var(--text-muted); }
 .reader-content blockquote { border-left: 3px solid var(--purple-400); padding-left: 1.25rem; color: var(--text-muted); font-style: italic; margin: 1.5em 0; }
 .reader-content .callout { background: var(--purple-50); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin: 1.5em 0; border-left: 3px solid var(--purple-400); }
 .reader-content .callout strong { color: var(--purple-800); }
@@ -1453,6 +1508,30 @@ a.video-author-link:hover { color: var(--purple-600); text-decoration-color: var
 </div>
 
 <div class="mission-wrap">
+<div class="section">
+<div class="section-head reveal">
+<span class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>What students are saying</span>
+<h2>Clubs started with our materials</h2>
+<p>Students who used our lecture decks and Kahoots to launch neuroscience clubs at their own schools.</p>
+</div>
+<div class="quote-grid">
+<div class="quote-card reveal" data-delay="0">
+<blockquote>&ldquo;NeuroView's pre-made lectures and slide decks were perfect for helping me start my own neuroscience club at my school! Their guidance and support have been extraordinary, and have made running a club much easier!&rdquo;</blockquote>
+<div class="quote-who">
+<span class="quote-avatar" aria-hidden="true">SU</span>
+<div><div class="quote-name">Samadhi U, Year 10</div><div class="quote-meta">MacRobertson Girls' High School</div></div>
+</div>
+</div>
+<div class="quote-card reveal" data-delay="120">
+<blockquote>&ldquo;NeuroView has helped me make my own club at my school, even though I had no prior knowledge.&rdquo;</blockquote>
+<div class="quote-who">
+<span class="quote-avatar" aria-hidden="true">ZA</span>
+<div><div class="quote-name">Zahraa Alahmad</div><div class="quote-meta">Student from Gaza</div></div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="mission-band">
 <h2 class="reveal">Our mission</h2>
 <p class="reveal" data-delay="120">Neuroscience shapes medicine, technology, and public policy — yet only 18% of Americans understand cognitive impairments. NeuroView exists to change that. No PhD required.</p>
@@ -2213,18 +2292,59 @@ const ARTICLES = {
     coverImg: 'images/cover-bcis.jpg',
     externalUrl: 'https://www.neuro-view.org/a-beginners-guide-to-bcis',
     content: `
-      <p>Brain-computer interfaces (BCIs) are devices that create a direct communication pathway between the brain and an external computer or device. They work by reading electrical signals produced by neurons — the brain's fundamental computational units.</p>
-      <h2>How do BCIs actually work?</h2>
-      <p>When you think about moving your arm, billions of neurons fire in coordinated patterns across your motor cortex. A BCI can "listen" to these patterns using electrodes placed on or inside your skull, then translate those signals into commands a computer can understand.</p>
-      <p>There are two main categories: <strong>non-invasive</strong> BCIs (like EEG headsets that sit on your scalp) and <strong>invasive</strong> BCIs (like Utah arrays surgically implanted directly into brain tissue).</p>
-      <h2>Real-world applications</h2>
-      <p>BCIs are already changing lives. Patients with ALS have used them to communicate. Paralyzed individuals have regained control of robotic limbs. In 2023, a patient with locked-in syndrome was able to type at nearly 40 words per minute using a BCI system developed at Stanford.</p>
-      <div class="callout"><strong>Key insight:</strong> The goal isn't to replace the brain — it's to create a new channel of communication that bypasses damaged or missing neural pathways.</div>
-      <p>Looking further ahead, consumer-grade BCIs like Neuralink and Synchron's Stentrode are pushing toward applications in healthy individuals — raising profound questions about human enhancement, privacy, and what it even means to be human.</p>
-      <h2>The challenges ahead</h2>
-      <p>Despite the excitement, BCIs face major hurdles. Invasive implants trigger an immune response — the brain treats the electrode as a foreign body and encases it in scar tissue, degrading signal quality over time. Non-invasive approaches avoid this problem but struggle to read fine-grained signals through the skull.</p>
-      <p>The field is moving fast. If you want to understand the technologies that will define the next century of medicine, BCIs are as good a starting point as any.</p>
-    `
+      <h2>What are BCIs?</h2>
+      <p>Imagine being able to control a robotic arm, play a video game, or even send Instagram reels to your friend &mdash; all with using just your mind. You might think this is science fiction, but it's quickly becoming a reality thanks to the advent of Brain-Computer Interface (BCI) technology.</p>
+      <p>BCIs are systems that enable direct communication between the brain and an external device. A chip is first implanted in the brain, and it starts recording neural signals. The chip then translates these signals into direct commands, and sends them to devices like computers, an electric wheelchair, robotic arm, or even smart home systems.</p>
+
+      <h2>Medical Applications</h2>
+      <h3>Noland Arbaugh and the N1 Chip</h3>
+      <p>Firstly, one of the most promising uses of BCI technology is in restoring the abilities and lost functions for disabled persons.</p>
+      <p>Take Noland Arbaugh, for example (pictured below). After a diving accident left him paralyzed from the shoulders down, Noland's life was shattered, and he couldn't even text his mom or play his favorite games anymore.</p>
+
+      <figure class="wide">
+        <img src="images/noland-arbaugh.webp" alt="Noland Arbaugh using a computer with the Neuralink N1 chip" width="840" height="476" loading="lazy" decoding="async">
+      </figure>
+
+      <p>But after being implanted with Neuralink's N1 Chip, he can now control a mouse cursor, play video games, and send emails &mdash; all with just his thoughts.</p>
+
+      <h3>BCIs in Prosthetics</h3>
+      <p>BCIs also revolutionize prosthetics. Traditional prosthetic limbs often require users to consciously contract their muscles in order to move, which can be a slow and awkward process. But with BCIs, the brain sends signals directly to the robotic limb, leading to a 41% faster response time and more natural movement. And because there is a direct connection between the brain and the robotic limb, users report that it feels like a true extension of their body. In fact, users report that it's like they never lost a leg in the first place.</p>
+
+      <figure class="wide">
+        <img src="images/bcis-prosthetics.webp" alt="A brain-controlled prosthetic limb" width="1440" height="805" loading="lazy" decoding="async">
+      </figure>
+
+      <h3>BCIs can help mute/paralyzed people speak</h3>
+      <p>At UCSF, researchers developed a BCI system that uses AI to turn brain activity into synthesized speech in just 80 milliseconds. For people who are mute/paralyzed, this restores the ability to communicate in real time.</p>
+
+      <h3>Restoring Vision</h3>
+      <p>Finally, BCIs can even restore sight in blind individuals. Neuralink is developing a visual prosthesis called Blindsight that bypasses the eyes entirely, instead sending signals directly to the visual cortex (the part of the brain that processes vision). This means that even someone born blind could perceive shapes and images through this system. While still in the development stage, this technology could change the lives of millions of people in the future, and is definitely something to look out for.</p>
+
+      <h2>BCIs for Everyday Convenience</h2>
+      <p>Brain-Computer Interfaces aren't just for people with medical conditions. Instead, they can make life easier for everyone.</p>
+
+      <h3>Environmental Control</h3>
+      <p>In clinical trials with a patient named Mark, company Synchron was able to integrate his BCI with his Alexa, smart home system, TV, phone, etc. With this, he was able to turn off the lights, command Alexa, and make FaceTime calls all with just his thoughts. Imagine coming home after a long day and being able to turn off the lights, set the thermostat, and play your favorite play list, all without lifting a finger.</p>
+
+      <figure class="wide">
+        <img src="images/synchron-mark-bci.webp" alt="Synchron trial patient Mark controlling a smart home device with a BCI" width="840" height="470" loading="lazy" decoding="async">
+      </figure>
+
+      <h3>Brain-to-Brain Communication</h3>
+      <p>If you've ever watched Cyberpunk: Edgerunners or The Matrix, you might think that being able to communicate brain-to-brain sounds like sci-fi. But with BCIs, this is quickly becoming a reality. In fact, researchers from the University of Barcelona were able to successfully transmit words like hola and ciao between human subjects using BCIs, with only a 1&ndash;4% error rate. While we're still in the early stages of BCI development, this experiment hints at a future where longer passages, or even full conversations, could be transmitted between minds.</p>
+
+      <figure class="wide">
+        <img src="images/brain-to-brain.webp" alt="Diagram of brain-to-brain communication between two human subjects" width="1440" height="823" loading="lazy" decoding="async">
+      </figure>
+
+      <h2>Concerns and Regulations</h2>
+      <p>Despite all the benefits BCIs can bring to society, it is absolutely imperative that we establish strict regulations before advancing further. Unlike standard digital data, neural data can contain an individual's deepest thoughts, intentions, and medical information. Thus, the misuse of this data can prove to be far more catastrophic than a hacked phone or email.</p>
+      <p>Some states are already taking action. Specifically, lawmakers in both Colorado and Minnesota have proposed legislation to protect neural data, including anonymization procedures, explicit consent user consent, and limitations on use/distribution of neural data.</p>
+      <p>Ultimately, innovation and ethics aren't a zero-sum game; rather, with smart regulations and policies, governments and companies can help maximize the benefits of BCIs and ensure that they improve lives while also preventing the misuse of brain data.</p>
+
+      <h2>Conclusion</h2>
+      <p>To wrap it up, Brain-Computer Interfaces are actively transforming lives today and reshaping what it means to interact with technology. From restoring mobility and speech to allowing hands-free control of digital environments, BCIs have the groundbreaking potential to reshape both medicine and everyday convenience. But of course, &ldquo;with great power comes great responsibility&rdquo;. As we continue to advance in this field, we must prioritize neural safeguards and data protections to ensure that our most private thoughts remain secure. BCIs promise a future of cohesion and empowerment, but it's only up to us to build it wisely.</p>
+`
   },
   'fmri': {
     title: 'Mind Reading: An fMRI Approach',
@@ -2235,17 +2355,38 @@ const ARTICLES = {
     coverImg: 'images/cover-fmri.jpg',
     externalUrl: 'https://www.neuro-view.org/mind-reading-an-fmri-approach',
     content: `
-      <p>What if a machine could tell what you're thinking just by watching your brain? This is no longer purely science fiction — it's an active area of neuroscience research, and functional MRI (fMRI) is at the center of it.</p>
-      <h2>What is fMRI?</h2>
-      <p>Functional MRI works by tracking blood flow in the brain. When neurons in a region become active, they demand more oxygen — and oxygenated blood is magnetically different from deoxygenated blood. The MRI scanner detects this difference, producing what's called the BOLD signal (Blood Oxygen Level Dependent).</p>
-      <p>By mapping which regions "light up" under different conditions, scientists can begin to build a kind of neural dictionary: this pattern of activity corresponds to seeing a face; this one, to thinking about a place.</p>
-      <h2>The decoding breakthrough</h2>
-      <p>In a landmark 2023 study, researchers at UT Austin trained an AI model on fMRI data from participants listening to hours of podcasts. The result? Given a new brain scan, the model could reconstruct the gist of what the person had heard — with remarkable accuracy. No electrodes in the brain required.</p>
-      <div class="callout"><strong>Key insight:</strong> The model didn't reproduce exact words — it reconstructed <em>meaning</em>. This distinction matters enormously for how we think about mental privacy.</div>
-      <h2>Limitations and ethical questions</h2>
-      <p>fMRI mind-reading is still far from perfect. It requires participants to sit perfectly still in a loud, expensive machine for extended periods. It's slow — capturing brain states over seconds rather than milliseconds. And current models only work for the individual they were trained on.</p>
-      <p>But the trajectory is clear. As models improve and scanning technology becomes more portable, the ethical questions become more urgent: Who owns your neural data? Could employers or insurers demand access? How do we regulate technology that can read your mind?</p>
-    `
+      <p>Have you ever wondered what it would be like to know what someone is thinking at any moment in time? Or what it would be like to send messages telepathically, without having to twitch a muscle. A new discovery in neuroengineering has made this seemingly impossible power a reality. In the future, this discovery has the potential to become a vital tool, whether it's in science, medicine, or even in daily life.</p>
+
+      <h2>What is fMRI</h2>
+
+      <figure class="wide">
+        <img src="images/fmri.webp" alt="A series of functional MRI brain scans" width="996" height="256" loading="lazy" decoding="async">
+      </figure>
+
+      <p>This all-new brain reading tool utilizes recently developed technology, including AI, as well as a brain imaging format known as fMRI, or functional Magnetic Resonance Imaging.</p>
+      <p>MRI functions by shooting radio waves (known as a radio frequency, or RF pulse) into a uniform 1.5-3T magnetic field created by the MRI machine. The magnetic field acts to align the hydrogen protons present in many bodily tissues. When the RF pulses are shot into the magnetic field, the hydrogen protons are disrupted, causing them to disalign. They slowly realign over time, and through a complex process, this realignment is what creates the image shown by an MRI.</p>
+      <p>The standard format of MRI, known as structural MRI, takes one image across the entire brain, taking roughly 30 minutes to complete. Functional MRI, unlike structural MRI, takes a multitude of scans in sequence, allowing brain scientists to see changes, specifically in blood flow, to different parts of the brain.</p>
+      <p>While structural scans allow for high spatial resolution, functional MRI allows for high temporal resolution, allowing scientists to distinguish between two images of the brain taken closely together in time.</p>
+
+      <h2>How does this tool utilize fMRI?</h2>
+      <p>Co-authors Alexander Huth, computational neuroscientist, and Jerry Tang, doctoral student, both working at the University of Texas at Austin, have developed a method using fMRI as well as AI in order to develop their mind-reading tool.</p>
+      <p>The two conducted a study involving two groups of participants. The first group of participants, referred to as reference participants, listened to 10 hours of radio stories while fMRI data was collected. Then, the data was fed to an advanced AI decoder to train it to recognize certain changes within the brain, and what they might mean in terms of changes in emotion. The second group of participants only had to stay in the scanner for 70 minutes, while either listening to radio stories or unrelated silent Pixar films.</p>
+      <p>Then, using realignment techniques, they were able to train the decoder to work and discern patterns within the participants' brain signals, allowing it to be applied to a general population. This brain decoder decodes messages from emotions and ideas, rather than decoding individual words. So, the thought-to-translation conversion may not be 100% accurate, it provides a highly useful tool for figuring out what message someone may be attempting to deliver.</p>
+      <p>In summary, these researchers were able to build a brand new brain decoder that is far more useful than previous decoders, allowing for the development of mind-reading tools that could have a variety of uses.</p>
+
+      <figure class="wide">
+        <img src="images/diagram-fmri.webp" alt="Diagram of the fMRI-based brain decoding pipeline" width="1440" height="872" loading="lazy" decoding="async">
+      </figure>
+
+      <h2>Future Uses</h2>
+      <p>AI brain decoding is in its very early developmental stages, meaning that practical uses won't be available for a while, but there are future concepts for possible uses of this technology.</p>
+      <p>Huth and Tang hope to apply the usage of this AI brain decoder onto participants with aphasia, which is a language disorder that limits a person's ability to communicate, including speech and writing. There are obvious uses for their tool here, which would help facilitate ease of communication for these afflicted people. There are many other medical uses for this technology, with those suffering from other neurodegenerative diseases being an obvious target community.</p>
+      <p>Currently, Huth and Tang are limited to fMRI as a method to decode brain signals, but they hope that, moving forward, fNIRS, or functional near-infrared spectroscopy, which is a much more mobile method of brain imaging, and also happens to rely on changes in blood flow for scanning, would be the way in which the AI decodes brain signals. So, in the future, there may be portable, wearable technology that allows for effective telepathic communication, without the reliance on large, expensive lab equipment.</p>
+      <p>Another possible use for this technology could be for lie detection. The current polygraph lie detection system is highly unreliable, meaning evidence collected through this test is inadmissible in court. However, with the capability to read minds, the accuracy of these tests would skyrocket, allowing for possible widespread usage in the criminal justice system.</p>
+
+      <h2>Conclusion</h2>
+      <p>In conclusion, while AI brain decoding is in its very early stages, it proves to be a reliable resource that could be highly useful in the future, and will help make the world healthier, safer, and happier for all.</p>
+`
   },
   'biocomputing': {
     title: 'Biocomputing: A Breakthrough in AGI',
@@ -2256,16 +2397,61 @@ const ARTICLES = {
     coverImg: 'images/cover-biocomputing.jpg',
     externalUrl: 'https://www.neuro-view.org/biocomputing',
     content: `
-      <p>What if the next generation of computers wasn't made of silicon at all — but of living human brain cells? This isn't speculative fiction. Researchers at Johns Hopkins have already built "organoid intelligence" systems using lab-grown brain organoids as computing substrates.</p>
-      <h2>What are brain organoids?</h2>
-      <p>Brain organoids are three-dimensional clusters of neurons grown from human stem cells. They self-organize into structures that resemble early fetal brain tissue, forming real synapses and producing real electrical activity. They're not brains — they lack sensory input, blood supply, and most of the complexity of a full organ — but they're far more than simple cell cultures.</p>
-      <h2>Why use them for computing?</h2>
-      <p>Biological neurons have properties that silicon can't yet match. They're extraordinarily energy-efficient — the entire human brain runs on roughly 20 watts, less than a dim light bulb. They can rewire themselves in response to experience (plasticity). And they operate in massively parallel, analog ways that bear little resemblance to binary computation.</p>
-      <div class="callout"><strong>Key insight:</strong> GPT-4 training required gigawatts of energy. A human child learns language using roughly the same power as a nightlight. Biocomputing is an attempt to close this efficiency gap.</div>
-      <h2>Implications for AGI</h2>
-      <p>The implications are enormous, and deeply uncertain. If biological substrates can process information more efficiently than silicon, they might unlock AI capabilities that are currently computationally infeasible. But they also raise questions we've never had to answer before: If a computing system is made of human neurons, what moral status does it have? What does it mean for that system to "experience" something?</p>
-      <p>Biocomputing is still in its earliest stages. But it may represent a genuine inflection point — not just in how we build computers, but in how we think about consciousness itself.</p>
-    `
+      <p>Imagine a computer that isn't just built from metal and silicon, but one that also incorporates living human brain cells. This technology is known as biocomputing, and it has major implications for the race in developing Artificial General Intelligence.</p>
+
+      <figure class="wide">
+        <img src="images/cortical-labs.webp" alt="Cortical Labs' first commercial biocomputer" width="828" height="406" loading="lazy" decoding="async">
+        <figcaption>Cortical Lab's first ever commercial Biocomputer</figcaption>
+      </figure>
+
+      <h2>What is biocomputing?</h2>
+      <p>Biocomputing represents an emerging field merging biology with computing. Unlike traditional computers that solely use silicon and electronic circuits, biocomputers incorporate both living neurons and silicon chips to create systems that can process information in ways similar to the human brain.</p>
+
+      <h2>How does it work?</h2>
+      <p>Researchers in biocomputing cultivate human neurons in a lab environment and then integrate them with electronic hardware. These neurons communicate with electrical and chemical signals, just as they do inside the brain. And when they connect to silicon chips, they form hybrid systems capable of real-time processing, decision-making, and learning.</p>
+      <p>So far, New Zealand researchers have made significant progress in biocomputing by engineering living cells to function like basic circuits. Using 9 different human cell types arranged in 3D cultures, they programmed each cell to perform specific computational instructions, mimicking logic gates such as AND, NOT, and OR, in order to create a primitive biological computer. These cells communicate chemically, enabling adaptable and evolving computing systems.</p>
+      <p>While they have a long way to go before they are as advanced as today's computers, the fact that researchers have already created rudimentary prototypes is already a notable achievement.</p>
+
+      <figure class="wide">
+        <img src="images/neurons-on-chip-cortical-labs.webp" alt="Living neurons cultured on a silicon chip" width="644" height="630" loading="lazy" decoding="async">
+        <figcaption>Actual Neurons, living on a neuron chip</figcaption>
+      </figure>
+
+      <h2>Why is biocomputing crucial in developing Artificial General Intelligence?</h2>
+
+      <figure class="wide">
+        <img src="images/energy-efficiency-graph-biocomputing.webp" alt="Graph of projected AI energy demand by 2030" width="834" height="468" loading="lazy" decoding="async">
+        <figcaption>Projected AI Energy Demands by year 2030</figcaption>
+      </figure>
+
+      <h3>1. Energy Efficiency</h3>
+      <p>Normal AI models require constant re-training, which means that they need millions of watts and insurmountable amounts of data. In Ireland, AI development has already taken up 17% of national energy consumption. And in America, analysts predict that AI's energy consumption from AI development is going to encompass 20% of America's electricity demand by year 2030.</p>
+      <p>On the other hand, neurons have the incredible ability to absorb information and learn on their own, mitigating the need for constant retraining and adjustment. This has allowed the human brain to be incredibly energy-efficient. In fact, &ldquo;the brain uses only 20 watts&rdquo; while managing vast networks of neurons performing trillions of calculations and actions.</p>
+
+      <h3>2. Creativity</h3>
+      <p>Artificial General Intelligence (AGI) is a type of AI that has human-level cognition and reasoning, meaning that it can create new ideas and perform beyond its set parameters.</p>
+      <p>However, current AI models cannot think for themselves. They cannot create new ideas or concepts; rather, they regurgitate whatever data they were trained on.</p>
+      <p>In contrast, living cells can form dynamic networks that learn, adapt, and generate novel ideas by processing information in ways that reflect the human brain's complex thought processes. This ability to innovate is critical for AGI, which requires flexible, generalized intelligence capable of reasoning at a human level. Thus, biocomputing offers a path toward AGI that conventional, silicon-based AI cannot.</p>
+
+      <figure class="wide">
+        <img src="images/creativity-biocomputing.webp" alt="Illustration representing creativity" width="820" height="756" loading="lazy" decoding="async">
+        <figcaption>Creativity, By Vierre Cloud</figcaption>
+      </figure>
+
+      <h2>Challenges and Ethics of Biocomputing</h2>
+
+      <figure class="wide">
+        <img src="images/airevolution-biocomputing.webp" alt="Illustration of the AI revolution" width="636" height="746" loading="lazy" decoding="async">
+      </figure>
+
+      <p>That being said, biocomputing has its issues.</p>
+      <p>Neurons' activity and performance can be drastically affected by high temperatures/heat. In fact, researchers from Yale discovered that even small changes in temperature of less than 1 degree celsius can lead to inactivity. This is a major issue, as computers usually generate a lot of heat.</p>
+      <p>Next, there are several ethical concerns regarding the use of biocomputing. If biocomputers use living human neurons, could they develop some form of consciousness/sentience? Wouldn't it be unethical to create or experiment on potentially conscious beings? And finally, if they gain self-awareness or cognitive abilities, will they fight back?</p>
+      <p>Moving forward, we must consider strict regulations in order to make sure that the development of biocomputing can go smoothly without any issues with consciousness/sentience.</p>
+
+      <h2>Conclusion</h2>
+      <p>Simply put, biocomputing is the future. It is millions of times more efficient than conventional silicon computers, making it crucial in reducing our carbon output and energy usage. Moreover, biocomputing harnesses living neurons that can think for themselves, paving the way for computers that have human-level intelligence and reasoning. This can allow us to discover all kinds of novel innovations and ideas, driving future prosperity. However, as we advance, it is essential to carefully address the ethical and moral implications these technologies raise. Strict regulations and responsible oversight must be put in place to ensure their development benefits humanity safely and equitably. Biocomputing has the potential to bring widespread benefits to society, but only if we do so in a safe and ethical way.</p>
+`
   },
   'chinavsus': {
     title: 'From Foster City to Shenzhen',
@@ -2276,16 +2462,21 @@ const ARTICLES = {
     coverImg: 'images/cover-chinavsus.jpg',
     externalUrl: 'https://www.neuro-view.org/chinavsus',
     content: `
-      <p>Last summer I had the unusual opportunity to intern at biotech labs on both sides of the Pacific — first at a neurotechnology startup in Foster City, California, then at a research institute in Shenzhen, China. I expected to find scientific common ground. What I found were two completely different cultures of doing science.</p>
-      <h2>The pace of work</h2>
-      <p>At the California lab, meetings were scheduled carefully and rarely ran over. Experiments were planned methodically, with extensive documentation. When something went wrong, the team spent time understanding why before moving on. There was a certain reverence for process.</p>
-      <p>In Shenzhen, the lab operated differently. Speed was everything. If an experiment failed, you tried a variation the next morning. The attitude was iteration over deliberation — and the pace was genuinely exhilarating. I learned more techniques in two weeks there than in six weeks in California, simply because we ran more experiments.</p>
-      <h2>Collaboration and hierarchy</h2>
-      <p>The social dynamics were equally striking. In California, interns were actively encouraged to challenge assumptions, ask "dumb" questions, and push back on senior researchers. The culture was flat and conversational.</p>
-      <p>The Shenzhen lab was more hierarchical. You deferred to the PI. You didn't interrupt. But within that structure, there was an extraordinary sense of collective mission — a feeling that everyone in the room was pulling toward the same goal, and that goal mattered.</p>
-      <div class="callout"><strong>Takeaway:</strong> Science is universal in its methods and its goals. But the culture of science — how people work together, what they value, what they're willing to sacrifice — is deeply local.</div>
-      <p>Both approaches produced good work. Both had blind spots the other didn't. If I could combine the California lab's emphasis on rigor with the Shenzhen lab's bias toward action, I think I'd build something worth working in.</p>
-    `
+      <p>Summer after 9th and 10th grade, I interned at 2 different biotech labs: one in the US, and one in China. I thought I would expect technical similarities. After all, science is universal, right? It's not like the pipettes, centrifuges, and research papers that I'll use are any different. However, I was shocked: the labs had drastic differences.</p>
+      <p>In America, research felt like a collaboration of ideas. In China, it felt like a factory machine of discipline and hard work. Both were extraordinary in their own ways, and both taught me lessons that I'll carry forward as I move on in life.</p>
+
+      <h2>Work Culture</h2>
+      <p>At my biotech internship in California, the atmosphere was lax and easygoing. Me and my fellow colleagues often had riveting conversations as we pipetted material, oftentimes sharing music and laughter. Moreover, there wasn't much emphasis on attendance. Whether you were clocking in at 9AM or 1PM, it didn't matter, as no one was taking attendance. Creativity and independence were valued, and people seemed to just be enjoying the process.</p>
+      <p>By contrast, my internship in Shenzhen felt like a whole different world. Scientists arrived early in the morning, sharp at 9AM. The work was relentless and nonstop, with scientists having to juggle multiple projects at once. The labs were mostly silent, except for the hum of the equipment and the occasional experimental discussion. Everyone worked six days a week, and I often saw my colleagues still in the lab at 10PM some days. Overall, it was less about freedom, and more about focus: precision, hierarchy, and speed drove everything.</p>
+
+      <h2>Why is this the case?</h2>
+      <p>This made me wonder: why are the scientists in China seemingly under so much more pressure than the ones in America? They aren't laughing and listening to music in the lab, nor are they clocking in at 1PM. Instead, they are razor-focused, with their eyes set on only one thing: the results.</p>
+      <p>So I did some research, and the answer was pretty simple.</p>
+      <p>In China, the job market for scientists is incredibly competitive. Each year, thousands of students graduate with advanced degrees in biology, chemistry, and medicine, but there are far fewer positions available than applicants. Unlike in the US, where biotech startups and universities offer a variety of opportunities, many Chinese researchers compete for limited roles at state/corporate labs. The result of this scarcity is a work culture that is intense, brutal, and stressful. It's not unusual for researchers to work six-day weeks, often stretching past 10 p.m. In fact, the phrase &ldquo;996 culture&rdquo; (working 9AM to 9PM, 6 days a week) has become a badge of honor in many Chinese industries, including biotech.</p>
+      <p>And it's not just biotech. In fact, pretty much every industry in China has a simliar work culture. Whether it's in computer science, AI, engineering, law, etc, almost every business in China encompasses long hours, hard work, and short breaks. My cousin, who interned at a law firm, reported a similar experience of having to work grueling, long hours that were packed with tasks and assignments.</p>
+      <p>Over time, this culture has become deeply normalized in China, and especially in their labs. Dedication is measured by hours spent, not just results achieved. While this can lead to burnout, it also leads these scientists to develop an incredible work ethic. They are trained to multitask, manage experiments with clockwork precision, and to think of research less as an exploration and more as a craft.</p>
+      <p>Comparing that to the U.S. made me realize how deeply culture shapes scientific progress. In America, freedom and flexibility drive innovation, and creativity is encouraged. Meanwhile, in China, discipline and work ethic drive productivity. Neither approach is &ldquo;better&rdquo;, but I've come to realize that research is at its best when creativity meets consistency. The ideal researcher is one who integrates the curiosity/creativity of an artist with the discipline of an engineer.</p>
+`
   },
   'neuroplasticity': {
     title: 'What is Neuroplasticity?',
@@ -2296,16 +2487,26 @@ const ARTICLES = {
     coverImg: 'images/cover-neuroplasticity.jpg',
     externalUrl: 'https://www.neuro-view.org/neuroplasticity',
     content: `
-      <p>For most of the 20th century, the brain was thought to be a fixed organ. You were born with a certain number of neurons; they died over time; that was it. We now know this picture was almost entirely wrong. The brain is extraordinarily plastic — capable of reorganizing its connections throughout your entire life.</p>
-      <h2>What neuroplasticity actually means</h2>
-      <p>Neuroplasticity refers to the brain's ability to change its structure and function in response to experience. This happens at multiple scales: synaptic plasticity (individual connections between neurons strengthening or weakening), structural plasticity (neurons growing new branches or pruning old ones), and even neurogenesis (the creation of entirely new neurons, particularly in the hippocampus).</p>
-      <p>The famous aphorism in neuroscience is: "Neurons that fire together, wire together." When two neurons are repeatedly activated at the same time, the synapse between them becomes stronger — a process called long-term potentiation (LTP). This is the molecular basis of learning and memory.</p>
-      <h2>Why this matters for your life</h2>
-      <p>Neuroplasticity is why practice works. When you learn an instrument, the motor cortex regions controlling your fingers literally expand. When you learn a new language, new neural networks form to process its phonetics. When you stop practicing, those connections weaken — "use it or lose it" is not just a metaphor.</p>
-      <div class="callout"><strong>Key insight:</strong> The brain that exists right now is a record of your experience. Everything you've done, learned, and practiced has physically shaped the organ in your skull.</div>
-      <h2>Therapeutic implications</h2>
-      <p>Neuroplasticity is also why stroke recovery is possible. When brain tissue is damaged, neighboring regions can sometimes take over lost functions — especially with intensive rehabilitation. This has transformed our approach to treatment, shifting from acceptance of permanent deficits toward active interventions that leverage the brain's capacity to rewire itself.</p>
-    `
+      <figure class="wide">
+        <img src="images/neurons-neuroplasticity.webp" alt="Illustration of neurons forming connections" width="840" height="360" loading="lazy" decoding="async">
+      </figure>
+
+      <blockquote>Neuroplasticity is the ability of the brain to form and reorganize synaptic connections, especially in response to learning or experience or following injury<br><strong>&mdash; Lisa Kreber, PhD</strong></blockquote>
+      <p>Neuroplasticity&mdash;otherwise known as brain plasticity&mdash;is the brain's ability to alter its structure throughout life. Despite the original belief that the brain remained constant after its initial development, recent research has shown that the brain keeps adapting throughout life. This adaptation can involve rewiring and reshaping itself in response to environmental changes, or after receiving injuries, or gaining experience. The skill to change is likely the brain's most incredible and powerful feature.</p>
+      <p>Essentially, Neuroplasticity is altering the strength of various neural connections in response to stimuli. Anytime we learn something or improve at a skill, the involved pathways increase in efficiency. A chain of neurons that connect together to complete a task have their connection nodes strengthened, essentially reinforcing the involved circuits. Just the same way, connections that are neglected go through synaptic pruning, where their circuits are essentially weakened. This shifting and adjusting of the various neural networks that make up the brain allow it to prioritize skills that it actually uses while eliminating unneeded pathways. In other words, the brain can fine-tune itself.</p>
+
+      <figure class="wide">
+        <img src="images/diagram-neuroplasticity.webp" alt="Diagram of structural and functional neuroplasticity" width="1440" height="630" loading="lazy" decoding="async">
+        <figcaption>Credit: UC Davis Biotech</figcaption>
+      </figure>
+
+      <p>Neuroplasticity has two main levels, the structural and the functional. Structurally, new synapses are formed while old ones shrink away, a continuous cycle that stretches into adulthood for many parts of the brain. But beyond structural changes, the functionality of certain network links change as well. The brain can shift responsibilities for certain functions, basically making connections that had originally had one purpose be used for another. This can be used to compensate for deficits that may occur because of damage (such as a stroke). Though being able to adjust for a loss of the neurons originally involved in a certain function is far from endless, it is actually far more powerful than scientists originally anticipated.</p>
+      <p>The uses of Neuroplasticity are many and varied. It can be used in complicated lab work and improving everyday knowledge, stretching from rehabilitation medicine where plasticity is essentially used to help patients recover skills to helping gain skills and &ldquo;hack&rdquo; learning to improve efficiency.</p>
+      <p>Neuroplasticity is important for gaining skills, and you've probably used it when learning, even if you didn't realize. When students practice active recall or spaced repetition, they are basically using plasticity-enhancing strategies to help their brain's network solidify. When used repeatedly over time these strategies make complex tasks or quickly retrieving certain information more automatic.</p>
+      <p>Similarly, Neuroplasticity has important uses in improving mental health. Cognitive behavioral therapy (CBT), mindfulness meditation, and certain types of exercise can reshape important brain circuits. These circuits have been clinically linked to stress, mood, and attention. As an example, regularly practicing mindfulness can strengthen regions involved in emotional regulations, and simultaneously reduce activity in areas that have been associated with anxiety. Despite the saying that &ldquo;you can't teach an old dog new tricks&rdquo;, long-term, solidified thought patterns can be altered after applying consistent effort.</p>
+      <p>Neuroplasticity and technology also have many intersection points. Various Biotechnological advancements such as Brain-computer interfaces (BCIs) like Elon Musk's proposed &ldquo;Neuralink&rdquo; chip, virtual reality rehabilitation, and neurofeedback systems are all able to work efficiently by targeting and encouraging specific neural changes. As these tools keep evolving, they may help strengthen cognitive skills and manage limiting neurological conditions.</p>
+      <p>Neuroplasticity is an incredible example of our brain's (and our wider bodies!) ability to adapt. The brain is not static or fixed, but an organ constantly rewriting and editing itself based on our experiences, thoughts, and actions. Whatever we do, whatever we think, whatever we choose not to do, our brain uses it to inform itself how to adapt. Furthering our understanding and knowledge of the complicated existence and functions of neuroplasticity are essential. So far, what we've learned has many positive connotations, such as how neuroplasticity suggests that learning is always possible, recovery is often more possible than previously believed, and the very existence of personal growth is rooted deeply in biology. When neuroplasticity is applied to education, therapy, or technological education, it provides an incredibly powerful baseline that helps us understand how we can shape our brains, and how our brains shape us.</p>
+`
   },
   'brain-death': {
     title: 'What Does Your Brain Experience as You Die?',
@@ -2316,17 +2517,34 @@ const ARTICLES = {
     coverImg: 'images/cover-brain-death.jpg',
     externalUrl: 'https://www.neuro-view.org/brain-death',
     content: `
-      <p>Your heart stops. Blood flow to the brain ceases. Oxygen runs out within seconds. By every clinical measure, you are dying. But what is your brain doing in those final moments?</p>
-      <h2>The surge of activity</h2>
-      <p>In a 2023 study published in PNAS, researchers monitoring patients who died of cardiac arrest made a startling observation: in two of four patients, the EEG showed a dramatic surge of high-frequency brain activity — gamma waves — in the seconds after the heart stopped. These are the same waves associated with conscious perception, dreaming, and memory recall in healthy brains.</p>
-      <p>The researchers hypothesized that the dying brain, starved of oxygen and losing the ability to regulate ion channels, enters a kind of runaway electrical state — one that might correspond to a final, intense burst of conscious experience.</p>
-      <h2>Near-death experiences</h2>
-      <p>This finding resonates with the phenomenology of near-death experiences (NDEs) — reported by roughly 10-20% of people who survive cardiac arrest. Common features include a sense of profound peace, a life review, movement through a tunnel toward light, and encounters with deceased relatives.</p>
-      <div class="callout"><strong>Key note:</strong> Whether these experiences represent something metaphysical or purely neurological remains genuinely unresolved. The science can describe what the brain is doing; it cannot determine what that activity means.</div>
-      <h2>What we don't know</h2>
-      <p>The study was small — four patients is not a population. We don't know whether the gamma surge is universal or idiosyncratic. We can't ask the patients what they experienced in those moments. And the hard problem of consciousness means we can't straightforwardly infer subjective experience from neural activity alone.</p>
-      <p>What the research does suggest is that death may be less of an instantaneous switch and more of a process — and that the brain's final moments may be more active, not less, than we imagined.</p>
-    `
+      <p>Your heart stops. No more oxygen. But your brain? It's not done yet.</p>
+      <p>Scientists have recorded brain activity up to 10 minutes after clinical death, and what happens in those moments might surprise you.</p>
+
+      <h2>The Moment of Death</h2>
+      <p>In research published in Frontiers in Aging Neuroscience, scientists recorded electrical activity from a patient who died of a heart attack while under monitoring.</p>
+      <p>Surprisingly, for 30 seconds before and after his heart stopped, his brain exhibited a significant rise in gamma-band activity, brainwaves linked to dreaming and memory recall.</p>
+      <p>Similar changes in gamma oscillations have been observed in rats as well, suggesting that this phenomenon isn't just limited to humans. Rather, it's experienced universally, by all kinds of species.</p>
+
+      <figure class="wide">
+        <img src="images/brain-death.webp" alt="Recording of electrical brain activity around cardiac arrest" width="1054" height="586" loading="lazy" decoding="async">
+      </figure>
+
+      <h2>A Source of Hope</h2>
+
+      <figure class="wide">
+        <img src="images/brain-death2.webp" alt="Visualization of brain regions associated with memory" width="648" height="332" loading="lazy" decoding="async">
+      </figure>
+
+      <p>Due to the gamma surges occurring in brain regions commonly associated with memory and conscious thought, researchers believe that the brain may be replaying key life events and moments.</p>
+      <p>Dr. Ajmal Zemmar from the University of Louisville said that &ldquo;although our loved ones have their eyes closed and are ready to leave us to rest, their brains may be replaying some of the nicest moments they experienced in their lives.&rdquo;</p>
+
+      <h2>What About Memories, Sensations, and Dying Visions?</h2>
+      <p>Many survivors of cardiac arrest describe lucid events such as tunnel vision, random memories, and out-of-body experiences. Electrical brain activity in this phase often shows delta, theta, alpha, beta, and gamma waves, suggesting brief cognitive function.</p>
+      <p>Different parts of the brain may be especially sensitive during oxygen loss. For example, hallucinations involving light, sounds, or loved ones may arise due to hypoxia-triggered activation in the visual and limbic lobes.</p>
+
+      <h2>Why this Matters</h2>
+      <p>Observing the final moments of brain function pushes us to reevaluate what death truly is. It may seem brief on the outside, but on the inside, the brain's last flicker could represent the final echo of memory, emotion, or consciousness.</p>
+`
   },
   'empowering-youth-rwanda': {
     title: 'Empowering Youth Through Education: Student-Led Initiatives Driving Social Change in Rwanda',
