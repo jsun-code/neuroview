@@ -2693,422 +2693,447 @@ document.querySelectorAll('.footer-year').forEach(el => {
   el.textContent = new Date().getFullYear();
 });
 
-/* ── NEURAL NETWORK LAYER ─────────────────────────────────────────────────────
-   One factory, two instances: a dense net in the hero and a sparse ambient net
-   down the rest of the page.
+/* ── DRIFT NETWORK ────────────────────────────────────────────────────────────
+   One simulation, two views.
 
-   The behaviour that matters is not the renderer, it is the split between what
-   is still and what moves. Nodes are placed once and stay put (a sub-pixel
-   drift only, never free flight). What animates is a glowing head travelling a
-   single edge over 1-2s, brightening that edge as it passes and fading behind
-   it. That is what reads as a signal firing; drifting particles with a
-   distance-mesh read as a screensaver.
+   Dots drift. Links are not stored — every frame each dot is matched against its
+   neighbours and a line is drawn for any pair closer than the link distance, so
+   the mesh forms and dissolves as they move. On top of that, pulses travel a
+   live pair over 1-2s, which is the part the original never had.
 
-   Placement is dart-thrown with a minimum separation, so spacing is organic and
-   there are real gaps between clusters. Degree is capped at 3 and edges are
-   dropped probabilistically, which keeps the graph a branching network rather
-   than the triangulated web a radius pass produces.
+   Dots that wander to the edge of the brain panel hand off: one fades out at the
+   boundary and another fades in just beyond it, so the page field is continuously
+   fed from the brain rather than being a separate decoration.
 
-   Cost: the glow is one pre-rendered sprite blitted with 'lighter', not a
-   per-particle gradient or shadowBlur, and pulses come from a fixed pool so a
-   burst allocates nothing. */
-function nvNetwork(cfg) {
-  var canvas = cfg.canvas;
-  if (!canvas || !canvas.getContext) return null;
-  var ctx = canvas.getContext('2d', { alpha: true });
-  if (!ctx) return null;
+   Positions are document-space, and the same node array is painted onto two
+   canvases — one inside the hero above the photo, one fixed behind the page
+   content. A single canvas cannot be both above the hero panel and beneath the
+   article cards, and the drift has to cross that boundary, so the simulation is
+   shared and only the projection differs.
+
+   Neighbour search is a spatial hash keyed on the link distance, so adding dots
+   costs roughly linearly rather than as the square. */
+(function () {
+  var heroCv = document.getElementById('synapseCanvas');
+  var pageCv = document.getElementById('pageNetCanvas');
+  var hero = heroCv && heroCv.closest('.hero');
+  if (!heroCv || !pageCv || !hero) return;
+  var hctx = heroCv.getContext('2d', { alpha: true });
+  var pctx = pageCv.getContext('2d', { alpha: true });
+  if (!hctx || !pctx) return;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
-  var nodes = [], edges = [], pulses = [], sprite = null, halo = null, darkBox = null;
-  var W = 0, H = 0, dpr = 1, raf = 0, last = 0, running = false, onScreen = true;
-  var docTop = 0, docH = 0;                 // page mode: node field in document space
-  var burst = 0, wave = -1, igniteAt = null, headlineNode = -1;
-  var relayPath = [], routeAt = 0, routeStep = -1;
-  var SPR = 64;
+  // ── tuning ──
+  var BRAIN_N = 24, PAGE_PER_MPX = 20, HERO_PER_MPX = 52;   // dots per million px, by band
+  /* Link radius is derived, not fixed. For n points over area A, mean degree is
+     n*pi*r^2/A, so targeting a degree of DEG gives r = sqrt(DEG*A/(n*pi)). A
+     constant radius cannot hold across breakpoints: 46px gave the desktop panel
+     three neighbours per dot but the same value on a 40%-smaller phone panel
+     produced 109 of 195 links inside the brain alone. */
+  var DEG_BRAIN = 2.6, DEG_PAGE = 3.0;
+  var LINK_BRAIN = 46, LINK_PAGE = 172;       // recomputed in seed()
+  function radiusFor(deg, area, n) {
+    if (n < 2 || area <= 0) return 40;
+    return Math.max(18, Math.min(320, Math.sqrt(deg * area / (n * Math.PI))));
+  }
+  /* The original drifted at ~23px/s and that pace is what makes the mesh visibly
+     re-form; at 5px/s only ~9% of links changed per second and it read as static
+     lines that merely pulsed. */
+  var SPEED_BRAIN = 17, SPEED_PAGE = 14;      // px/sec
+  var DUR_MIN = 1.0, DUR_MAX = 2.0;
+  var POOL = 70;
+  /* Handoffs are rate-limited AND gated on how many page dots are already near
+     the brain. Injecting next to the panel every 1.15s while drift carried them
+     away at 5px/s collapsed the whole field inward: dots near the brain went
+     1 to 23 in 30s and mean degree 2.25 to 7.25. The gate makes it self-
+     limiting rather than relying on the rates happening to balance. */
+  var EMIT_EVERY = 5.5, EMIT_NEAR_CAP = 12, EMIT_NEAR_R = 420;
 
-  for (var i = 0; i < cfg.pool; i++) {
-    pulses.push({ on: false, e: 0, t: 0, sp: 1, gain: 1, fwd: true });
+  var INK = '83,74,183';                       // --purple-600
+  var INK_LIT = '104,86,232';
+  var GLOW = '196,182,255';                    // over the dark panel
+
+  var nodes = [], pulses = [], grid = {}, sprite = null, halo = null;
+  var raf = 0, last = 0, running = false, onScreen = true;
+  var vw = 0, vh = 0, dpr = 1, docH = 0;
+  var heroBox = null, brainBox = null, pageTop = 0;
+  var emitAt = 0, fireAt = 0, routeAt = 0;
+
+  for (var i = 0; i < POOL; i++) pulses.push({ on: false, a: 0, b: 0, t: 0, sp: 1, gain: 1, dead: 0 });
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  function mkSprite(stops) {
+    var c = document.createElement('canvas');
+    c.width = c.height = 64;
+    var g = c.getContext('2d');
+    var rg = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    for (var i = 0; i < stops.length; i++) rg.addColorStop(stops[i][0], stops[i][1]);
+    g.fillStyle = rg; g.fillRect(0, 0, 64, 64);
+    return c;
+  }
+  function buildSprites() {
+    sprite = mkSprite([[0, 'rgba(214,206,255,1)'], [0.34, 'rgba(163,142,255,0.80)'],
+                       [0.56, 'rgba(116,94,240,0.16)'], [1, 'rgba(104,84,228,0)']]);
+    halo = mkSprite([[0, 'rgba(112,96,226,0.40)'], [0.42, 'rgba(112,96,226,0.13)'],
+                     [1, 'rgba(112,96,226,0)']]);
   }
 
-  function rng(seed) {
-    return function () { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+  function measure() {
+    var de = document.documentElement;
+    vw = de.clientWidth || window.innerWidth || 0;
+    vh = de.clientHeight || window.innerHeight || 0;
+    if (vw < 1 || vh < 1) return false;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    docH = Math.max(de.scrollHeight, vh);
+
+    var sy = window.scrollY || window.pageYOffset || 0;
+    var hr = hero.getBoundingClientRect();
+    heroBox = { x: hr.left, y: hr.top + sy, w: hr.width, h: hr.height };
+    var st = hero.querySelector('.nv-stage');
+    if (st) {
+      var sr = st.getBoundingClientRect();
+      brainBox = { x: sr.left, y: sr.top + sy, w: sr.width, h: sr.height };
+    } else brainBox = null;
+    pageTop = heroBox.y + heroBox.h;
+
+    heroCv.width = Math.round(heroBox.w * dpr);
+    heroCv.height = Math.round(heroBox.h * dpr);
+    hctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pageCv.width = Math.round(vw * dpr);
+    pageCv.height = Math.round(vh * dpr);
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return true;
   }
 
-  /* Two sprites, both with a fast falloff. The old single sprite held solid to
-     0.16 of its radius and trailed to 1.0, so the halo ran 6x the core and every
-     node read as a soft haze. Core holds to 0.34 and the halo dies by 0.9, which
-     puts the glow at roughly 2.6x the dot. */
-  function buildSprite() {
-    function mk(stops) {
-      var c = document.createElement('canvas');
-      c.width = c.height = SPR;
-      var g = c.getContext('2d');
-      var rg = g.createRadialGradient(SPR / 2, SPR / 2, 0, SPR / 2, SPR / 2, SPR / 2);
-      for (var i = 0; i < stops.length; i++) rg.addColorStop(stops[i][0], stops[i][1]);
-      g.fillStyle = rg; g.fillRect(0, 0, SPR, SPR);
-      return c;
-    }
-    // over the dark panel, where additive light genuinely emits
-    sprite = mk([
-      [0.00, 'rgba(214,206,255,1)'],
-      [0.34, 'rgba(163,142,255,0.80)'],
-      [0.56, 'rgba(116,94,240,0.16)'],
-      [0.90, 'rgba(104,84,228,0.01)'],
-      [1.00, 'rgba(104,84,228,0)']
-    ]);
-    // a tight accent bloom for an active node on the light field; kept small and
-    // saturated so it never becomes the pale wash additive blending produces
-    halo = mk([
-      [0.00, 'rgba(112,96,226,0.42)'],
-      [0.42, 'rgba(112,96,226,0.14)'],
-      [0.80, 'rgba(112,96,226,0.02)'],
-      [1.00, 'rgba(112,96,226,0)']
-    ]);
-  }
-
-  function overDark(x, y) {
-    if (!darkBox) return false;
-    return x > darkBox.x && x < darkBox.x + darkBox.w &&
-           y > darkBox.y && y < darkBox.y + darkBox.h;
-  }
-
-  /* Dart throwing with a minimum separation. A uniform grid reads as a grid and
-     pure uniform random clumps; this gives organic spacing with visible gaps. */
-  function scatter(rand, count, minDist, box, weight) {
-    var out = [], tries = 0, cap = count * 260;
-    while (out.length < count && tries < cap) {
-      tries++;
-      var x = box.x + rand() * box.w;
-      var y = box.y + rand() * box.h;
-      if (weight && rand() > weight(x, y)) continue;
-      var ok = true;
-      for (var i = 0; i < out.length; i++) {
-        var dx = out[i].x - x, dy = out[i].y - y;
-        if (dx * dx + dy * dy < minDist * minDist) { ok = false; break; }
+  function seed() {
+    nodes = [];
+    if (brainBox) {
+      for (var i = 0; i < BRAIN_N; i++) {
+        var a = Math.random() * 6.2832, s = Math.random();
+        nodes.push({
+          x: brainBox.x + brainBox.w * (0.33 + Math.cos(a) * 0.27 * s),
+          y: brainBox.y + brainBox.h * (0.32 + Math.sin(a) * 0.26 * s),
+          vx: rnd(-1, 1), vy: rnd(-1, 1), r: rnd(1.0, 2.1),
+          zone: 1, fade: 1, lit: 0
+        });
       }
-      if (!ok) continue;
-      out.push({ x: x, y: y });
+    }
+    /* The hero band gets its own, denser seeding. Spreading one uniform density
+       over the whole document put only ~17% of the dots in the 585px hero, so the
+       most prominent surface ended up the emptiest. */
+    var heroWant = Math.max(14, Math.min(46, Math.round(vw * heroBox.h / 1e6 * HERO_PER_MPX)));
+    for (var hn = 0; hn < heroWant; hn++) {
+      nodes.push({
+        x: Math.random() * vw,
+        y: heroBox.y + Math.random() * heroBox.h,
+        vx: rnd(-1, 1), vy: rnd(-1, 1), r: rnd(0.9, 1.9),
+        zone: 0, fade: 1, lit: 0
+      });
+    }
+    var want = Math.max(20, Math.min(84, Math.round(vw * Math.max(1, docH - pageTop) / 1e6 * PAGE_PER_MPX)));
+    for (var p = 0; p < want; p++) {
+      nodes.push({
+        x: Math.random() * vw,
+        y: pageTop + Math.random() * Math.max(1, docH - pageTop),
+        vx: rnd(-1, 1), vy: rnd(-1, 1), r: rnd(0.9, 1.9),
+        zone: 0, fade: 1, lit: 0
+      });
+    }
+    // derive link radii from the geometry that actually got seeded
+    if (brainBox) {
+      var bArea = brainBox.w * brainBox.h * 0.28;      // the seeded sub-region
+      LINK_BRAIN = radiusFor(DEG_BRAIN, bArea, BRAIN_N);
+    }
+    /* Derive from the hero band, not the whole document. The band is seeded
+       denser than the rest, so a radius sized for the document average
+       over-connects it: at 375px that produced a mean degree of 8.9. Sizing for
+       the dense band leaves the lower page sparser, which is the intended
+       thinning rather than a side effect. */
+    var bandCount = 0;
+    for (var pc = 0; pc < nodes.length; pc++) {
+      if (nodes[pc].zone) continue;
+      if (nodes[pc].y >= heroBox.y && nodes[pc].y <= heroBox.y + heroBox.h) bandCount++;
+    }
+    LINK_PAGE = radiusFor(DEG_PAGE, vw * heroBox.h, Math.max(6, bandCount));
+
+    // normalise velocity to the zone's speed so drift is even, not lumpy
+    for (var n = 0; n < nodes.length; n++) {
+      var nd = nodes[n], m = Math.hypot(nd.vx, nd.vy) || 1;
+      var sp = nd.zone ? SPEED_BRAIN : SPEED_PAGE;
+      nd.vx = nd.vx / m * sp; nd.vy = nd.vy / m * sp;
+    }
+  }
+
+  function inBrain(nd) {
+    return brainBox && nd.x > brainBox.x && nd.x < brainBox.x + brainBox.w &&
+           nd.y > brainBox.y && nd.y < brainBox.y + brainBox.h;
+  }
+
+  /* Spatial hash on the larger link distance. Rebuilt each frame because the
+     dots move; that is cheaper than maintaining an incremental structure at
+     these counts. */
+  function hash() {
+    grid = {};
+    var cell = LINK_PAGE;
+    for (var i = 0; i < nodes.length; i++) {
+      var k = ((nodes[i].x / cell) | 0) + ':' + ((nodes[i].y / cell) | 0);
+      (grid[k] || (grid[k] = [])).push(i);
+    }
+  }
+  function neighbours(i, out) {
+    out.length = 0;
+    var cell = LINK_PAGE;
+    var cx = (nodes[i].x / cell) | 0, cy = (nodes[i].y / cell) | 0;
+    for (var dx = -1; dx <= 1; dx++) {
+      for (var dy = -1; dy <= 1; dy++) {
+        var b = grid[(cx + dx) + ':' + (cy + dy)];
+        if (!b) continue;
+        for (var q = 0; q < b.length; q++) if (b[q] > i) out.push(b[q]);
+      }
     }
     return out;
   }
-
-  /* Degree-capped nearest-neighbour linking. Most nodes end with 1-3 edges and
-     some clusters stay unconnected, which is the point: a radius pass over the
-     same points produces the fully-linked mesh this is avoiding. */
-  function link(rand, maxDeg, maxLen, keep) {
-    edges = [];
-    var deg = new Array(nodes.length).fill(0);
-    var cand = [];
-    for (var i = 0; i < nodes.length; i++) {
-      for (var j = i + 1; j < nodes.length; j++) {
-        var dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
-        var d2 = dx * dx + dy * dy;
-        if (d2 > maxLen * maxLen) continue;
-        cand.push({ a: i, b: j, d: d2 });
-      }
-    }
-    cand.sort(function (u, v) { return u.d - v.d; });   // short edges first
-    for (var c = 0; c < cand.length; c++) {
-      var e = cand[c];
-      if (deg[e.a] >= maxDeg || deg[e.b] >= maxDeg) continue;
-      if (deg[e.a] >= 1 && deg[e.b] >= 1 && rand() > keep) continue;  // leave gaps
-      edges.push({ a: e.a, b: e.b, lit: 0, next: rand() * cfg.gapMax });
-      deg[e.a]++; deg[e.b]++;
-    }
+  function linkDist(a, b) {
+    return (a.zone && b.zone) ? LINK_BRAIN : LINK_PAGE;
   }
 
-  function layout() {
-    var host = cfg.host();
-    if (!host) return false;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function take() { for (var i = 0; i < POOL; i++) if (!pulses[i].on) return pulses[i]; return null; }
 
-    if (cfg.mode === 'page') {
-      // viewport-sized canvas, node field in document space: a canvas as tall as
-      // the document would cost tens of megabytes of backing store at dpr 2
-      var de = document.documentElement;
-      W = de.clientWidth || window.innerWidth || 0;
-      H = de.clientHeight || window.innerHeight || 0;
-      if (W < 1 || H < 1) return false;         // a 0 read would collapse the field
-      docTop = host.top;
-      // clamp: an anomalous measurement must not seed a field kilometres tall
-      docH = Math.max(0, Math.min(host.height, de.scrollHeight));
-    } else {
-      var r = host.getBoundingClientRect();
-      W = Math.max(1, r.width); H = Math.max(1, r.height);
-    }
-    canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    var rand = rng(cfg.seed);
-    nodes = [];
-    var placed = cfg.place(rand, scatter, { W: W, H: H, docTop: docTop, docH: docH });
-    for (var i = 0; i < placed.length; i++) {
-      nodes.push({
-        x: placed[i].x, y: placed[i].y, bx: placed[i].x, by: placed[i].y,
-        r: placed[i].r || (1.1 + rand() * 1.1),
-        ph: rand() * 6.28, lit: 0,
-        dph: rand() * 6.28,                  // slow drift phase, ~1px amplitude
-        tag: placed[i].tag || 0
-      });
-    }
-    darkBox = cfg.dark ? cfg.dark() : null;
-    igniteAt = cfg.ignite ? cfg.ignite(nodes, { W: W, H: H }) : null;
-    if (igniteAt) {
-      for (var q = 0; q < nodes.length; q++) {
-        var ex = nodes[q].x - igniteAt.x, ey = nodes[q].y - igniteAt.y;
-        nodes[q].d = Math.sqrt(ex * ex + ey * ey);
-      }
-    }
-    var mlen = typeof cfg.maxLen === 'function' ? cfg.maxLen(W, H) : cfg.maxLen;
-    link(rand, cfg.maxDegree, mlen, cfg.keep);
-    headlineNode = cfg.headline ? cfg.headline(nodes, { W: W, H: H }) : -1;
-    /* The brief requires at least one pulse path running from the brain toward
-       the wordmark. maxLen would never span that distance, so the route is added
-       explicitly as a short relay of the nodes nearest the straight line between
-       them; a single edge that long would read as a wire laid over the layout
-       rather than a signal finding its way. */
-    if (headlineNode >= 0) {
-      var src = -1, sd = Infinity;
-      for (var b = 0; b < nodes.length; b++) {
-        if (nodes[b].tag !== 1) continue;
-        var bx = nodes[b].x - nodes[headlineNode].x, by = nodes[b].y - nodes[headlineNode].y;
-        var bd = bx * bx + by * by;
-        if (bd < sd) { sd = bd; src = b; }
-      }
-      if (src >= 0) {
-        var chain = [src], A = nodes[src], B = nodes[headlineNode];
-        var HOPS = 3;
-        for (var h = 1; h < HOPS; h++) {
-          var tt = h / HOPS;
-          var tx = A.x + (B.x - A.x) * tt, ty = A.y + (B.y - A.y) * tt;
-          var pick = -1, pd = Infinity;
-          for (var c2 = 0; c2 < nodes.length; c2++) {
-            if (chain.indexOf(c2) >= 0 || c2 === headlineNode) continue;
-            var cx = nodes[c2].x - tx, cy = nodes[c2].y - ty, cd = cx * cx + cy * cy;
-            if (cd < pd) { pd = cd; pick = c2; }
-          }
-          if (pick >= 0) chain.push(pick);
-        }
-        chain.push(headlineNode);
-        relayPath = [];
-        for (var k2 = 0; k2 < chain.length - 1; k2++) {
-          var a2 = chain[k2], b2 = chain[k2 + 1];
-          var found = -1;
-          for (var e2 = 0; e2 < edges.length; e2++) {
-            if ((edges[e2].a === a2 && edges[e2].b === b2) || (edges[e2].a === b2 && edges[e2].b === a2)) { found = e2; break; }
-          }
-          if (found < 0) {
-            edges.push({ a: a2, b: b2, lit: 0, next: rand() * cfg.gapMax, route: true });
-            found = edges.length - 1;
-          } else { edges[found].route = true; }
-          relayPath.push({ e: found, fwd: edges[found].a === a2 });
-        }
-      }
-    }
-    return nodes.length > 0;
-  }
-
-  function take() {
-    for (var i = 0; i < cfg.pool; i++) if (!pulses[i].on) return pulses[i];
-    return null;
-  }
-
-  /* One pulse per edge fire, in one direction, at a duration inside the
-     1-2s band the brief asks for. */
-  function firePulse(ei, gain, dir) {
+  function firePair(a, b, gain) {
     var pu = take(); if (!pu) return;
-    var dur = cfg.durMin + Math.random() * (cfg.durMax - cfg.durMin);
-    pu.on = true; pu.e = ei; pu.t = 0; pu.sp = 1 / dur; pu.gain = gain;
-    pu.fwd = dir === undefined ? Math.random() < 0.5 : dir;
+    pu.on = true; pu.a = a; pu.b = b; pu.t = 0; pu.gain = gain; pu.dead = 0;
+    pu.sp = 1 / rnd(DUR_MIN, DUR_MAX);
   }
 
-  function fireFrom(nodeIdx, gain) {
-    var fired = 0;
-    for (var i = 0; i < edges.length && fired < 2; i++) {
-      var e = edges[i];
-      if (e.a !== nodeIdx && e.b !== nodeIdx) continue;
-      if (fired === 1 && Math.random() > 0.14) continue;   // a second branch is rare
-      firePulse(i, gain, e.a === nodeIdx);
-      fired++;
+  /* Fire along a pair that is currently linked, so a pulse never starts on a
+     connection the viewer cannot see. */
+  function fireSomewhere(preferBrain) {
+    var nb = [];
+    for (var tries = 0; tries < 40; tries++) {
+      var i = (Math.random() * nodes.length) | 0;
+      if (preferBrain && !nodes[i].zone) continue;
+      neighbours(i, nb);
+      for (var q = 0; q < nb.length; q++) {
+        var j = nb[q];
+        var d = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+        if (d < linkDist(nodes[i], nodes[j])) {
+          firePair(i, j, preferBrain ? 1 : 0.85);
+          nodes[i].lit = Math.max(nodes[i].lit, 0.9);
+          return true;
+        }
+      }
     }
-    if (nodes[nodeIdx]) nodes[nodeIdx].lit = Math.max(nodes[nodeIdx].lit, gain);
+    return false;
   }
 
-  function draw(t, scroll) {
-    ctx.clearRect(0, 0, W, H);
-    var oy = cfg.mode === 'page' ? docTop - scroll : 0;
+  /* A dot at the brain's boundary fades out and one fades in just outside it, so
+     the page field is fed from the brain instead of existing independently. */
+  function emit() {
+    if (!brainBox) return;
+    var best = -1, bd = Infinity;
+    for (var i = 0; i < nodes.length; i++) {
+      if (!nodes[i].zone || nodes[i].fade < 0.9) continue;
+      var dx = Math.min(nodes[i].x - brainBox.x, brainBox.x + brainBox.w - nodes[i].x);
+      var dy = Math.min(nodes[i].y - brainBox.y, brainBox.y + brainBox.h - nodes[i].y);
+      var d = Math.min(dx, dy);
+      if (d < bd) { bd = d; best = i; }
+    }
+    if (best < 0 || bd > Math.min(brainBox.w, brainBox.h) * 0.22) return;
+    // already enough page dots around the brain: skip, or the field concentrates
+    var cx0 = brainBox.x + brainBox.w / 2, cy0 = brainBox.y + brainBox.h / 2, near = 0;
+    for (var c = 0; c < nodes.length; c++) {
+      if (nodes[c].zone) continue;
+      if (Math.hypot(nodes[c].x - cx0, nodes[c].y - cy0) < EMIT_NEAR_R) near++;
+    }
+    if (near >= EMIT_NEAR_CAP) return;
+    var src = nodes[best];
+    // recycle the page dot that is furthest away, so counts stay constant
+    var far = -1, fd = -1;
+    for (var p = 0; p < nodes.length; p++) {
+      if (nodes[p].zone) continue;
+      var q2 = Math.hypot(nodes[p].x - src.x, nodes[p].y - src.y);
+      if (q2 > fd) { fd = q2; far = p; }
+    }
+    if (far < 0) return;
+    var ang = Math.atan2(src.y - (brainBox.y + brainBox.h / 2), src.x - (brainBox.x + brainBox.w / 2));
+    var nd = nodes[far];
+    nd.x = src.x + Math.cos(ang) * rnd(30, 90);
+    nd.y = src.y + Math.sin(ang) * rnd(30, 90);
+    nd.y = Math.max(heroBox.y + 8, Math.min(docH - 8, nd.y));
+    nd.x = Math.max(6, Math.min(vw - 6, nd.x));
+    nd.fade = 0;                      // fades in at its new home
+    nd.lit = 1;
+    src.fade = 0.45;                  // and dims briefly at the boundary
+    var m = Math.hypot(nd.vx, nd.vy) || 1;
+    nd.vx = Math.cos(ang) * SPEED_PAGE * 1.15 + nd.vx / m * 0.4;
+    nd.vy = Math.sin(ang) * SPEED_PAGE * 1.15 + nd.vy / m * 0.4;
+  }
 
-    /* Blend per surface. 'lighter' can only move a pixel toward white, so on a
-       near-white page it turns any colour into a pale haze regardless of what
-       colour was asked for. Additive is used only where the backdrop is the dark
-       panel; on the light field nodes are drawn source-over as saturated ink,
-       which is what keeps the core crisp and the colour actually purple. */
+  function step(dt) {
+    for (var i = 0; i < nodes.length; i++) {
+      var nd = nodes[i];
+      nd.x += nd.vx * dt; nd.y += nd.vy * dt;
+      nd.lit *= Math.pow(0.06, dt);                 // ~decay to 6% per second
+      nd.fade = Math.min(1, nd.fade + dt * 1.6);
 
-    // ── resting structure: lines ──
-    ctx.lineWidth = 1;
-    for (var pass = 0; pass < 2; pass++) {
-      ctx.globalCompositeOperation = pass === 0 ? 'source-over' : 'lighter';
-      for (var i = 0; i < edges.length; i++) {
-        var e = edges[i];
-        var a = nodes[e.a], b = nodes[e.b];
-        var ay = a.y + oy, by = b.y + oy;
-        if ((ay < -60 && by < -60) || (ay > H + 60 && by > H + 60)) continue;
-        var dk = overDark((a.x + b.x) / 2, (ay + by) / 2);
-        if ((pass === 1) !== dk) continue;
-        if (pass === 0) e.lit *= 0.92;                 // decay once, in pass 0
-        var al = (dk ? cfg.lineAlphaDark : cfg.lineAlpha) + e.lit * cfg.lineLitBoost;
-        ctx.strokeStyle = 'rgba(' + (dk ? cfg.lineRGBDark : cfg.lineRGB) + ',' + al.toFixed(3) + ')';
-        ctx.beginPath(); ctx.moveTo(a.x, ay); ctx.lineTo(b.x, by); ctx.stroke();
+      if (nd.zone) {
+        // reflect inside the panel so the brain never empties
+        if (brainBox) {
+          if (nd.x < brainBox.x + 6) { nd.x = brainBox.x + 6; nd.vx = Math.abs(nd.vx); }
+          if (nd.x > brainBox.x + brainBox.w - 6) { nd.x = brainBox.x + brainBox.w - 6; nd.vx = -Math.abs(nd.vx); }
+          if (nd.y < brainBox.y + 6) { nd.y = brainBox.y + 6; nd.vy = Math.abs(nd.vy); }
+          if (nd.y > brainBox.y + brainBox.h - 6) { nd.y = brainBox.y + brainBox.h - 6; nd.vy = -Math.abs(nd.vy); }
+        }
+      } else {
+        if (nd.x < -20) nd.x = vw + 20;             // wrap horizontally
+        if (nd.x > vw + 20) nd.x = -20;
+        if (nd.y < heroBox.y + 4) { nd.y = heroBox.y + 4; nd.vy = Math.abs(nd.vy); }
+        if (nd.y > docH - 4) { nd.y = docH - 4; nd.vy = -Math.abs(nd.vy); }
       }
     }
 
-    // ── resting structure: nodes ──
+    emitAt -= dt;
+    if (emitAt <= 0) { emit(); emitAt = EMIT_EVERY * rnd(0.7, 1.4); }
+
+    fireAt -= dt;
+    if (fireAt <= 0) { fireSomewhere(Math.random() < 0.55); fireAt = rnd(0.14, 0.58); }
+
+    for (var p = 0; p < POOL; p++) {
+      var pu = pulses[p];
+      if (!pu.on) continue;
+      var A = nodes[pu.a], B = nodes[pu.b];
+      var d = Math.hypot(A.x - B.x, A.y - B.y);
+      // the pair can drift apart mid-flight; let the pulse die rather than
+      // drawing a signal along a connection that is no longer there
+      if (d > linkDist(A, B) * 1.25) pu.dead = Math.min(1, pu.dead + dt * 4);
+      pu.t += pu.sp * dt;
+      if (pu.t >= 1 || pu.dead >= 1) {
+        pu.on = false;
+        if (pu.dead < 1) {
+          B.lit = Math.max(B.lit, pu.gain);
+          if (pu.gain > 0.34 && Math.random() < 0.4) {
+            // continue from the arrival node along one of its live links
+            var nb = [], moved = false;
+            neighbours(pu.b, nb);
+            for (var q = 0; q < nb.length && !moved; q++) {
+              var j = nb[q];
+              if (Math.hypot(B.x - nodes[j].x, B.y - nodes[j].y) < linkDist(B, nodes[j])) {
+                firePair(pu.b, j, pu.gain * 0.72); moved = true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function paint(ctx, ox, oy, w, h) {
+    ctx.clearRect(0, 0, w, h);
+    var nb = [];
+
+    // ── links, recomputed from current positions ──
+    ctx.lineWidth = 1;
+    for (var i = 0; i < nodes.length; i++) {
+      var A = nodes[i];
+      neighbours(i, nb);
+      for (var q = 0; q < nb.length; q++) {
+        var j = nb[q], B = nodes[j];
+        var lim = linkDist(A, B);
+        var dx = A.x - B.x, dy = A.y - B.y;
+        var d2 = dx * dx + dy * dy;
+        if (d2 > lim * lim) continue;
+        var ax = A.x - ox, ay = A.y - oy, bx = B.x - ox, by = B.y - oy;
+        if ((ax < -40 && bx < -40) || (ax > w + 40 && bx > w + 40)) continue;
+        if ((ay < -40 && by < -40) || (ay > h + 40 && by > h + 40)) continue;
+        var near = 1 - Math.sqrt(d2) / lim;          // fade in as they approach
+        var lit = Math.max(A.lit, B.lit);
+        var dk = inBrain(A) && inBrain(B);
+        ctx.globalCompositeOperation = dk ? 'lighter' : 'source-over';
+        var al = (dk ? 0.22 : 0.115) * near + lit * (dk ? 0.42 : 0.34);
+        al *= Math.min(A.fade, B.fade);
+        if (al < 0.004) continue;
+        ctx.strokeStyle = 'rgba(' + (dk ? GLOW : INK) + ',' + al.toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+      }
+    }
+
+    // ── dots ──
     for (var n = 0; n < nodes.length; n++) {
       var nd = nodes[n];
-      var ny = nd.y + oy;
-      if (ny < -40 || ny > H + 40) continue;
-      nd.lit *= 0.92;
-      var lit = nd.lit;
-      if (overDark(nd.x, ny)) {
-        // additive, tight: a bright speck on the panel that swells when lit
+      var x = nd.x - ox, y = nd.y - oy;
+      if (x < -30 || x > w + 30 || y < -30 || y > h + 30) continue;
+      var lit = nd.lit, f = nd.fade;
+      if (inBrain(nd)) {
         ctx.globalCompositeOperation = 'lighter';
-        var radD = (nd.r * 0.9 + lit * 2.4) * cfg.glowScale;
-        ctx.globalAlpha = Math.min(1, cfg.nodeAlphaDark + lit * cfg.nodeLitBoost);
-        ctx.drawImage(sprite, nd.x - radD, ny - radD, radD * 2, radD * 2);
+        var rd = (nd.r * 0.95 + lit * 2.3) * 1.5;
+        ctx.globalAlpha = Math.min(1, (0.12 + lit * 0.82) * f);
+        ctx.drawImage(sprite, x - rd, y - rd, rd * 2, rd * 2);
         ctx.globalAlpha = 1;
       } else {
-        /* Crisp ink. A filled arc is sharp by construction, so the resting state
-           is a hard 1px dot rather than a blur, and only an active node earns a
-           halo at all. */
         ctx.globalCompositeOperation = 'source-over';
         if (lit > 0.06) {
-          var hr = (nd.r + 1.4) * cfg.haloScale * (0.5 + 0.5 * lit);
-          ctx.globalAlpha = Math.min(1, lit * 1.1);
-          ctx.drawImage(halo, nd.x - hr, ny - hr, hr * 2, hr * 2);
+          var hr = (nd.r + 1.3) * 2.5 * (0.5 + 0.5 * lit);
+          ctx.globalAlpha = Math.min(1, lit * f);
+          ctx.drawImage(halo, x - hr, y - hr, hr * 2, hr * 2);
           ctx.globalAlpha = 1;
         }
-        var rl = nd.r * (1 + lit * 0.85);
-        ctx.fillStyle = 'rgba(' + (lit > 0.35 ? cfg.nodeRGBLit : cfg.nodeRGB) + ',' +
-                        Math.min(0.96, cfg.nodeAlpha + lit * cfg.nodeLitBoost).toFixed(3) + ')';
-        ctx.beginPath(); ctx.arc(nd.x, ny, rl, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = 'rgba(' + (lit > 0.35 ? INK_LIT : INK) + ',' +
+                        Math.min(0.94, (0.20 + lit * 0.74) * f).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(x, y, nd.r * (1 + lit * 0.8), 0, 6.2832); ctx.fill();
       }
     }
     ctx.globalAlpha = 1;
 
     // ── travelling heads ──
-    for (var p = 0; p < cfg.pool; p++) {
+    for (var p = 0; p < POOL; p++) {
       var pu = pulses[p];
       if (!pu.on) continue;
-      var ed = edges[pu.e];
-      if (!ed) { pu.on = false; continue; }
-      var s = pu.fwd ? nodes[ed.a] : nodes[ed.b];
-      var d = pu.fwd ? nodes[ed.b] : nodes[ed.a];
-      var sy = s.y + oy, dy2 = d.y + oy;
+      var A2 = nodes[pu.a], B2 = nodes[pu.b];
       var u = pu.t;
-      var fade = (u < 0.12 ? u / 0.12 : (u > 0.80 ? (1 - u) / 0.20 : 1)) * pu.gain;
-      if (fade <= 0) continue;
-      var hx = s.x + (d.x - s.x) * u, hy = sy + (dy2 - sy) * u;
-      if (hy < -40 || hy > H + 40) continue;
-      var dk2 = overDark(hx, hy);
-      var tail = Math.max(0, u - 0.20);
-
+      var fade = (u < 0.12 ? u / 0.12 : (u > 0.82 ? (1 - u) / 0.18 : 1)) * pu.gain * (1 - pu.dead);
+      if (fade <= 0.01) continue;
+      var hx = A2.x + (B2.x - A2.x) * u - ox;
+      var hy = A2.y + (B2.y - A2.y) * u - oy;
+      if (hx < -30 || hx > w + 30 || hy < -30 || hy > h + 30) continue;
+      var tl = Math.max(0, u - 0.22);
+      var tx = A2.x + (B2.x - A2.x) * tl - ox, ty = A2.y + (B2.y - A2.y) * tl - oy;
+      var dk2 = inBrain(A2) && inBrain(B2);
       ctx.globalCompositeOperation = dk2 ? 'lighter' : 'source-over';
-      ctx.strokeStyle = 'rgba(' + (dk2 ? cfg.pulseRGBDark : cfg.pulseRGB) + ',' +
-                       ((dk2 ? 0.70 : 0.58) * fade).toFixed(3) + ')';
-      ctx.lineWidth = cfg.pulseWidth;
+      ctx.strokeStyle = 'rgba(' + (dk2 ? GLOW : '92,74,214') + ',' + ((dk2 ? 0.72 : 0.58) * fade).toFixed(3) + ')';
+      ctx.lineWidth = dk2 ? 1.7 : 1.6;
       ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(s.x + (d.x - s.x) * tail, sy + (dy2 - sy) * tail);
-      ctx.lineTo(hx, hy);
-      ctx.stroke();
-
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
       if (dk2) {
-        var hrD = cfg.headSize * (0.55 + 0.45 * fade);
+        var s1 = 5.4 * (0.55 + 0.45 * fade);
         ctx.globalAlpha = Math.min(1, fade);
-        ctx.drawImage(sprite, hx - hrD, hy - hrD, hrD * 2, hrD * 2);
+        ctx.drawImage(sprite, hx - s1, hy - s1, s1 * 2, s1 * 2);
         ctx.globalAlpha = 1;
       } else {
-        // tight bloom then a hard core: bright, small, unmistakably purple
-        var hb = cfg.headSize * cfg.haloScale * 0.62 * (0.6 + 0.4 * fade);
+        var s2 = 7.2 * (0.6 + 0.4 * fade);
         ctx.globalAlpha = Math.min(1, fade * 0.9);
-        ctx.drawImage(halo, hx - hb, hy - hb, hb * 2, hb * 2);
+        ctx.drawImage(halo, hx - s2, hy - s2, s2 * 2, s2 * 2);
         ctx.globalAlpha = 1;
-        ctx.fillStyle = 'rgba(' + cfg.pulseRGB + ',' + (0.94 * fade).toFixed(3) + ')';
-        ctx.beginPath(); ctx.arc(hx, hy, cfg.headCore, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = 'rgba(92,74,214,' + (0.94 * fade).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(hx, hy, 2.2, 0, 6.2832); ctx.fill();
       }
     }
     ctx.globalCompositeOperation = 'source-over';
   }
 
-  function step(dt, t) {
-    // per-edge staggered timers: irregular by construction, never a shared beat
-    for (var i = 0; i < edges.length; i++) {
-      var e = edges[i];
-      e.next -= dt;
-      if (e.next <= 0) {
-        e.next = cfg.gapMin + Math.random() * (cfg.gapMax - cfg.gapMin);
-        if (Math.random() < cfg.fireChance) firePulse(i, 1);
-      }
-    }
-
-    /* Walk the brain -> wordmark route one hop at a time so it reads as a
-       single signal travelling the whole way, not all its edges lighting at
-       once. Runs on its own slower clock than the ambient firing. */
-    if (relayPath.length) {
-      routeAt -= dt;
-      if (routeAt <= 0) {
-        if (routeStep < 0) { routeStep = 0; }
-        if (routeStep < relayPath.length) {
-          firePulse(relayPath[routeStep].e, 1, relayPath[routeStep].fwd);
-          routeAt = cfg.durMin * 0.82;            // next hop as this one lands
-          routeStep++;
-        } else { routeStep = -1; routeAt = cfg.routeGap + Math.random() * cfg.routeSpread; }
-      }
-    }
-
-    // hero only: an ignition sweep out of the brain every few seconds
-    if (igniteAt) {
-      burst -= dt;
-      if (burst <= 0) { wave = 0; burst = cfg.burstMin + Math.random() * cfg.burstSpread; }
-      if (wave >= 0) {
-        var prev = wave;
-        wave += dt * Math.max(W, H) * 0.55;
-        for (var n = 0; n < nodes.length; n++) {
-          if (nodes[n].d > prev && nodes[n].d <= wave && Math.random() < cfg.sweepTake) {
-            fireFrom(n, nodes[n].tag === 1 ? 1 : 0.8);
-          }
-        }
-        if (wave > Math.max(W, H) * 1.6) wave = -1;
-      }
-    }
-
-    for (var p = 0; p < cfg.pool; p++) {
-      var pu = pulses[p];
-      if (!pu.on) continue;
-      pu.t += pu.sp * dt;
-      var ed = edges[pu.e];
-      if (ed) ed.lit = Math.max(ed.lit, pu.gain * 0.9);
-      if (pu.t >= 1) {
-        pu.on = false;
-        if (ed) {
-          var arrive = pu.fwd ? ed.b : ed.a;
-          if (nodes[arrive]) nodes[arrive].lit = Math.max(nodes[arrive].lit, pu.gain);
-          // relay onward so a signal visibly crosses the network, decaying out
-          if (pu.gain > cfg.relayFloor && Math.random() < cfg.relayChance) {
-            fireFrom(arrive, pu.gain * cfg.relayDecay);
-          }
-        }
-      }
-    }
+  function render() {
+    hash();
+    var sy = window.scrollY || window.pageYOffset || 0;
+    paint(hctx, heroBox.x, heroBox.y, heroBox.w, heroBox.h);
+    paint(pctx, 0, sy, vw, vh);
   }
 
   function frame(ts) {
     if (!last) last = ts;
     var dt = Math.min((ts - last) / 1000, 0.05);
     last = ts;
-    step(dt, ts);
-    draw(ts, window.scrollY || window.pageYOffset || 0);
+    step(dt);
+    render();
     raf = requestAnimationFrame(frame);
   }
 
@@ -3116,255 +3141,61 @@ function nvNetwork(cfg) {
   function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
 
   function staticFrame() {
-    // reduced motion: the graph, no travel. A few edges and somas sit lit so the
-    // network still reads as a network with nothing in flight.
-    for (var p = 0; p < cfg.pool; p++) pulses[p].on = false;
-    for (var e = 0; e < edges.length; e++) edges[e].lit = Math.random() < 0.18 ? 0.7 : 0;
-    for (var n = 0; n < nodes.length; n++) nodes[n].lit = Math.random() < 0.12 ? 0.5 : 0;
-    draw(0, window.scrollY || window.pageYOffset || 0);
+    // reduced motion: drift and pulses both stopped, the mesh left as it stands
+    for (var i = 0; i < nodes.length; i++) { nodes[i].vx = 0; nodes[i].vy = 0; nodes[i].lit = 0; }
+    for (var p = 0; p < POOL; p++) pulses[p].on = false;
+    hash(); render();
   }
 
   function apply() {
-    if (!sprite) buildSprite();
-    if (!layout()) return;
+    if (!sprite) buildSprites();
+    if (!measure()) return;
+    seed();
     if (reduce.matches) { stop(); staticFrame(); return; }
-    // paint once synchronously: rAF is suspended while the document is hidden,
-    // so a page opened in a background tab would show an empty layer
-    draw(performance.now(), window.scrollY || window.pageYOffset || 0);
+    hash(); render();                 // rAF is suspended while hidden; paint once now
     start();
   }
 
   var rt;
   addEventListener('resize', function () {
     clearTimeout(rt);
-    rt = setTimeout(function () {
-      var was = running; stop(); if (!layout()) return;
-      if (reduce.matches) staticFrame(); else if (was) start(); else apply();
-    }, 160);
+    rt = setTimeout(function () { var was = running; stop(); apply(); if (!was) stop(); }, 160);
   }, { passive: true });
 
-  if (cfg.mode === 'page') {
-    addEventListener('scroll', function () {
-      if (reduce.matches && sprite) staticFrame();
-    }, { passive: true });
-  }
+  // the page view is scroll-anchored, so a frozen layer still needs repainting
+  addEventListener('scroll', function () {
+    if (!running && !document.hidden && sprite && heroBox) { hash(); render(); }
+  }, { passive: true });
 
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) stop(); else if (!reduce.matches && onScreen) start();
+    if (document.hidden) stop(); else if (!reduce.matches) start();
   });
-
-  /* Stop burning frames on a net that is scrolled out of view. The page net
-     spans the document so it stays armed; the hero net does not. */
-  if (cfg.watch && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) {
-      onScreen = en[0].isIntersecting;
-      if (onScreen) { if (!reduce.matches) start(); } else stop();
-    }, { threshold: 0 }).observe(cfg.watch());
-  }
 
   (reduce.addEventListener ? reduce.addEventListener('change', apply) : reduce.addListener(apply));
 
-  return { apply: apply, start: start, stop: stop, stats: function () {
-    var deg = new Array(nodes.length).fill(0);
-    for (var i = 0; i < edges.length; i++) { deg[edges[i].a]++; deg[edges[i].b]++; }
-    var live = 0; for (var p = 0; p < cfg.pool; p++) if (pulses[p].on) live++;
-    return { nodes: nodes.length, edges: edges.length, live: live,
-             avgDeg: +(2 * edges.length / Math.max(1, nodes.length)).toFixed(2),
-             deg0: deg.filter(function (d) { return d === 0; }).length,
-             degOver3: deg.filter(function (d) { return d > 3; }).length };
-  } };
-}
+  var img0 = hero.querySelector('.nv-render');
+  if (img0 && !img0.complete) img0.addEventListener('load', apply, { once: true });
+  apply();
 
-/* ── HERO NET ──
-   Dense, and spread across the whole hero rather than clustered on the panel.
-   The brain contributes a tighter sub-cluster (sampled off the photograph's own
-   warm mass) which is where ignition starts, and one edge is forced from that
-   cluster to a node sitting under the wordmark so a signal visibly crosses from
-   the brain into the headline. */
-(function () {
-  var canvas = document.getElementById('synapseCanvas');
-  var hero = canvas && canvas.closest('.hero');
-  if (!hero) return;
-
-  var BGX = 26, BGY = 16;
-  var BRAIN = '00000000000000000000000000000000030000000000000000000000004878630000000000000000000059999800000000000000000005068997000000000000000000003349940000000000000000000034387000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-
-  var net = nvNetwork({
-    canvas: canvas, mode: 'hero', seed: 20260824,
-    host: function () { return hero; },
-    watch: function () { return hero; },
-    /* The opaque photo panel. Everything inside it is composited additively,
-       everything outside as ink; 'lighter' on a near-white page can only push
-       pixels toward white, which is what turned a purple glow into pale haze. */
-    dark: function () {
-      var st = hero.querySelector('.nv-stage');
-      if (!st) return null;
-      var hr = hero.getBoundingClientRect(), sr = st.getBoundingClientRect();
-      return { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
-    },
-    pool: 90,
-    maxDegree: 2, keep: 0.66,
-    maxLen: function (W, H) { return Math.max(112, Math.min(215, Math.min(W, H) * 0.42)); },
-    /* Resting values are deliberately near-invisible. The previous set put the
-       resting node at 0.25-0.40 alpha against an active 0.95, a ratio under 4x,
-       so all 46 nodes read as lit and the travelling pulse had nothing to stand
-       out from. Resting is now 0.13 against 0.93, a ratio over 7x. */
-    lineRGB: '83,74,183', lineAlpha: 0.075, lineLitBoost: 0.50,
-    lineRGBDark: '150,132,255', lineAlphaDark: 0.16,
-    nodeRGB: '83,74,183', nodeRGBLit: '104,86,232',
-    nodeAlpha: 0.13, nodeLitBoost: 0.80,
-    nodeAlphaDark: 0.10, glowScale: 1.5, haloScale: 2.6,
-    pulseRGB: '92,74,214', pulseRGBDark: '196,182,255',
-    pulseWidth: 1.6, headSize: 5.5, headCore: 2.3,
-    durMin: 1.0, durMax: 2.0,               // travel time, per the brief
-    gapMin: 4.5, gapMax: 18.0, fireChance: 0.30,
-    burstMin: 4.6, burstSpread: 2.2,
-    relayChance: 0.20, relayDecay: 0.70, relayFloor: 0.38, sweepTake: 0.30,
-    routeGap: 5.0, routeSpread: 3.0,
-
-    place: function (rand, scatter, geo) {
-      var stage = hero.querySelector('.nv-stage');
-      var h1 = hero.querySelector('h1');
-      var hr = hero.getBoundingClientRect();
-      var out = [];
-      if (stage) {
-        var sr = stage.getBoundingClientRect();
-        var P = { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
-        var img = hero.querySelector('.nv-render');
-        var nw = img ? (img.naturalWidth || 1024) : 1024;
-        var nh = img ? (img.naturalHeight || 682) : 682;
-        var isc = Math.max(P.w / nw, P.h / nh);
-        var irw = nw * isc, irh = nh * isc;
-        var iox = P.x + (P.w - irw) / 2, ioy = P.y + (P.h - irh) / 2;
-        // brain sub-cluster, rejection-sampled against the mask
-        var want = 7, guard = 0;
-        while (out.length < want && guard < 6000) {
-          guard++;
-          var gx = (rand() * BGX) | 0, gy = (rand() * BGY) | 0;
-          var occ = BRAIN.charCodeAt(gy * BGX + gx) - 48;
-          if (occ <= 0 || rand() > occ / 9) continue;
-          out.push({ x: iox + ((gx + rand()) / BGX) * irw,
-                     y: ioy + ((gy + rand()) / BGY) * irh,
-                     r: 1.2 + rand() * 1.1, tag: 1 });
+  window.__nvNet = {
+    stats: function () {
+      hash();
+      var nb = [], links = 0, brainLinks = 0;
+      for (var i = 0; i < nodes.length; i++) {
+        neighbours(i, nb);
+        for (var q = 0; q < nb.length; q++) {
+          var j = nb[q];
+          var d = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+          if (d < linkDist(nodes[i], nodes[j])) { links++; if (nodes[i].zone && nodes[j].zone) brainLinks++; }
         }
       }
-      /* The wider field: the whole hero, minus a keep-out around the panel so
-         the two do not merge into one blob, and thinned over the copy column so
-         lines do not crowd the headline. */
-      var stageBox = stage ? (function () {
-        var sr = stage.getBoundingClientRect();
-        return { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
-      })() : null;
-      var wide = scatter(rand, 24, Math.min(geo.W, geo.H) * 0.095,
-        { x: geo.W * 0.02, y: geo.H * 0.04, w: geo.W * 0.96, h: geo.H * 0.92 },
-        function (x, y) {
-          if (stageBox) {
-            var inX = x > stageBox.x - 14 && x < stageBox.x + stageBox.w + 14;
-            var inY = y > stageBox.y - 14 && y < stageBox.y + stageBox.h + 14;
-            if (inX && inY) return 0;                    // panel is opaque: keep out
-          }
-          return x < geo.W * 0.46 ? 0.55 : 0.95;         // thinner over the copy
-        });
-      for (var i = 0; i < wide.length; i++) {
-        wide[i].r = 1.0 + rand() * 1.2; wide[i].tag = 0;
-        out.push(wide[i]);
-      }
-      return out;
-    },
-
-    ignite: function (nodes, geo) {
-      // the photograph's own hot spot, projected through the cover box
-      var stage = hero.querySelector('.nv-stage');
-      var img = hero.querySelector('.nv-render');
-      if (!stage || !img) return { x: geo.W * 0.75, y: geo.H * 0.3 };
-      var hr = hero.getBoundingClientRect(), sr = stage.getBoundingClientRect();
-      var P = { x: sr.left - hr.left, y: sr.top - hr.top, w: sr.width, h: sr.height };
-      var fx = parseFloat(img.getAttribute('data-ignite-x'));
-      var fy = parseFloat(img.getAttribute('data-ignite-y'));
-      if (!isFinite(fx)) { fx = 0.3037; fy = 0.2375; }
-      var nw = img.naturalWidth || 1024, nh = img.naturalHeight || 682;
-      var isc = Math.max(P.w / nw, P.h / nh), irw = nw * isc, irh = nh * isc;
-      return { x: P.x + (P.w - irw) / 2 + fx * irw, y: P.y + (P.h - irh) / 2 + fy * irh };
-    },
-
-    headline: function (nodes, geo) {
-      var h1 = hero.querySelector('h1');
-      if (!h1) return -1;
-      var hr = hero.getBoundingClientRect(), r = h1.getBoundingClientRect();
-      var tx = r.left - hr.left + r.width * 0.62, ty = r.top - hr.top + r.height * 0.5;
-      var best = -1, bd = Infinity;
-      for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].tag === 1) continue;
-        var dx = nodes[i].x - tx, dy = nodes[i].y - ty, d = dx * dx + dy * dy;
-        if (d < bd) { bd = d; best = i; }
-      }
-      return best;
+      var live = 0; for (var p = 0; p < POOL; p++) if (pulses[p].on) live++;
+      var brain = 0; for (var n = 0; n < nodes.length; n++) if (nodes[n].zone) brain++;
+      return { nodes: nodes.length, brainNodes: brain, pageNodes: nodes.length - brain,
+               links: links, brainLinks: brainLinks, live: live,
+               avgDeg: +(2 * links / Math.max(1, nodes.length)).toFixed(2), running: running };
     }
-  });
-  if (net) net.apply();
-  window.__nvHero = net;
-})();
-
-/* ── PAGE NET ──
-   The same principle continued below the hero as ambient texture: sparser,
-   dimmer, slower. The canvas is viewport-sized and fixed while the node field
-   lives in document coordinates, because a canvas as tall as the document would
-   cost tens of megabytes of backing store at dpr 2. */
-(function () {
-  var canvas = document.getElementById('pageNetCanvas');
-  if (!canvas) return;
-
-  function field() {
-    var hero = document.querySelector('.page.active .hero');
-    var page = document.querySelector('.page.active');
-    if (!page) return null;
-    var pr = page.getBoundingClientRect();
-    var sy = window.scrollY || window.pageYOffset || 0;
-    var top = hero ? (hero.getBoundingClientRect().bottom + sy - 40) : (pr.top + sy);
-    var bottom = pr.bottom + sy;
-    var h = bottom - top;
-    if (h < 240) return null;
-    return { top: top, height: h };
-  }
-
-  var net = nvNetwork({
-    canvas: canvas, mode: 'page', seed: 20260825,
-    host: field,
-    pool: 40,
-    maxDegree: 2, keep: 0.46,
-    maxLen: function (W) { return Math.max(240, Math.min(430, W * 0.30)); },
-    lineRGB: '83,74,183', lineAlpha: 0.05, lineLitBoost: 0.32,
-    lineRGBDark: '150,132,255', lineAlphaDark: 0.10,
-    nodeRGB: '83,74,183', nodeRGBLit: '104,86,232',
-    nodeAlpha: 0.09, nodeLitBoost: 0.58,
-    nodeAlphaDark: 0.08, glowScale: 1.3, haloScale: 2.3,
-    pulseRGB: '92,74,214', pulseRGBDark: '196,182,255',
-    pulseWidth: 1.4, headSize: 4.6, headCore: 1.9,
-    durMin: 1.4, durMax: 2.0,
-    gapMin: 5.0, gapMax: 18.0, fireChance: 0.4,
-    burstMin: 1e9, burstSpread: 0,          // no ignition sweep down here
-    relayChance: 0.22, relayDecay: 0.7, relayFloor: 0.36, sweepTake: 1,
-    routeGap: 0, routeSpread: 0,
-
-    place: function (rand, scatter, geo) {
-      if (!geo.docH) return [];
-      /* Density from area, not height: dividing the field height alone gave 9
-         nodes for a 1440x2949 field, which at a 240px link radius produced one
-         edge and read as scattered dots rather than a network. Mean spacing at
-         this count is ~300px, so maxLen has to clear that. */
-      var area = geo.W * geo.docH;
-      var n = Math.max(12, Math.min(30, Math.round(area / 120000)));
-      /* Separation scales with width: a fixed 130px on a 375px column leaves so
-         few nodes in range that the field reads as unconnected specks. */
-      var sep = Math.max(76, Math.min(130, geo.W * 0.11));
-      var pts = scatter(rand, n, sep,
-        { x: geo.W * 0.03, y: 0, w: geo.W * 0.94, h: geo.docH }, null);
-      for (var i = 0; i < pts.length; i++) pts[i].r = 0.9 + rand() * 1.0;
-      return pts;
-    }
-  });
-  if (net) net.apply();
-  window.__nvPage = net;
+  };
 })();
 
 bindTeamProfileLinks();
